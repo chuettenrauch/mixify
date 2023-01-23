@@ -1,4 +1,4 @@
-name: Run Tests
+name: Tests
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: "Run tests"
+    name: "Run"
     runs-on: ubuntu-latest
 
     steps:
