@@ -1,0 +1,59 @@
+name: Deploy to fly.io
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Install JDK"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: "Run tests"
+        working-directory: backend
+        run: mvn -B clean test --file pom.xml
+
+  build:
+    name: "Build & Deploy"
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Install JDK"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: "Install flyctl"
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: "Build app"
+        working-directory: backend
+        run: ./mvnw -B package -D maven.test.skip --file pom.xml
+
+      - name: "Deploy app to fly.io"
+        run: flyctl deploy --remote-only
