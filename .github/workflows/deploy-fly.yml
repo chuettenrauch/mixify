@@ -10,7 +10,7 @@ env:
 
 jobs:
   test:
-    uses: ./.github/workflows/tests.yml
+    uses: ./.github/workflows/qa.yml
 
   build:
     name: "Build & Deploy"
