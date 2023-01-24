@@ -5,7 +5,7 @@ import MixtapesOverviewPage from "./pages/MixtapesOverviewPage";
 import PlayMixtapePage from "./pages/PlayMixtapePage";
 import LoginPage from "./pages/LoginPage";
 import MixtapeDetailPage from "./pages/MixtapeDetailPage";
-import MainLayout from "./utils/MainLayout";
+import MainLayout from "./components/MainLayout";
 
 function App() {
     return (

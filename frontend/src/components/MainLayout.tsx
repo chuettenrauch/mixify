@@ -1,5 +1,5 @@
-import HeaderNav from "../components/HeaderNav";
-import BottomNav from "../components/BottomNav";
+import HeaderNav from "./HeaderNav";
+import BottomNav from "./BottomNav";
 import {Outlet} from "react-router-dom";
 import {Container} from "@mui/material";
 
