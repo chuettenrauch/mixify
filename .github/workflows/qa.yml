@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: "Run"
+    name: "Run tests"
     runs-on: ubuntu-latest
 
     steps:
@@ -58,19 +58,18 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=chuettenrauch_mixify
 
   analyze-frontend:
-    sonarcloud:
-      name: "Analyze frontend"
-      runs-on: ubuntu-latest
+    name: "Analyze frontend"
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: "Checkout"
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-        - name: "Analyze"
-          uses: SonarSource/sonarcloud-github-action@master
-          working-directory: frontend
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: "Analyze"
+        uses: SonarSource/sonarcloud-github-action@master
+        working-directory: frontend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
