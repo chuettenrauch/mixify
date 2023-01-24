@@ -12,7 +12,8 @@ jobs:
   qa:
     uses: ./.github/workflows/qa.yml
     secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_TOKEN_BACKEND: ${{ secrets.SONAR_TOKEN_BACKEND }}
+      SONAR_TOKEN_FRONTEND: ${{ secrets.SONAR_TOKEN_FRONTEND }}
 
   build:
     name: "Build & Deploy"
