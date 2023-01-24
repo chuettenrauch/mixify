@@ -1,16 +1,19 @@
 package com.github.chuettenrauch.mixifyapi.security;
 
+import com.github.chuettenrauch.mixifyapi.config.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.*;
 
 @Configuration
-@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final AppProperties appProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,10 +30,17 @@ public class SecurityConfig {
                         .redirectionEndpoint(config -> config
                                 .baseUri("/oauth2/code/*")
                         )
+                        .successHandler(authenticationSuccessHandler(
+                                appProperties.getOauth2().getSuccessRedirectUri()
+                        ))
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .build();
+    }
+
+    private AuthenticationSuccessHandler authenticationSuccessHandler(String redirectUri) {
+        return new SimpleUrlAuthenticationSuccessHandler(redirectUri);
     }
 }
