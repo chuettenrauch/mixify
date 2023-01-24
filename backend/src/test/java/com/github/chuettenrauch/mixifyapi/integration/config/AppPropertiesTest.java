@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             "app.o-auth2.failure-redirect-uri=/failure",
         }
 )
-public class AppPropertiesTest {
+class AppPropertiesTest {
 
     @Autowired
     private AppProperties appProperties;
