@@ -26,3 +26,4 @@ spring:
 app:
   oauth2:
     success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:/}"
+    failure-redirect-uri: "${OAUTH2_FAILURE_REDIRECT_URI:/login}"
