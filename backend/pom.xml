@@ -17,6 +17,8 @@
 		<java.version>19</java.version>
 		<sonar.organization>chuettenrauch</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.project.key>mixify-backend</sonar.project.key>
+		<sonar.project.name>mixify-backend</sonar.project.name>
 	</properties>
 	<dependencies>
 		<dependency>
