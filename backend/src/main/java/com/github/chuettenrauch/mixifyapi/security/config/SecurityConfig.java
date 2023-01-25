@@ -1,4 +1,4 @@
-package com.github.chuettenrauch.mixifyapi.security;
+package com.github.chuettenrauch.mixifyapi.security.config;
 
 import com.github.chuettenrauch.mixifyapi.config.AppProperties;
 import lombok.RequiredArgsConstructor;

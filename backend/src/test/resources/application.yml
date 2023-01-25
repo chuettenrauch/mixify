@@ -1,0 +1,10 @@
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 5.0.14
+
+app:
+  oauth2:
+    success-redirect-uri: "/"
+    failure-redirect-uri: "/login"
