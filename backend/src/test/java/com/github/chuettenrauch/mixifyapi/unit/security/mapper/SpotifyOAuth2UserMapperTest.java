@@ -39,7 +39,7 @@ class SpotifyOAuth2UserMapperTest {
 
         List<Map<String, String>> images = new ArrayList<>(List.of(
                 Map.of(
-                        "url", "http://url/to/image-1.jpg"
+                        "url", expectedImageUrl
                 ),
                 Map.of(
                         "url", "http://url/to/image-2.jpg"

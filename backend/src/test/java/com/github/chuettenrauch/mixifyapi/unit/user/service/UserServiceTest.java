@@ -5,48 +5,46 @@ import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
     @Test
-    void findByEmail_returnsOptionalWithUserIfUserExists() {
+    void findByEmail_delegatesToUserRepository() {
         // given
         String email = "someone@somewhere.de";
-        User expected = new User();
+        Optional<User> expected = Optional.of(new User());
 
         UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(expected));
+        when(userRepository.findByEmail(email)).thenReturn(expected);
 
         // when
         UserService sut = new UserService(userRepository);
         Optional<User> actual = sut.findByEmail(email);
 
         // then
-        assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get());
+        assertEquals(expected, actual);
+        verify(userRepository).findByEmail(email);
     }
 
     @Test
-    void findByEmail_returnsOptionalOfNullIfUserDoesNotExist() {
+    void save_delegatesToUserRepository() {
         // given
-        String email = "someone@somewhere.de";
+        User expected = new User();
 
         UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userRepository.save(expected)).thenReturn(expected);
 
         // when
         UserService sut = new UserService(userRepository);
-        Optional<User> actual = sut.findByEmail(email);
+        User actual = sut.save(expected);
 
         // then
-        assertFalse(actual.isPresent());
-        assertThrows(NoSuchElementException.class, actual::get);
+        assertEquals(expected, actual);
+        verify(userRepository).save(expected);
     }
 
 }
