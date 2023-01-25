@@ -74,9 +74,11 @@ class SpotifyOAuth2UserMapperTest {
         OAuth2User oAuth2User = mock(OAuth2User.class);
         when(oAuth2User.getAttributes()).thenReturn(attributes);
 
+        User user = new User();
+
         // when + then
         SpotifyOAuth2UserMapper sut = new SpotifyOAuth2UserMapper();
-        assertThrows(OAuth2MappingException.class, () -> sut.mapOAuth2UserToUser(oAuth2User, new User()));
+        assertThrows(OAuth2MappingException.class, () -> sut.mapOAuth2UserToUser(oAuth2User, user));
 
     }
 

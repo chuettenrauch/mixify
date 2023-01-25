@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class OAuth2AuthenticationSuccessEventListenerTest {
+class OAuth2AuthenticationSuccessEventListenerTest {
 
     @Autowired
     private OAuth2AuthenticationSuccessEventListener sut;

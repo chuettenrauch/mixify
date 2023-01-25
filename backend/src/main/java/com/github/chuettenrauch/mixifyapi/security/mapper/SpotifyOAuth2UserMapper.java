@@ -40,7 +40,7 @@ public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
         user.setName((String) attributes.get(ATTRIBUTE_NAME));
 
         List<Map<String, String>> images = (List<Map<String, String>>) attributes.get(ATTRIBUTE_IMAGES);
-        if (images.size() > 0) {
+        if (!images.isEmpty()) {
             Map<String, String> image = images.get(0);
 
             user.setImageUrl(image.getOrDefault("url", null));
