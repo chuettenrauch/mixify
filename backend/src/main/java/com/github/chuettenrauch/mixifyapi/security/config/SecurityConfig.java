@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.security.config;
 
 import com.github.chuettenrauch.mixifyapi.config.AppProperties;
+import com.github.chuettenrauch.mixifyapi.security.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.*;
 public class SecurityConfig {
 
     private final AppProperties appProperties;
+    private final OAuth2UserService oAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,6 +30,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(config -> config
+                                .userService(oAuth2UserService)
+                        )
                         .redirectionEndpoint(config -> config
                                 .baseUri("/oauth2/code/*")
                         )
