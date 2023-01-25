@@ -1,5 +1,7 @@
 import {Button, Container, Typography} from "@mui/material";
 
+const authorizeUrl = `${process.env.REACT_APP_API_BASE_URL ?? ""}/oauth2/authorization/spotify`;
+
 export default function LoginPage() {
     return (
         <Container maxWidth="md" sx={{
@@ -16,7 +18,7 @@ export default function LoginPage() {
                 <Typography>
                     Bring back the nostalgia of creating and sharing mixtapes like in the good old days of cassette tapes
                 </Typography>
-                <Button variant="contained" href="/oauth/authorize/spotify">
+                <Button variant="contained" href={authorizeUrl}>
                     Continue with spotify
                 </Button>
         </Container>

@@ -1,0 +1,29 @@
+spring:
+  data:
+    mongodb:
+      uri: "${MONGO_URI:mongodb://localhost:27017}"
+      database: "${MONGO_DATABASE:mixify}"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          spotify:
+            client-id: "${SPOTIFY_CLIENT_ID}"
+            client-secret: "${SPOTIFY_CLIENT_SECRET}"
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/oauth2/code/{registrationId}"
+            scope:
+              - user-read-private
+              - user-read-email
+        provider:
+          spotify:
+            authorization-uri: https://accounts.spotify.com/authorize
+            token-uri: https://accounts.spotify.com/api/token
+            user-info-uri: https://api.spotify.com/v1/me
+            user-name-attribute: display_name
+
+app:
+  oauth2:
+    success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:/}"
+    failure-redirect-uri: "${OAUTH2_FAILURE_REDIRECT_URI:/login}"
