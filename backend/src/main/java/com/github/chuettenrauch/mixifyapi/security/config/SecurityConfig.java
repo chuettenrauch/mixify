@@ -25,7 +25,8 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .redirectionEndpoint(config -> config
