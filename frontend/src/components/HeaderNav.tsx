@@ -18,7 +18,7 @@ import {useNavigate} from "react-router-dom";
 import logo from "../logo.png";
 
 export default function HeaderNav() {
-    const {user} = useUserContext();
+    const {user, setUser} = useUserContext();
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,6 +26,7 @@ export default function HeaderNav() {
 
     const onLogout = async () => {
         await UserApi.logout();
+        setUser(null);
 
         toast.success("Successfully logged out.");
 
