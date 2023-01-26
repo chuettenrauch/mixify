@@ -36,7 +36,9 @@ export default function HeaderNav() {
         <AppBar position="static">
             <Container maxWidth="md">
                 <Toolbar disableGutters>
-                    <img src={logo} width="150" alt="mixify logo"/>
+                    <Box sx={{ filter: "invert(1)", display: "flex", alignItems: "center"}}>
+                        <img src={logo} width="150" alt="mixify logo"/>
+                    </Box>
 
                     <Box sx={{ marginLeft: "auto" }}>
                         <IconButton
