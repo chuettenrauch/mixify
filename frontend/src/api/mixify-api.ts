@@ -11,4 +11,8 @@ export module UserApi {
 
         return response.data;
     }
+
+    export async function logout() {
+        return await client.post("/logout");
+    }
 }

@@ -8,6 +8,8 @@ import MixtapeDetailPage from "./pages/MixtapeDetailPage";
 import MainLayout from "./components/MainLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import {UserProvider} from "./context/userContext";
+import 'react-toastify/dist/ReactToastify.css';
+import {Slide, ToastContainer} from "react-toastify";
 
 function App() {
     return (
@@ -26,6 +28,19 @@ function App() {
 
                     <Route path="/login" element={<LoginPage/>}/>
                 </Routes>
+                <ToastContainer
+                    position="bottom-center"
+                    autoClose={1500}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable={false}
+                    pauseOnHover={false}
+                    transition={Slide}
+                    theme="light"
+                />
             </BrowserRouter>
         </UserProvider>
     );
