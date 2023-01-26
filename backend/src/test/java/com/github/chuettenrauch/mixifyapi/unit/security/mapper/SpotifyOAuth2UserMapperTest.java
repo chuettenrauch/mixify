@@ -67,6 +67,26 @@ class SpotifyOAuth2UserMapperTest {
         assertEquals(expectedProviderId, actual.getProviderId());
     }
 
+    @Test
+    void mapToUser_whenImagesEmpty_thenDoesNotSetImageUrl() {
+        // given
+        OAuth2User oAuth2User = mock(OAuth2User.class);
+
+        when(oAuth2User.getAttributes()).thenReturn(Map.of(
+                "email", "alvin@chipmunks.de",
+                "display_name", "Alvin Chipmunk",
+                "id", "user-123",
+                "images", new ArrayList<>()
+        ));
+
+        // when
+        SpotifyOAuth2UserMapper sut = new SpotifyOAuth2UserMapper();
+        User actual = sut.mapOAuth2UserToUser(oAuth2User, new User());
+
+        // then
+        assertNull(actual.getImageUrl());
+    }
+
     @ParameterizedTest
     @MethodSource("provideInvalidAttributes")
     void mapToUser_throwsOAuth2UserMapperExceptionIfDataIsRequiredDataIsNotPresent(Map<String, Object> attributes) {
