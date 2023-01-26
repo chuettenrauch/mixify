@@ -1,8 +1,11 @@
 package com.github.chuettenrauch.mixifyapi.security.listener;
 
+import com.github.chuettenrauch.mixifyapi.security.exception.NoSuchOAuth2MapperException;
 import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapper;
+import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapperFactory;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
@@ -10,26 +13,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 @Component
+@RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessEventListener {
 
     private final UserService userService;
 
-    private final Map<String, OAuth2UserMapper> oAuth2UserMapperByProvider;
-
-    public OAuth2AuthenticationSuccessEventListener(UserService userService, List<OAuth2UserMapper> oAuth2UserMappers) {
-        this.userService = userService;
-        this.oAuth2UserMapperByProvider = oAuth2UserMappers
-                .stream()
-                .collect(
-                        Collectors.toMap(oAuth2UserMapper -> oAuth2UserMapper.getProvider().toString(), Function.identity())
-                );
-    }
+    private final OAuth2UserMapperFactory oAuth2UserMapperFactory;
 
     @EventListener
     public void saveUserOnAuthenticationSuccess(AuthenticationSuccessEvent successEvent) {
@@ -37,12 +27,15 @@ public class OAuth2AuthenticationSuccessEventListener {
         OAuth2User oAuth2User = authentication.getPrincipal();
         ClientRegistration clientRegistration = authentication.getClientRegistration();
 
-        String providerName = clientRegistration.getRegistrationId();
-        if (!this.oAuth2UserMapperByProvider.containsKey(providerName)) {
+        OAuth2UserMapper oAuth2UserMapper;
+
+        try {
+            oAuth2UserMapper = this.oAuth2UserMapperFactory.getOAuth2UserMapperByProviderName(
+                    clientRegistration.getRegistrationId()
+            );
+        } catch (NoSuchOAuth2MapperException e) {
             return;
         }
-
-        OAuth2UserMapper oAuth2UserMapper = this.oAuth2UserMapperByProvider.get(providerName);
 
         User user = oAuth2UserMapper.mapOAuth2UserToUser(oAuth2User, new User());
 
