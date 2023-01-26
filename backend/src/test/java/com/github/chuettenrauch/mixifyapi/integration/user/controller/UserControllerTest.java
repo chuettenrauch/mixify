@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Client;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,6 +57,25 @@ class UserControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson, true));
+    }
+
+    @Test
+    void logout_returnsUnauthorizedIfNotLoggedIn() throws Exception {
+        this.mvc.perform(post("/api/users/logout"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void logout_invalidatesSession() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+
+        this.mvc.perform(post("/api/users/logout")
+                        .session(session)
+                )
+                .andExpect(status().isOk());
+
+        assertTrue(session.isInvalid());
     }
 
     private ClientRegistration createOAuth2ClientRegistration() {
