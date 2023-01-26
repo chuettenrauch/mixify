@@ -7,11 +7,9 @@ import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -36,10 +34,8 @@ class OAuth2AuthenticationSuccessEventListenerTest {
     @Autowired
     private UserRepository userRepository;
 
-    @MockBean
-    private ClientRegistrationRepository clientRegistrationRepository;
-
     @Test
+    @DirtiesContext
     void saveUserOnAuthenticationSuccess_createsNewUserIfUserDoesNotExistAlready() {
         // given
         String expectedImageUrl = "http://url/to/image-1.jpg";
