@@ -8,7 +8,6 @@ import {
     Menu,
     MenuItem,
     Toolbar,
-    Typography
 } from "@mui/material";
 import React from "react";
 import {useUserContext} from "../context/userContext";
@@ -16,6 +15,7 @@ import {Logout as LogoutIcon} from "@mui/icons-material";
 import {UserApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import logo from "../logo.png";
 
 export default function HeaderNav() {
     const {user} = useUserContext();
@@ -36,9 +36,7 @@ export default function HeaderNav() {
         <AppBar position="static">
             <Container maxWidth="md">
                 <Toolbar disableGutters>
-                    <Typography sx={{ marginLeft: "auto" }} variant="h6" noWrap component="a" href="/">
-                        Logo
-                    </Typography>
+                    <img src={logo} width="150" alt="mixify logo"/>
 
                     <Box sx={{ marginLeft: "auto" }}>
                         <IconButton

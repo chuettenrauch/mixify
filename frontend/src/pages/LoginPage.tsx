@@ -1,4 +1,6 @@
 import {Button, Container, Typography} from "@mui/material";
+import logo from "../logo.png";
+import React from "react";
 
 const authorizeUrl = `${process.env.REACT_APP_API_BASE_URL ?? ""}/oauth2/authorization/spotify`;
 
@@ -14,7 +16,7 @@ export default function LoginPage() {
             textAlign: "center",
             height: "100vh"
         }}>
-                <Typography variant="h2" component="h1">mixify</Typography>
+                <img src={logo} alt="mixify logo"/>
                 <Typography>
                     Bring back the nostalgia of creating and sharing mixtapes like in the good old days of cassette tapes
                 </Typography>
