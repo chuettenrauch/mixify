@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.unit.user.service;
 
+import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
 import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapper;
 import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapperFactory;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
@@ -8,6 +9,7 @@ import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -31,9 +33,10 @@ class UserServiceTest {
         when(userRepository.findByEmail(email)).thenReturn(expected);
 
         OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
+        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory);
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
         Optional<User> actual = sut.findByEmail(email);
 
         // then
@@ -50,14 +53,83 @@ class UserServiceTest {
         when(userRepository.save(expected)).thenReturn(expected);
 
         OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
+        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory);
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
         User actual = sut.save(expected);
 
         // then
         assertEquals(expected, actual);
         verify(userRepository).save(expected);
+    }
+
+    @Test
+    void getAuthenticatedUser_whenLoggedIn_thenReturnAuthenticatedUser() {
+        // given
+        User user = new User();
+        user.setEmail("alvin@chipmunks.de");
+
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn(user.getEmail());
+
+        AuthService authService = mock(AuthService.class);
+        when(authService.getAuthentication()).thenReturn(authentication);
+
+        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
+
+        // when
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        Optional<User> actual = sut.getAuthenticatedUser();
+
+        // then
+        assertTrue(actual.isPresent());
+        assertEquals(user, actual.get());
+    }
+
+    @Test
+    void getAuthenticatedUser_whenNotLoggedIn_thenReturnEmpty() {
+        // given
+        User user = new User();
+        user.setEmail("alvin@chipmunks.de");
+
+        AuthService authService = mock(AuthService.class);
+        when(authService.getAuthentication()).thenReturn(null);
+
+        UserRepository userRepository = mock(UserRepository.class);
+        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
+
+        // when
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        Optional<User> actual = sut.getAuthenticatedUser();
+
+        // then
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void getAuthenticatedUser_whenUserNotExists_thenReturnEmpty() {
+        // given
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("not-existing-user");
+
+        AuthService authService = mock(AuthService.class);
+        when(authService.getAuthentication()).thenReturn(authentication);
+
+        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
+
+        // when
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        Optional<User> actual = sut.getAuthenticatedUser();
+
+        // then
+        assertTrue(actual.isEmpty());
     }
 
     @Test
@@ -76,9 +148,10 @@ class UserServiceTest {
         OAuth2UserMapperFactory oAuth2UserMapperFactory = this.mockOAuth2UserMapperFactory(user);
 
         UserRepository userRepository = mock(UserRepository.class);
+        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory);
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
         UserResource actual = sut.createUserResource(authentication, authorizedClient);
 
         // then
@@ -101,9 +174,10 @@ class UserServiceTest {
         OAuth2UserMapperFactory oAuth2UserMapperFactory = this.mockOAuth2UserMapperFactory(user);
 
         UserRepository userRepository = mock(UserRepository.class);
+        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory);
+        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
         UserResource actual = sut.createUserResource(authentication, authorizedClient);
 
         // then

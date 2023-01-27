@@ -1,11 +1,13 @@
 package com.github.chuettenrauch.mixifyapi.user.service;
 
+import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
 import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapper;
 import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapperFactory;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
@@ -22,12 +24,24 @@ public class UserService {
 
     private final OAuth2UserMapperFactory oAuth2UserMapperFactory;
 
+    private final AuthService authService;
+
     public Optional<User> findByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
     public User save(User user) {
         return this.userRepository.save(user);
+    }
+
+    public Optional<User> getAuthenticatedUser() {
+        Authentication authentication = this.authService.getAuthentication();
+
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
+        return this.findByEmail(authentication.getName());
     }
 
     public UserResource createUserResource(OAuth2AuthenticationToken authentication, OAuth2AuthorizedClient authorizedClient) {
