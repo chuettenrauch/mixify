@@ -164,12 +164,28 @@ class MixtapeControllerTest {
     @DirtiesContext
     void getAll_whenLoggedIn_thenReturnMixtapesForTheLoggedUser() throws Exception {
         // given
+        String expectedJson = """
+                        [
+                            {
+                                "id": "123",
+                                "title": "mixtape of logged in user",
+                                "description": "description",
+                                "image": null,
+                                "createdBy": {
+                                    "id": "123",
+                                    "name": "alvin",
+                                    "imageUrl": "/path/to/image"
+                                }
+                            }
+                        ]
+                        """;
+
         User loggedInUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
 
         this.userRepository.saveAll(List.of(loggedInUser, otherUser));
 
-        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of other user", "description", null, new ArrayList<>(), LocalDateTime.now(), loggedInUser);
+        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", null, new ArrayList<>(), LocalDateTime.now(), loggedInUser);
         Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
 
         this.mixtapeRepository.saveAll(List.of(mixtapeOfLoggedInUser, mixtapeOfOtherUser));
@@ -177,29 +193,6 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
                 "email", loggedInUser.getEmail()
         ), "email");
-
-        String expectedJson = String.format("""
-                        [
-                            {
-                                "id": "%s",
-                                "title": "%s",
-                                "description": "%s",
-                                "image": null,
-                                "createdBy": {
-                                    "id": "%s",
-                                    "name": "%s",
-                                    "imageUrl": "%s"
-                                }
-                            }
-                        ]
-                        """,
-                mixtapeOfLoggedInUser.getId(),
-                mixtapeOfLoggedInUser.getTitle(),
-                mixtapeOfLoggedInUser.getDescription(),
-                loggedInUser.getId(),
-                loggedInUser.getName(),
-                loggedInUser.getImageUrl()
-        );
 
         // when + then
         this.mvc.perform(get("/api/mixtapes")
