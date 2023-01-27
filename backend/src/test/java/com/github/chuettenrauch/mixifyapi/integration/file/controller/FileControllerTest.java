@@ -10,8 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
@@ -109,11 +114,38 @@ public class FileControllerTest {
     @DirtiesContext
     void downloadFile_whenLoggedInButFileDoesNotExist_returnNotFound() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         this.userRepository.save(user);
 
+        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
+                "email", user.getEmail()
+        ), "email");
+
+        // when + then
         this.mvc.perform(get("/api/files/123")
-                        .with(oauth2Login())
+                .with(oauth2Login().oauth2User(oAuth2User))
+        )
+        .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void downloadFile_whenLoggedInButFileDoesNotBelongsToLoggedInUser_returnNotFound() throws Exception {
+        // given
+        User fileCreator = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User loggedInUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
+        this.userRepository.saveAll(List.of(fileCreator, loggedInUser));
+
+        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
+        File uploadedFile = this.uploadFileWithUser(file, fileCreator);
+
+        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
+            "email", loggedInUser.getEmail()
+        ), "email");
+
+        // when + then
+        this.mvc.perform(get("/api/files/" +  uploadedFile.getId())
+                        .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isNotFound());
     }
@@ -122,26 +154,37 @@ public class FileControllerTest {
     @DirtiesContext
     void downloadFile_whenLoggedIn_returnFile() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         this.userRepository.save(user);
 
+        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
+                "email", user.getEmail()
+        ), "email");
+
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
+        File uploadedFile = this.uploadFileWithUser(file, user);
+
+        this.mvc.perform(get("/api/files/" + uploadedFile.getId())
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/plain"));
+    }
+
+    private File uploadFileWithUser(MockMultipartFile file, User user) throws Exception {
+        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
+                "email", user.getEmail()
+        ), "email");
 
         String postResult = this.mvc.perform(multipart("/api/files")
                         .file(file)
-                        .with(oauth2Login())
+                        .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        File uploadedFile = objectMapper.readValue(postResult, File.class);
-
-        this.mvc.perform(get("/api/files/" + uploadedFile.getId())
-                        .with(oauth2Login())
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("text/plain"));
+        return objectMapper.readValue(postResult, File.class);
     }
 }
