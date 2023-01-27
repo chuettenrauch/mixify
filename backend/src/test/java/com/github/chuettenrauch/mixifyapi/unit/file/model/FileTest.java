@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FileTest {
+class FileTest {
 
     @Test
     void create_whenGridFSResourceWithoutGridFSFile_thenReturnFileWithOnlyContent() throws IOException {
