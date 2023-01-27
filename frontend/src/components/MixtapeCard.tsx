@@ -1,7 +1,23 @@
 import Mixtape from "../types/Mixtape";
-import {Backdrop, Box, Container, IconButton, ListItemIcon, Menu, MenuItem, Paper, Typography} from "@mui/material";
+import {
+    Backdrop,
+    Box,
+    Container,
+    IconButton,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Paper,
+    Typography
+} from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
 import React from "react";
+
+const formatDate = (date: string) => {
+    const formattedDate: Date = new Date(date);
+
+    return formattedDate.toLocaleDateString("en", {month: "long", year: "numeric"})
+}
 
 export default function MixtapeCard({mixtape}: {
     mixtape: Mixtape
@@ -16,9 +32,12 @@ export default function MixtapeCard({mixtape}: {
           <Box sx={{border: 1, p: 0}}>
               <img src={`/api/files/${mixtape.image}`} alt={mixtape.title} style={{objectFit: "cover", width: "100px", height: "100px"}}/>
           </Box>
-          <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-              <Typography variant="h3">{mixtape.title}</Typography>
-              <Typography>{mixtape.createdAt}</Typography>
+          <Container sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 2}}>
+              <Container sx={{p: 0}}>
+                  <Typography variant="h3">{mixtape.title}</Typography>
+                  <Typography>{formatDate(mixtape.createdAt)}</Typography>
+              </Container>
+              <Typography>No tracks</Typography>
           </Container>
           <IconButton onClick={(e) => setMixtapeMenu(e.currentTarget)}
                       aria-controls={mixtapeMenuOpen ? mixtapeMenuId : undefined}
