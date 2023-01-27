@@ -19,6 +19,9 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.project.key>mixify-backend</sonar.project.key>
 		<sonar.project.name>mixify-backend</sonar.project.name>
+		<sonar.issue.ignore.multicriteria>dto</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria.dto.ruleKey>java:S4684</sonar.issue.ignore.multicriteria.dto.ruleKey>
+		<sonar.issue.ignore.multicriteria.dto.resourceKey>**/*Controller.java</sonar.issue.ignore.multicriteria.dto.resourceKey>
 	</properties>
 	<dependencies>
 		<dependency>
