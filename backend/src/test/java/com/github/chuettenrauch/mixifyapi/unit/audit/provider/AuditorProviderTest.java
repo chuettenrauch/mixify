@@ -1,5 +1,6 @@
-package com.github.chuettenrauch.mixifyapi.audit.provider;
+package com.github.chuettenrauch.mixifyapi.unit.audit.provider;
 
+import com.github.chuettenrauch.mixifyapi.audit.provider.AuditorProvider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import org.junit.jupiter.api.Test;
