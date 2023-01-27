@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.chuettenrauch.mixifyapi.file.validation.IsOwnedByAuthenticatedUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,8 @@ public class Mixtape {
     private String id;
     private String title;
     private String description;
+
+    @IsOwnedByAuthenticatedUser
     private String image;
 
     @JsonIgnore
