@@ -12,9 +12,9 @@ export default function MixtapeCard({mixtape}: {
     const mixtapeMenuOpen = Boolean(mixtapeMenu);
 
     return (
-      <Paper square={true} elevation={1} sx={{display: "flex", p: 2, position: "relative"}}>
-          <Box sx={{border: 1, width: 150}}>
-              <img src={`/api/files/${mixtape.image}`} alt={mixtape.title}/>
+      <Paper elevation={5} sx={{display: "flex", p: 2, position: "relative"}}>
+          <Box sx={{border: 1, p: 0}}>
+              <img src={`/api/files/${mixtape.image}`} alt={mixtape.title} style={{objectFit: "cover", width: "100px", height: "100px"}}/>
           </Box>
           <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
               <Typography variant="h3">{mixtape.title}</Typography>
