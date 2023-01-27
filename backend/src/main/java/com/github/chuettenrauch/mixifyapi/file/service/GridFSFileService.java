@@ -1,11 +1,9 @@
 package com.github.chuettenrauch.mixifyapi.file.service;
 
 import com.github.chuettenrauch.mixifyapi.file.exception.FileNotFoundException;
-import com.github.chuettenrauch.mixifyapi.file.exception.FileOperationUnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.file.exception.InvalidFileException;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
-import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -27,18 +25,14 @@ public class GridFSFileService implements FileService {
 
     private final GridFsOperations gridFsOperations;
 
-    private final UserService userService;
-
-    public File saveFile(MultipartFile file) throws IOException {
+    public File saveFileForUser(MultipartFile file, User user) throws IOException {
         if (file.isEmpty()) {
             throw new InvalidFileException();
         }
 
-        User authenticatedUser = this.userService.getAuthenticatedUser().orElseThrow(FileOperationUnauthorizedException::new);
-
         DBObject metadata = BasicDBObjectBuilder
                 .start()
-                .add("createdBy", authenticatedUser.getId())
+                .add("createdBy", user.getId())
                 .get();
 
         ObjectId fileId = this.gridFsOperations.store(
@@ -48,21 +42,23 @@ public class GridFSFileService implements FileService {
                 metadata
         );
 
-        return File.create(this.findGridFSFileById(fileId.toString()));
+        GridFSFile gridFSFile = this.findGridFSFileByIdAndCreatedBy(fileId.toString(), user.getId());
+
+        return File.create(gridFSFile);
     }
 
-    public File findFileById(String id) throws IOException {
-        GridFsResource gridFsResource = this.gridFsOperations.getResource(this.findGridFSFileById(id));
+    public File findFileByIdForUser(String id, User user) throws IOException {
+        GridFsResource gridFsResource = this.gridFsOperations.getResource(
+                this.findGridFSFileByIdAndCreatedBy(id, user.getId())
+        );
 
         return File.create(gridFsResource);
     }
 
-    private GridFSFile findGridFSFileById(String id) {
-        User authenticatedUser = this.userService.getAuthenticatedUser().orElseThrow(FileOperationUnauthorizedException::new);
-
+    private GridFSFile findGridFSFileByIdAndCreatedBy(String id, String createdBy) {
         Query query = new Query().addCriteria(Criteria
                         .where("_id").is(id)
-                        .and("metadata.createdBy").is(authenticatedUser.getId())
+                        .and("metadata.createdBy").is(createdBy)
                 );
 
         GridFSFile gridFSFile = this.gridFsOperations.findOne(query);

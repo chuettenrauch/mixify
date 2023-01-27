@@ -1,7 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.integration.file.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
+import com.github.chuettenrauch.mixifyapi.file.service.FileService;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -34,7 +34,7 @@ class FileControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private FileService fileService;
 
     @Test
     void uploadFile_whenNotLoggedIn_returnUnauthorized() throws Exception {
@@ -58,7 +58,12 @@ class FileControllerTest {
     }
 
     @Test
+    @DirtiesContext
     void uploadFile_whenLoggedInButFileIsEmpty_returnBadRequest() throws Exception {
+        // given
+        User user = new User("123", "user", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        this.userRepository.save(user);
+
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "".getBytes());
 
         this.mvc.perform(multipart("/api/files")
@@ -137,7 +142,7 @@ class FileControllerTest {
         this.userRepository.saveAll(List.of(fileCreator, loggedInUser));
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.uploadFileWithUser(file, fileCreator);
+        File uploadedFile = this.fileService.saveFileForUser(file, fileCreator);
 
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
             "email", loggedInUser.getEmail()
@@ -162,7 +167,7 @@ class FileControllerTest {
         ), "email");
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.uploadFileWithUser(file, user);
+        File uploadedFile = this.fileService.saveFileForUser(file, user);
 
         this.mvc.perform(get("/api/files/" + uploadedFile.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
@@ -171,20 +176,4 @@ class FileControllerTest {
                 .andExpect(content().contentType("text/plain"));
     }
 
-    private File uploadFileWithUser(MockMultipartFile file, User user) throws Exception {
-        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
-                "email", user.getEmail()
-        ), "email");
-
-        String postResult = this.mvc.perform(multipart("/api/files")
-                        .file(file)
-                        .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        return objectMapper.readValue(postResult, File.class);
-    }
 }

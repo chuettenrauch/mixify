@@ -1,7 +1,10 @@
 package com.github.chuettenrauch.mixifyapi.file.controller;
 
+import com.github.chuettenrauch.mixifyapi.file.exception.FileOperationUnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.file.service.FileService;
+import com.github.chuettenrauch.mixifyapi.user.model.User;
+import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -17,15 +20,22 @@ import java.io.IOException;
 public class FileController {
 
     private final FileService fileService;
+    private final UserService userService;
 
     @PostMapping
     public File uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return this.fileService.saveFile(file);
+        User authenticatedUser = this.userService.getAuthenticatedUser()
+                .orElseThrow(FileOperationUnauthorizedException::new);
+
+        return this.fileService.saveFileForUser(file, authenticatedUser);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String id) throws IOException {
-        File file = this.fileService.findFileById(id);
+        User authenticatedUser = this.userService.getAuthenticatedUser()
+                .orElseThrow(FileOperationUnauthorizedException::new);
+
+        File file = this.fileService.findFileByIdForUser(id, authenticatedUser);
 
         return ResponseEntity
                 .ok()
