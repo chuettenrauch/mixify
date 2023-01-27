@@ -12,7 +12,7 @@ export default function MixtapeCard({mixtape}: {
     const mixtapeMenuOpen = Boolean(mixtapeMenu);
 
     return (
-      <Paper square={true} elevation={1} sx={{display: "flex", p: 2}}>
+      <Paper square={true} elevation={1} sx={{display: "flex", p: 2, position: "relative"}}>
           <Box sx={{border: 1, width: 150}}>
               <img src={`/api/files/${mixtape.image}`} alt={mixtape.title}/>
           </Box>
@@ -24,7 +24,7 @@ export default function MixtapeCard({mixtape}: {
                       aria-controls={mixtapeMenuOpen ? mixtapeMenuId : undefined}
                       aria-haspopup="true"
                       aria-expanded={mixtapeMenuOpen ? 'true' : undefined}
-                      sx={{alignSelf: "flex-start"}}>
+                      sx={{alignSelf: "flex-start", position: "absolute", top: 5, right: 0}}>
               <MoreVertIcon/>
           </IconButton>
 
