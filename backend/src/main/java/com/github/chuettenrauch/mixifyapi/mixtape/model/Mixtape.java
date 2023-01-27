@@ -2,6 +2,7 @@ package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.chuettenrauch.mixifyapi.file.validation.IsOwnedByAuthenticatedUser;
+import com.github.chuettenrauch.mixifyapi.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,5 +35,6 @@ public class Mixtape {
     private LocalDateTime createdAt;
 
     @CreatedBy
-    private String createdBy;
+    @DocumentReference(lazy = true)
+    private User createdBy;
 }

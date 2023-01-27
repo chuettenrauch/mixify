@@ -24,11 +24,11 @@ class AuditorProviderTest {
 
         // when
         AuditorProvider sut = new AuditorProvider(userService);
-        Optional<String> actual = sut.getCurrentAuditor();
+        Optional<User> actual = sut.getCurrentAuditor();
 
         // then
         assertTrue(actual.isPresent());
-        assertEquals(user.getId(), actual.get());
+        assertEquals(user, actual.get());
     }
 
     @Test
@@ -39,7 +39,7 @@ class AuditorProviderTest {
 
         // when
         AuditorProvider sut = new AuditorProvider(userService);
-        Optional<String> actual = sut.getCurrentAuditor();
+        Optional<User> actual = sut.getCurrentAuditor();
 
         // then
         assertTrue(actual.isEmpty());

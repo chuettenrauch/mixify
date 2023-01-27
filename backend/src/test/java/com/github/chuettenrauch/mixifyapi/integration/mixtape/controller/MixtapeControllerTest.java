@@ -69,9 +69,13 @@ class MixtapeControllerTest {
                     "title": "Best mixtape ever",
                     "description": "some nice description",
                     "image": "%s",
-                    "createdBy": "%s"
+                    "createdBy": {
+                        "id": "%s",
+                        "name": "%s",
+                        "imageUrl": "%s"
+                    }
                 }
-                """, uploadedFile.getId(), user.getId());
+                """, uploadedFile.getId(), user.getId(), user.getName(), user.getImageUrl());
 
         // when + then
         this.mvc.perform(post("/api/mixtapes")

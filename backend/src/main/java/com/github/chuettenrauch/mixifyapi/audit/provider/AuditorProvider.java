@@ -10,12 +10,12 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AuditorProvider implements AuditorAware<String> {
+public class AuditorProvider implements AuditorAware<User> {
 
     private final UserService userService;
 
     @Override
-    public Optional<String> getCurrentAuditor() {
-        return this.userService.getAuthenticatedUser().map(User::getId);
+    public Optional<User> getCurrentAuditor() {
+        return this.userService.getAuthenticatedUser();
     }
 }
