@@ -46,6 +46,18 @@ class MixtapeControllerTest {
     @DirtiesContext
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
+        String expectedJson = """
+                {
+                    "title": "Best mixtape ever",
+                    "description": "some nice description",
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    }
+                }
+                """;
+
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         this.userRepository.save(user);
 
@@ -63,19 +75,6 @@ class MixtapeControllerTest {
                     "image": "%s"
                 }
                 """, uploadedFile.getId());
-
-        String expectedJson = String.format("""
-                {
-                    "title": "Best mixtape ever",
-                    "description": "some nice description",
-                    "image": "%s",
-                    "createdBy": {
-                        "id": "%s",
-                        "name": "%s",
-                        "imageUrl": "%s"
-                    }
-                }
-                """, uploadedFile.getId(), user.getId(), user.getName(), user.getImageUrl());
 
         // when + then
         this.mvc.perform(post("/api/mixtapes")
