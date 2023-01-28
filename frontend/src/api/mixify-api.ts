@@ -1,6 +1,6 @@
 import User from "../types/user";
 import axios from "axios";
-import Mixtape from "../types/Mixtape";
+import Mixtape from "../types/mixtape";
 
 export namespace UserApi {
     const client = axios.create({

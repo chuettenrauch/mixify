@@ -1,4 +1,4 @@
-import Mixtape from "../types/Mixtape";
+import Mixtape from "../types/mixtape";
 import {
     Backdrop,
     Box,
@@ -12,11 +12,19 @@ import {
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
 import React from "react";
+import Track from "../types/track";
 
 const formatDate = (date: string) => {
     const formattedDate: Date = new Date(date);
 
     return formattedDate.toLocaleDateString("en", {month: "long", year: "numeric"})
+}
+
+const formatTrackNumberLabel = (tracks: Track[]) => {
+    const numText: string = tracks.length === 0 ? "No" : String(tracks.length);
+    const trackText: string = tracks.length === 1 ? "track" : "tracks";
+
+    return `${numText} ${trackText}`;
 }
 
 export default function MixtapeCard({mixtape}: {
@@ -37,7 +45,7 @@ export default function MixtapeCard({mixtape}: {
                   <Typography variant="h3">{mixtape.title}</Typography>
                   <Typography>{formatDate(mixtape.createdAt)}</Typography>
               </Container>
-              <Typography>No tracks</Typography>
+              <Typography>{formatTrackNumberLabel(mixtape.tracks)}</Typography>
           </Container>
           <IconButton onClick={(e) => setMixtapeMenu(e.currentTarget)}
                       aria-controls={mixtapeMenuOpen ? mixtapeMenuId : undefined}

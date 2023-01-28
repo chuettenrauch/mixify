@@ -1,5 +1,5 @@
 import {Container, Stack, Typography} from "@mui/material";
-import Mixtape from "../types/Mixtape";
+import Mixtape from "../types/mixtape";
 import {useEffect, useState} from "react";
 import {MixtapeApi} from "../api/mixify-api";
 import MixtapeCard from "../components/MixtapeCard";

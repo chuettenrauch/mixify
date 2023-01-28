@@ -1,4 +1,5 @@
 import User from "./user";
+import Track from "./track";
 
 type Mixtape = {
     id: string,
@@ -6,7 +7,8 @@ type Mixtape = {
     description: string,
     image: string,
     createdAt: string,
-    createdBy: User
+    createdBy: User,
+    tracks: Track[],
 }
 
 export default Mixtape;

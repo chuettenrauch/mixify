@@ -81,7 +81,8 @@ class MixtapeControllerTest {
                         "id": "%s",
                         "name": "%s",
                         "imageUrl": "%s"
-                    }
+                    },
+                    "tracks": []
                 }
                 """, uploadedFile.getId(), user.getId(), user.getName(), user.getImageUrl());
 
@@ -190,7 +191,8 @@ class MixtapeControllerTest {
                                     "id": "%s",
                                     "name": "%s",
                                     "imageUrl": "%s"
-                                }
+                                },
+                                "tracks": []
                             }
                         ]
                         """,
