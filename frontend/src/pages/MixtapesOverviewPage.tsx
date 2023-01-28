@@ -1,21 +1,13 @@
 import {Container, Fab, Stack, Typography} from "@mui/material";
-import Mixtape from "../types/mixtape";
-import {useEffect, useState} from "react";
-import {MixtapeApi} from "../api/mixify-api";
+import {useState} from "react";
 import MixtapeCard from "../components/MixtapeCard";
 import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
+import useMixtapes from "../hooks/useMixtapes";
 
 export default function MixtapesOverviewPage() {
-    const [mixtapes, setMixtapes] = useState<Mixtape[]>([]);
+    const [mixtapes] = useMixtapes();
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
-
-    useEffect(() => {
-        (async () => {
-            const mixtapes = await MixtapeApi.getMixtapes();
-            setMixtapes(mixtapes);
-        })();
-    }, []);
 
     const openMixtapeForm = () => {
         setIsMixtapeFormOpen(true);
