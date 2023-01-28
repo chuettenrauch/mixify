@@ -37,7 +37,7 @@ export default function MixtapeCard({mixtape}: {
 
     return (
       <Paper elevation={5} sx={{display: "flex", p: 2, position: "relative"}}>
-          <Box sx={{border: 1, p: 0}}>
+          <Box sx={{border: "1px solid grey", p: 0, lineHeight: 0}}>
               <img src={`/api/files/${mixtape.image}`} alt={mixtape.title} style={{objectFit: "cover", width: "100px", height: "100px"}}/>
           </Box>
           <Container sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 2}}>
