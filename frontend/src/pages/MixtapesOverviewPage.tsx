@@ -1,9 +1,10 @@
-import {Container, Fab, Stack, Typography} from "@mui/material";
+import {Container, Fab, Stack} from "@mui/material";
 import {useState} from "react";
 import MixtapeCard from "../components/MixtapeCard";
 import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
 import useMixtapes from "../hooks/useMixtapes";
+import PageHeader from "../components/PageHeader";
 
 export default function MixtapesOverviewPage() {
     const [mixtapes] = useMixtapes();
@@ -25,7 +26,7 @@ export default function MixtapesOverviewPage() {
             gap: 3,
             p: 0,
         }}>
-            <Typography variant="h1" component="h1" textTransform={"uppercase"}>Your Mixtapes</Typography>
+            <PageHeader title="Your Mixtapes"/>
 
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtapes.map(mixtape => (
