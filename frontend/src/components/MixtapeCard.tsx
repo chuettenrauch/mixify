@@ -38,23 +38,38 @@ export default function MixtapeCard({mixtape}: {
     return (
       <Paper elevation={5} sx={{display: "flex", p: 2, position: "relative"}}>
           <Box sx={{border: "1px solid grey", p: 0, lineHeight: 0}}>
-              <img src={`/api/files/${mixtape.image}`} alt={mixtape.title} style={{objectFit: "cover", width: "100px", height: "100px"}}/>
+              <img src={`/api/files/${mixtape.image}`} alt={mixtape.title} style={{
+                  objectFit: "cover",
+                  width: "100px",
+                  height: "100px"
+              }}/>
           </Box>
-          <Container sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 2}}>
+
+          <Container sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              p: 2}}
+          >
               <Container sx={{p: 0}}>
                   <Typography variant="h3">{mixtape.title}</Typography>
                   <Typography>{formatDate(mixtape.createdAt)}</Typography>
               </Container>
               <Typography>{formatTrackNumberLabel(mixtape.tracks)}</Typography>
           </Container>
+
           <IconButton onClick={(e) => setMixtapeMenu(e.currentTarget)}
                       aria-controls={mixtapeMenuOpen ? mixtapeMenuId : undefined}
                       aria-haspopup="true"
                       aria-expanded={mixtapeMenuOpen ? 'true' : undefined}
-                      sx={{alignSelf: "flex-start", position: "absolute", top: 5, right: 0}}>
+                      sx={{
+                          alignSelf: "flex-start",
+                          position: "absolute",
+                          top: (theme) => theme.spacing(1),
+                          right: 0
+          }}>
               <MoreVertIcon/>
           </IconButton>
-
           <Menu
               id={mixtapeMenuId}
               anchorEl={mixtapeMenu}
