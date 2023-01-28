@@ -16,22 +16,20 @@ export default function MixtapesOverviewPage() {
     }, []);
 
     return (
-        <>
-            <Container sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 3,
-                p: 0,
-            }}>
-                <Typography variant="h1" component="h1" textTransform={"uppercase"}>Your Mixtapes</Typography>
+        <Container sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 3,
+            p: 0,
+        }}>
+            <Typography variant="h1" component="h1" textTransform={"uppercase"}>Your Mixtapes</Typography>
 
-                <Stack spacing={2} sx={{width: "100%"}}>
-                    {mixtapes.map(mixtape => (
-                        <MixtapeCard key={mixtape.id} mixtape={mixtape}/>
-                    ))}
-                </Stack>
-            </Container>
+            <Stack spacing={2} sx={{width: "100%"}}>
+                {mixtapes.map(mixtape => (
+                    <MixtapeCard key={mixtape.id} mixtape={mixtape}/>
+                ))}
+            </Stack>
 
             <Fab color="primary" size="medium" aria-label="add" sx={{
                 position: "fixed",
@@ -40,6 +38,6 @@ export default function MixtapesOverviewPage() {
             }>
                 <AddIcon/>
             </Fab>
-        </>
+        </Container>
     );
 }
