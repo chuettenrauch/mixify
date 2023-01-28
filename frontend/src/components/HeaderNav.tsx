@@ -1,6 +1,6 @@
 import {
     AppBar,
-    Avatar,
+    Avatar, Backdrop,
     Box,
     Container,
     IconButton,
@@ -21,8 +21,8 @@ export default function HeaderNav() {
     const {user, setUser} = useUserContext();
     const navigate = useNavigate();
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+    const accountMenuOpen = Boolean(accountMenuAnchorEl);
 
     const onLogout = async () => {
         await UserApi.logout();
@@ -34,7 +34,7 @@ export default function HeaderNav() {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Container maxWidth="md">
                 <Toolbar disableGutters>
                     <Box sx={{ filter: "invert(1)", display: "flex", alignItems: "center"}}>
@@ -43,21 +43,21 @@ export default function HeaderNav() {
 
                     <Box sx={{ marginLeft: "auto" }}>
                         <IconButton
-                            onClick={(e) => setAnchorEl(e.currentTarget)}
+                            onClick={(e) => setAccountMenuAnchorEl(e.currentTarget)}
                             sx={{ p: 0 }}
-                            aria-controls={open ? 'account-menu' : undefined}
+                            aria-controls={accountMenuOpen ? 'account-menu' : undefined}
                             aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
+                            aria-expanded={accountMenuOpen ? 'true' : undefined}
                         >
                             <Avatar alt={user?.name} src={user?.imageUrl}/>
                         </IconButton>
 
                         <Menu
                             id="account-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={() => setAnchorEl(null)}
-                            onClick={() => setAnchorEl(null)}
+                            anchorEl={accountMenuAnchorEl}
+                            open={accountMenuOpen}
+                            onClose={() => setAccountMenuAnchorEl(null)}
+                            onClick={() => setAccountMenuAnchorEl(null)}
                         >
                             <MenuItem onClick={onLogout}>
                                 <ListItemIcon>
@@ -69,6 +69,7 @@ export default function HeaderNav() {
                     </Box>
                 </Toolbar>
             </Container>
+            <Backdrop open={accountMenuOpen} sx={{ zIndex: (theme) => theme.zIndex.appBar + 1 }}/>
         </AppBar>
     );
 }

@@ -62,7 +62,8 @@ class MixtapeControllerTest {
                         "id": "123",
                         "name": "alvin",
                         "imageUrl": "/path/to/image"
-                    }
+                    },
+                    "tracks": []
                 }
                 """;
 
@@ -175,7 +176,8 @@ class MixtapeControllerTest {
                                     "id": "123",
                                     "name": "alvin",
                                     "imageUrl": "/path/to/image"
-                                }
+                                },
+                                tracks: []
                             }
                         ]
                         """;
