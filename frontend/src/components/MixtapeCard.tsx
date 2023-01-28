@@ -11,20 +11,7 @@ import {
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
 import React from "react";
-import Track from "../types/track";
-
-const formatDate = (date: string) => {
-    const formattedDate: Date = new Date(date);
-
-    return formattedDate.toLocaleDateString("en", {month: "long", year: "numeric"})
-}
-
-const formatTrackNumberLabel = (tracks: Track[]) => {
-    const numText: string = tracks.length === 0 ? "No" : String(tracks.length);
-    const trackText: string = tracks.length === 1 ? "track" : "tracks";
-
-    return `${numText} ${trackText}`;
-}
+import MixtapeUtils from "../utils/mixtape-utils";
 
 export default function MixtapeCard({mixtape}: {
     mixtape: Mixtape
@@ -49,9 +36,9 @@ export default function MixtapeCard({mixtape}: {
                         sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 0}}>
                         <Container sx={{p: 0}}>
                             <Typography variant="h3">{mixtape.title}</Typography>
-                            <Typography>{formatDate(mixtape.createdAt)}</Typography>
+                            <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
                         </Container>
-                        <Typography>{formatTrackNumberLabel(mixtape.tracks)}</Typography>
+                        <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                     </Container>
                 </CardContent>
             </CardActionArea>
