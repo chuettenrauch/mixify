@@ -11,7 +11,7 @@ export default function MixtapeForm({open, onClose}: {
             open={open}
             aria-labelledby="modal-mixtape-form"
             aria-describedby="Form to create a new mixtape"
-            sx={{overflow: "scroll", zIndex: (theme) => theme.zIndex.appBar - 1}}
+            sx={{overflow: "scroll", zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
             <Container sx={{
                 paddingInline: 2,

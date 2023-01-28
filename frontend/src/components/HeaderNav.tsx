@@ -69,7 +69,7 @@ export default function HeaderNav() {
                     </Box>
                 </Toolbar>
             </Container>
-            <Backdrop open={accountMenuOpen} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}/>
+            <Backdrop open={accountMenuOpen} sx={{ zIndex: (theme) => theme.zIndex.appBar + 1 }}/>
         </AppBar>
     );
 }
