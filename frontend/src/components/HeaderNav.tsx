@@ -34,7 +34,7 @@ export default function HeaderNav() {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Container maxWidth="md">
                 <Toolbar disableGutters>
                     <Box sx={{ filter: "invert(1)", display: "flex", alignItems: "center"}}>
