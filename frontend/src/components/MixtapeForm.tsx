@@ -26,8 +26,9 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const mixtape: Mixtape = await MixtapeApi.createMixtape(mixtapeForm);
-        onSave(mixtape)
+        // @ToDo use PUT endpoint for update and setId to null on POST to ensure, that PUT endpoint is used
+        const savedMixtape: Mixtape = await MixtapeApi.createMixtape(mixtapeForm);
+        onSave(savedMixtape)
     };
 
     const onImageUpload = (fileMetadata: FileMetadata) => {
