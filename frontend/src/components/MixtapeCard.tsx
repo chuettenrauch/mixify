@@ -10,16 +10,30 @@ import {
     Typography
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React from "react";
+import React, {useState} from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
+import MixtapeForm from "./MixtapeForm";
 
 export default function MixtapeCard({mixtape}: {
     mixtape: Mixtape
 }) {
     const [mixtapeMenu, setMixtapeMenu] = React.useState<null | HTMLElement>(null);
+    const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
     const mixtapeMenuOpen = Boolean(mixtapeMenu);
+
+    const openMixtapeForm = () => {
+        setIsMixtapeFormOpen(true);
+    }
+
+    const closeMixtapeForm= () => {
+        setIsMixtapeFormOpen(false);
+    }
+
+    const editMixtape = (savedMixtape: Mixtape) => {
+        console.log(savedMixtape);
+    }
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
@@ -63,7 +77,7 @@ export default function MixtapeCard({mixtape}: {
                     onClose={() => setMixtapeMenu(null)}
                     onClick={() => setMixtapeMenu(null)}
                 >
-                    <MenuItem>
+                    <MenuItem onClick={openMixtapeForm}>
                         <ListItemIcon>
                             <EditIcon fontSize="small"/>
                         </ListItemIcon>
@@ -77,6 +91,8 @@ export default function MixtapeCard({mixtape}: {
                     </MenuItem>
                 </Menu>
             </CardActions>
+
+            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={editMixtape} onClose={closeMixtapeForm}/>
             <Backdrop open={mixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
         </Card>
     );

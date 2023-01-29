@@ -14,7 +14,8 @@ const initialMixtapeData = {
     image: "",
 }
 
-export default function MixtapeForm({mixtape, open, onSave, onClose}: {
+export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
+    title: string,
     mixtape?: Mixtape,
     open: boolean,
     onSave: (savedMixtape: Mixtape) => void,
@@ -64,9 +65,9 @@ export default function MixtapeForm({mixtape, open, onSave, onClose}: {
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title="Create Mixtape" onClose={onClose}/>
+                <FormHeader title={title} onClose={onClose}/>
 
-                <ImageUpload onUpload={onImageUpload}/>
+                <ImageUpload imageUrl={mixtape ? `/api/files/${mixtape.image}` : null} onUpload={onImageUpload}/>
 
                 <Stack
                     component="form"

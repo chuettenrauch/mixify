@@ -4,10 +4,11 @@ import React, {ChangeEvent, useState} from "react";
 import FileMetadata from "../types/file-metadata";
 import {FileApi} from "../api/mixify-api";
 
-export default function ImageUpload({onUpload}: {
+export default function ImageUpload({imageUrl = null, onUpload}: {
+    imageUrl: string|null,
     onUpload: (fileMetadata: FileMetadata) => void,
 }) {
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(imageUrl ?? null);
 
     const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const {files} = e.target;
