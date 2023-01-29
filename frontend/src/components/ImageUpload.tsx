@@ -1,6 +1,6 @@
 import {Container, IconButton, Skeleton, Stack} from "@mui/material";
 import {PhotoCamera as PhotoCameraIcon} from "@mui/icons-material";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useMemo, useState} from "react";
 import FileMetadata from "../types/file-metadata";
 import {FileApi} from "../api/mixify-api";
 
@@ -9,6 +9,15 @@ export default function ImageUpload({imageUrl = null, onUpload}: {
     onUpload: (fileMetadata: FileMetadata) => void,
 }) {
     const [imagePreview, setImagePreview] = useState<string | null>(imageUrl ?? null);
+
+    const fileReader: FileReader = useMemo<FileReader>(() => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            setImagePreview(reader.result as string);
+        }, false);
+
+        return reader;
+    }, []);
 
     const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const {files} = e.target;
@@ -20,14 +29,16 @@ export default function ImageUpload({imageUrl = null, onUpload}: {
 
         const fileToUpload: File = files[0];
 
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            setImagePreview(reader.result as string);
-        }, false);
+        showImagePreview(fileToUpload);
+        uploadFile(fileToUpload);
+    }
 
-        reader.readAsDataURL(fileToUpload);
+    const showImagePreview = (file: File) => {
+        fileReader.readAsDataURL(file);
+    }
 
-        const fileMetadata: FileMetadata = await FileApi.uploadFile(fileToUpload);
+    const uploadFile = async (file: File) => {
+        const fileMetadata: FileMetadata = await FileApi.uploadFile(file);
 
         onUpload(fileMetadata);
     }
