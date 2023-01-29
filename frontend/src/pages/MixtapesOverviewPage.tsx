@@ -6,9 +6,11 @@ import MixtapeForm from "../components/MixtapeForm";
 import useMixtapes from "../hooks/useMixtapes";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
+import {useNavigate} from "react-router-dom";
 
 export default function MixtapesOverviewPage() {
-    const [mixtapes, setMixtapes] = useMixtapes();
+    const navigate = useNavigate();
+    const [mixtapes] = useMixtapes();
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
 
     const openMixtapeForm = () => {
@@ -19,12 +21,8 @@ export default function MixtapesOverviewPage() {
         setIsMixtapeFormOpen(false);
     }
 
-    const addMixtape = (mixtape: Mixtape) => {
-        setMixtapes([...mixtapes, mixtape]);
-    }
-
-    const editMixtape = (editedMixtape: Mixtape) => {
-        setMixtapes(mixtapes.map(m => m.id === editedMixtape.id ? editedMixtape : m))
+    const navigateToMixtapeDetailPage = (mixtape: Mixtape) => {
+        navigate(`/mixtapes/${mixtape.id}`);
     }
 
     return (
@@ -39,7 +37,7 @@ export default function MixtapesOverviewPage() {
 
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtapes.map(mixtape => (
-                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={editMixtape}/>
+                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage}/>
                 ))}
             </Stack>
 
@@ -51,7 +49,7 @@ export default function MixtapesOverviewPage() {
                 <AddIcon/>
             </Fab>
 
-            <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={addMixtape} onClose={closeMixtapeForm}/>
+            <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={navigateToMixtapeDetailPage} onClose={closeMixtapeForm}/>
         </Container>
     );
 }
