@@ -7,6 +7,7 @@ import {Save as SaveIcon} from "@mui/icons-material";
 import {MixtapeApi} from "../api/mixify-api";
 import FileMetadata from "../types/file-metadata";
 import ImageUpload from "./ImageUpload";
+import {toast} from "react-toastify";
 
 const initialMixtapeData = {
     title: "",
@@ -28,7 +29,11 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
 
         // @ToDo use PUT endpoint for update and setId to null on POST to ensure, that PUT endpoint is used
         const savedMixtape: Mixtape = await MixtapeApi.createMixtape(mixtapeForm);
-        onSave(savedMixtape)
+
+        onSave(savedMixtape);
+        onClose();
+
+        toast.success("Successfully saved mixtape.");
     };
 
     const onImageUpload = (fileMetadata: FileMetadata) => {

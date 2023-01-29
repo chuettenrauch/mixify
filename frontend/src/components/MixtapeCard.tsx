@@ -14,8 +14,9 @@ import React, {useState} from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MixtapeForm from "./MixtapeForm";
 
-export default function MixtapeCard({mixtape}: {
-    mixtape: Mixtape
+export default function MixtapeCard({mixtape, onEdit}: {
+    mixtape: Mixtape,
+    onEdit: (savedMixtape: Mixtape) => void,
 }) {
     const [mixtapeMenu, setMixtapeMenu] = React.useState<null | HTMLElement>(null);
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
@@ -29,10 +30,6 @@ export default function MixtapeCard({mixtape}: {
 
     const closeMixtapeForm= () => {
         setIsMixtapeFormOpen(false);
-    }
-
-    const editMixtape = (savedMixtape: Mixtape) => {
-        console.log(savedMixtape);
     }
 
     return (
@@ -92,7 +89,7 @@ export default function MixtapeCard({mixtape}: {
                 </Menu>
             </CardActions>
 
-            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={editMixtape} onClose={closeMixtapeForm}/>
+            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={onEdit} onClose={closeMixtapeForm}/>
             <Backdrop open={mixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
         </Card>
     );

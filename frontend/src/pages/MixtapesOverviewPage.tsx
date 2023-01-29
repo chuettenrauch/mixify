@@ -19,9 +19,12 @@ export default function MixtapesOverviewPage() {
         setIsMixtapeFormOpen(false);
     }
 
-    const addMixtape = (savedMixtape: Mixtape) => {
-        setMixtapes([...mixtapes, savedMixtape]);
-        closeMixtapeForm();
+    const addMixtape = (mixtape: Mixtape) => {
+        setMixtapes([...mixtapes, mixtape]);
+    }
+
+    const editMixtape = (editedMixtape: Mixtape) => {
+        setMixtapes(mixtapes.map(m => m.id === editedMixtape.id ? editedMixtape : m))
     }
 
     return (
@@ -36,7 +39,7 @@ export default function MixtapesOverviewPage() {
 
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtapes.map(mixtape => (
-                    <MixtapeCard key={mixtape.id} mixtape={mixtape}/>
+                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={editMixtape}/>
                 ))}
             </Stack>
 
