@@ -5,9 +5,10 @@ import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
 import useMixtapes from "../hooks/useMixtapes";
 import PageHeader from "../components/PageHeader";
+import Mixtape from "../types/mixtape";
 
 export default function MixtapesOverviewPage() {
-    const [mixtapes] = useMixtapes();
+    const [mixtapes, setMixtapes] = useMixtapes();
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
 
     const openMixtapeForm = () => {
@@ -16,6 +17,11 @@ export default function MixtapesOverviewPage() {
 
     const closeMixtapeForm= () => {
         setIsMixtapeFormOpen(false);
+    }
+
+    const addMixtape = (savedMixtape: Mixtape) => {
+        setMixtapes([...mixtapes, savedMixtape]);
+        closeMixtapeForm();
     }
 
     return (
@@ -42,7 +48,7 @@ export default function MixtapesOverviewPage() {
                 <AddIcon/>
             </Fab>
 
-            <MixtapeForm open={isMixtapeFormOpen} onClose={closeMixtapeForm}/>
+            <MixtapeForm open={isMixtapeFormOpen} onSave={addMixtape} onClose={closeMixtapeForm}/>
         </Container>
     );
 }

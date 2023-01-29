@@ -14,9 +14,10 @@ const initialMixtapeData = {
     image: "",
 }
 
-export default function MixtapeForm({mixtape, open, onClose}: {
+export default function MixtapeForm({mixtape, open, onSave, onClose}: {
     mixtape?: Mixtape,
     open: boolean,
+    onSave: (savedMixtape: Mixtape) => void,
     onClose: () => void,
 }) {
     const [mixtapeForm, setMixtapeForm] = useState<Form.Mixtape>(mixtape ?? initialMixtapeData);
@@ -24,8 +25,8 @@ export default function MixtapeForm({mixtape, open, onClose}: {
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        await MixtapeApi.createMixtape(mixtapeForm);
-        onClose();
+        const mixtape: Mixtape = await MixtapeApi.createMixtape(mixtapeForm);
+        onSave(mixtape)
     };
 
     const onImageUpload = (fileMetadata: FileMetadata) => {
