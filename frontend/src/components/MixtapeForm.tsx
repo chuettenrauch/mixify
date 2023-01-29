@@ -1,6 +1,6 @@
-import {Container, IconButton, Modal, Typography} from "@mui/material";
-import {Close as CloseIcon} from "@mui/icons-material";
+import {Container, Modal} from "@mui/material";
 import React from "react";
+import FormHeader from "./FormHeader";
 
 export default function MixtapeForm({open, onClose}: {
     open: boolean
@@ -15,22 +15,13 @@ export default function MixtapeForm({open, onClose}: {
         >
             <Container sx={{
                 paddingInline: 2,
-                paddingBlock: 9,
+                paddingBlock: 10,
                 width: "100%",
                 height: "100vh",
                 bgcolor: 'background.paper',
                 position: "relative"
             }}>
-                <IconButton
-                    onClick={onClose}
-                    sx={{
-                        position: "absolute",
-                        top: (theme) => theme.spacing(8),
-                        right: (theme) => theme.spacing(1)
-                    }}>
-                    <CloseIcon/>
-                </IconButton>
-                <Typography variant="h1" component="h1" textTransform={"uppercase"}>Create Mixtape</Typography>
+                <FormHeader title="Create Mixtape" onClose={onClose}/>
             </Container>
         </Modal>
     );
