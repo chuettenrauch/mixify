@@ -48,6 +48,7 @@ export default function ImageUpload({imageUrl = null, onUpload}: {
             spacing={2}
             width="100%"
             maxWidth={(theme) => theme.breakpoints.values.sm}
+            sx={{position: "relative"}}
         >
             <Container sx={{height: 0, overflow: "hidden", paddingTop: "100%", position: "relative"}}>
                 {imagePreview
@@ -68,9 +69,18 @@ export default function ImageUpload({imageUrl = null, onUpload}: {
                 }
             </Container>
 
-            <IconButton aria-label="upload image" component="label" sx={{zIndex: 1}}>
+            <IconButton size="large" aria-label="upload image" component="label" sx={{
+                display: "block",
+                m: 0,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 1
+            }}>
                 <input hidden accept="image/*" type="file" onChange={onImageChange}/>
-                <PhotoCameraIcon/>
+                <PhotoCameraIcon sx={{width: "30%", height: "100%"}}/>
             </IconButton>
         </Stack>
     );

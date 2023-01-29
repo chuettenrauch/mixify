@@ -60,6 +60,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                 alignItems: "center",
                 paddingInline: 2,
                 paddingBlock: {xs: 9, sm: 10},
+                gap: 2,
                 width: "100%",
                 height: "100vh",
                 bgcolor: 'background.paper',
@@ -77,15 +78,6 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                     maxWidth={(theme) => theme.breakpoints.values.sm}
                     onSubmit={onSubmit}
                 >
-                    <input
-                        required
-                        readOnly
-                        hidden
-                        id="image"
-                        name="image"
-                        value={mixtapeForm.image}
-                    />
-
                     <TextField
                         required
                         variant="standard"
@@ -94,7 +86,6 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         value={mixtapeForm.title}
                         label="Title"
                         placeholder="Mixtape title"
-                        margin="normal"
                         onChange={onInputChange}
                     />
                     <TextField
@@ -109,6 +100,15 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         margin="normal"
                         onChange={onInputChange}
                     />
+                    <input
+                        required
+                        readOnly
+                        hidden
+                        id="image"
+                        name="image"
+                        value={mixtapeForm.image}
+                    />
+
                     <Button type="submit" variant="contained" startIcon={<SaveIcon/>}>
                         Save
                     </Button>
