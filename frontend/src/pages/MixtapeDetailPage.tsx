@@ -69,7 +69,7 @@ export default function MixtapeDetailPage() {
                 <AddIcon/>
             </Fab>
 
-            <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>
+            {isSearchTrackFormOpen && <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>}
         </Container>
     );
 }

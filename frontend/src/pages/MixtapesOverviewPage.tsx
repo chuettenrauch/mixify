@@ -45,7 +45,7 @@ export default function MixtapesOverviewPage() {
                 <AddIcon/>
             </Fab>
 
-            <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={navigateToMixtapeDetailPage} onClose={closeMixtapeForm}/>
+            {isMixtapeFormOpen && <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={navigateToMixtapeDetailPage} onClose={closeMixtapeForm}/>}
         </Container>
     );
 }
