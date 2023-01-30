@@ -3,6 +3,7 @@ import FormHeader from "./FormHeader";
 import React, {FormEvent, useState} from "react";
 import {Clear as ClearIcon, MusicNote as MusicNoteIcon, Search as SearchIcon} from "@mui/icons-material";
 import useSpotifyApi from "../hooks/useSpotifyApi";
+import SearchResultCard from "./SearchResultCard";
 
 export default function SearchTrackForm({open, onClose}: {
     open: boolean,
@@ -92,12 +93,12 @@ export default function SearchTrackForm({open, onClose}: {
                             track</Typography>
                         <Typography>Find the track you're looking for above.</Typography>
                     </Container>
-                    : <Container sx={{p: 0}}>
+                    : <Stack spacing={2} sx={{width: "100%"}}>
                         <Typography variant="h2" textTransform="uppercase">Results</Typography>
                         {searchResults.map(searchResult => (
-                            <p key={searchResult.id}>{searchResult.name}</p>
+                            <SearchResultCard key={searchResult.id} searchResult={searchResult}/>
                         ))}
-                    </Container>
+                    </Stack>
                 }
 
             </Container>
