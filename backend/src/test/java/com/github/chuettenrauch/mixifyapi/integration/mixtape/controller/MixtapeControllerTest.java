@@ -124,6 +124,34 @@ class MixtapeControllerTest {
 
     @Test
     @DirtiesContext
+    void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
+        File uploadedFile = this.fileService.saveFileForUser(file, user);
+
+        String givenJson = String.format("""
+                {
+                    "id": "123",
+                    "title": "Best mixtape ever",
+                    "description": "some nice description",
+                    "image": "%s"
+                }
+                """, uploadedFile.getId());
+
+        // when + then
+        this.mvc.perform(post("/api/mixtapes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @DirtiesContext
     void getAll_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
         this.mvc.perform(get("/api/mixtapes"))
                 .andExpect(status().isUnauthorized());
@@ -235,6 +263,11 @@ class MixtapeControllerTest {
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void update_whenNotLoggedIn_thenReturnUnauthorized() {
+
     }
 
     private OAuth2User createLoginUser() {
