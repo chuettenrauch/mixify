@@ -27,6 +27,11 @@ public class MixtapeController {
         return this.mixtapeService.findAllForAuthenticatedUser();
     }
 
+    @PutMapping("/{id}")
+    public Mixtape update(@PathVariable String id, @RequestBody Mixtape mixtape) {
+        return this.mixtapeService.updateById(id, mixtape);
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
         this.mixtapeService.deleteById(id);

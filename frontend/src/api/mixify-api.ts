@@ -42,6 +42,12 @@ export namespace MixtapeApi {
 
         return response.data;
     }
+
+    export async function updateMixtape(mixtape: Mixtape): Promise<Mixtape> {
+        const response = await client.put(`/${mixtape.id}`, mixtape);
+
+        return response.data;
+    }
 }
 
 export namespace FileApi {

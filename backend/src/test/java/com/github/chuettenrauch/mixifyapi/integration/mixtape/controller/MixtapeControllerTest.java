@@ -124,6 +124,34 @@ class MixtapeControllerTest {
 
     @Test
     @DirtiesContext
+    void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
+        File uploadedFile = this.fileService.saveFileForUser(file, user);
+
+        String givenJson = String.format("""
+                {
+                    "id": "123",
+                    "title": "Best mixtape ever",
+                    "description": "some nice description",
+                    "image": "%s"
+                }
+                """, uploadedFile.getId());
+
+        // when + then
+        this.mvc.perform(post("/api/mixtapes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @DirtiesContext
     void getAll_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
         this.mvc.perform(get("/api/mixtapes"))
                 .andExpect(status().isUnauthorized());
@@ -235,6 +263,118 @@ class MixtapeControllerTest {
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void update_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
+        this.mvc.perform(put("/api/mixtapes/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DirtiesContext
+    void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        String givenJson = """
+                {
+                    "id": "123",
+                    "title": "existing mixtape",
+                    "description": "description",
+                    "image": null,
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void update_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        User otherUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        this.userRepository.save(otherUser);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "description",
+                    "image": null,
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void update_whenLoggedInAndMixtapeExists_thenReturnOk() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);
+
+        String expectedJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "updated description",
+                    "image": null,
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/" + mixtape.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
     }
 
     private OAuth2User createLoginUser() {
