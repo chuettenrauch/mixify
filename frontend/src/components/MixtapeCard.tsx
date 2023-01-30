@@ -19,6 +19,7 @@ import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import useForm from "../hooks/useForm";
 import useMenu from "../hooks/useMenu";
+import {Link} from "react-router-dom";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -47,7 +48,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <CardActionArea sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
+            <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
                 <CardMedia
                     component="img"
                     image={`/api/files/${mixtape.image}`}
