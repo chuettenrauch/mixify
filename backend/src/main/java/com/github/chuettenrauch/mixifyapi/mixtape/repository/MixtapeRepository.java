@@ -13,4 +13,6 @@ public interface MixtapeRepository extends MongoRepository<Mixtape, String> {
     List<Mixtape> findAllByCreatedBy(User createdBy);
 
     Optional<Mixtape> findByIdAndCreatedBy(String id, User createdBy);
+
+    boolean existsByIdAndCreatedBy(String id, User createdBy);
 }

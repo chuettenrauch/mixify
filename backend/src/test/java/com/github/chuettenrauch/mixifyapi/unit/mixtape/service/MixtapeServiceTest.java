@@ -76,14 +76,18 @@ class MixtapeServiceTest {
     @Test
     void deleteById_whenNotLoggedIn_thenThrowUnauthorizedException() {
         // given
+        String id = "123";
         MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
 
         UserService userService = mock(UserService.class);
         when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
 
-        // when + then
+        // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(UnauthorizedException.class, () -> sut.deleteById("123"));
+        assertThrows(UnauthorizedException.class, () -> sut.deleteById(id));
+
+        // then
+        verify(mixtapeRepository, never()).deleteById(any());
     }
 
     @Test
@@ -96,11 +100,14 @@ class MixtapeServiceTest {
         when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
 
         MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
-        when(mixtapeRepository.findByIdAndCreatedBy(id, user)).thenReturn(Optional.empty());
+        when(mixtapeRepository.existsByIdAndCreatedBy(id, user)).thenReturn(false);
 
-        // when + then
+        // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
         assertThrows(MixtapeNotFoundException.class, () -> sut.deleteById("123"));
+
+        // then
+        verify(mixtapeRepository, never()).deleteById(any());
     }
 
     @Test
@@ -115,7 +122,7 @@ class MixtapeServiceTest {
         when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
 
         MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
-        when(mixtapeRepository.findByIdAndCreatedBy(mixtape.getId(), user)).thenReturn(Optional.of(mixtape));
+        when(mixtapeRepository.existsByIdAndCreatedBy(mixtape.getId(), user)).thenReturn(true);
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
