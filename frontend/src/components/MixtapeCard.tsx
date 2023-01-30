@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React, {useCallback} from "react";
+import React from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MixtapeForm from "./MixtapeForm";
 import ConfirmDialog from "./ConfirmDialog";
@@ -25,20 +25,25 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
-    const {isConfirmDialogOpen: isDeleteConfirmDialogOpen, openConfirmDialog: openDeleteConfirmDialog, closeConfirmDialog: closeDeleteConfirmDialog} = useConfirmDialog();
     const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
+    const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
+
+    const {
+        isConfirmDialogOpen: isDeleteConfirmDialogOpen,
+        openConfirmDialog: openDeleteConfirmDialog,
+        closeConfirmDialog: closeDeleteConfirmDialog
+    } = useConfirmDialog();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
 
-    const handleDeleteConfirmed = useCallback(async () => {
+    const handleDeleteConfirmed = async () => {
         await MixtapeApi.deleteMixtape(mixtape);
 
         onDelete(mixtape);
-        closeDeleteConfirmDialog();
-
         toast.success("Successfully deleted mixtape.");
-    }, [onDelete, mixtape, closeDeleteConfirmDialog]);
+
+        closeDeleteConfirmDialog();
+    };
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
@@ -99,9 +104,9 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
 
             <ConfirmDialog
                 open={isDeleteConfirmDialogOpen}
-                title={`Do you really want to delete the mixtape "${mixtape.title}"?`}
+                title={`Do you really want to delete your "${mixtape.title}" mixtape?`}
                 onCancel={closeDeleteConfirmDialog}
-               onConfirm={handleDeleteConfirmed}
+                onConfirm={handleDeleteConfirmed}
             />
 
             <MixtapeForm
