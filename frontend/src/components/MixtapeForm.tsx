@@ -22,12 +22,14 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
     onSave: (savedMixtape: Mixtape) => void,
     onClose: () => void,
 }) {
-    const [mixtapeForm, setMixtapeForm] = useState<Form.Mixtape>(mixtape ?? initialMixtapeData);
+    const [mixtapeForm, setMixtapeForm] = useState<Form.Mixtape | Mixtape>(mixtape ?? initialMixtapeData);
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const savedMixtape: Mixtape = await MixtapeApi.createMixtape(mixtapeForm);
+        const savedMixtape: Mixtape = mixtape
+            ? await MixtapeApi.updateMixtape(mixtapeForm as Mixtape)
+            : await MixtapeApi.createMixtape(mixtapeForm);
 
         onSave(savedMixtape);
         onClose();
