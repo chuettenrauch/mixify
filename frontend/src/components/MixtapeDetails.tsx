@@ -44,14 +44,16 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     return (
         <Container sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
             <Container sx={{display: "flex", width: "100%", p: 0, position: "relative"}}>
-                <CardMedia
-                    component="img"
-                    image={`/api/files/${mixtape.image}`}
-                    alt={mixtape.title}
-                    sx={{width: 130, height: 130, lineHeight: 0, border: "1px solid grey"}}
-                />
+                <Box sx={{flex: 1}}>
+                    <CardMedia
+                        component="img"
+                        image={`/api/files/${mixtape.image}`}
+                        alt={mixtape.title}
+                        sx={{width: 130, height: 130, lineHeight: 0, border: "1px solid grey", flex: 1}}
+                    />
+                </Box>
 
-                <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center", flexGrow: 1}}>
+                <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
                     <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                 </Container>
