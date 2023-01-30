@@ -17,6 +17,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import useConfirmDialog from "../hooks/useConfirmDialog";
 import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
+import useForm from "../hooks/useForm";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -24,20 +25,11 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
     const [mixtapeMenu, setMixtapeMenu] = useState<null | HTMLElement>(null);
-    const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
-
+    const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {isConfirmDialogOpen: isDeleteConfirmDialogOpen, openConfirmDialog: openDeleteConfirmDialog, closeConfirmDialog: closeDeleteConfirmDialog} = useConfirmDialog();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
     const mixtapeMenuOpen = Boolean(mixtapeMenu);
-
-    const openMixtapeForm = () => {
-        setIsMixtapeFormOpen(true);
-    }
-
-    const closeMixtapeForm = () => {
-        setIsMixtapeFormOpen(false);
-    }
 
     const handleDeleteConfirmed = useCallback(async () => {
         await MixtapeApi.deleteMixtape(mixtape);

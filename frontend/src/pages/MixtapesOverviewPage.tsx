@@ -1,5 +1,4 @@
 import {Container, Fab, Stack} from "@mui/material";
-import {useState} from "react";
 import MixtapeCard from "../components/MixtapeCard";
 import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
@@ -8,19 +7,12 @@ import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import {useNavigate} from "react-router-dom";
 import mixtape from "../types/mixtape";
+import useForm from "../hooks/useForm";
 
 export default function MixtapesOverviewPage() {
     const navigate = useNavigate();
     const [mixtapes, setMixtapes] = useMixtapes();
-    const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
-
-    const openMixtapeForm = () => {
-        setIsMixtapeFormOpen(true);
-    }
-
-    const closeMixtapeForm= () => {
-        setIsMixtapeFormOpen(false);
-    }
+    const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
 
     const navigateToMixtapeDetailPage = (mixtape: Mixtape) => {
         navigate(`/mixtapes/${mixtape.id}`);
