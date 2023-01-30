@@ -7,10 +7,11 @@ import useMixtapes from "../hooks/useMixtapes";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import {useNavigate} from "react-router-dom";
+import mixtape from "../types/mixtape";
 
 export default function MixtapesOverviewPage() {
     const navigate = useNavigate();
-    const [mixtapes] = useMixtapes();
+    const [mixtapes, setMixtapes] = useMixtapes();
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
 
     const openMixtapeForm = () => {
@@ -25,6 +26,10 @@ export default function MixtapesOverviewPage() {
         navigate(`/mixtapes/${mixtape.id}`);
     }
 
+    const removeMixtapeFromList = (deletedMixtape: mixtape) => {
+        setMixtapes(mixtapes.filter(mixtape => mixtape.id !== deletedMixtape.id));
+    }
+
     return (
         <Container sx={{
             display: "flex",
@@ -37,7 +42,7 @@ export default function MixtapesOverviewPage() {
 
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtapes.map(mixtape => (
-                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage}/>
+                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage} onDelete={removeMixtapeFromList}/>
                 ))}
             </Stack>
 
