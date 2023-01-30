@@ -8,12 +8,20 @@ import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
 import TrackCard from "../components/TrackCard";
+import SearchTrackForm from "../components/SearchTrackForm";
+import useForm from "../hooks/useForm";
 
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
     const {id} = useParams<{id: string}>();
 
     const {mixtape, setMixtape, loading, error} = useMixtape(id);
+
+    const {
+        isFormOpen: isSearchTrackFormOpen,
+        openForm: openSearchTrackForm,
+        closeForm: closeSearchTrackForm
+    } = useForm();
 
     const navigateToMixtapesOverviewPage = () => {
         navigate("/mixtapes");
@@ -53,7 +61,7 @@ export default function MixtapeDetailPage() {
                 }
             </Container>
 
-            <Fab color="primary" size="medium" aria-label="add track" sx={{
+            <Fab color="primary" size="medium" onClick={openSearchTrackForm} aria-label="add track" sx={{
                 position: "fixed",
                 bottom: (theme) => theme.spacing(9),
                 right: (theme) => theme.spacing(2)}
@@ -61,6 +69,7 @@ export default function MixtapeDetailPage() {
                 <AddIcon/>
             </Fab>
 
+            <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>
         </Container>
     );
 }
