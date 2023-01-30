@@ -21,7 +21,7 @@ export default function SearchTrackForm({open, onClose}: {
                 paddingBlock: {xs: 9, sm: 10},
                 gap: 2,
                 width: "100%",
-                height: "100vh",
+                height: window.innerHeight,
                 bgcolor: 'background.paper',
                 position: "relative",
                 overflow: "scroll"
