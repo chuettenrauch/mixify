@@ -16,13 +16,13 @@ import {UserApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import logo from "../logo.png";
+import useMenu from "../hooks/useMenu";
 
 export default function HeaderNav() {
     const {user, setUser} = useUserContext();
     const navigate = useNavigate();
 
-    const [accountMenuAnchorEl, setAccountMenuAnchorEl] = React.useState<null | HTMLElement>(null);
-    const accountMenuOpen = Boolean(accountMenuAnchorEl);
+    const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
 
     const onLogout = async () => {
         await UserApi.logout();
@@ -43,21 +43,21 @@ export default function HeaderNav() {
 
                     <Box sx={{ marginLeft: "auto" }}>
                         <IconButton
-                            onClick={(e) => setAccountMenuAnchorEl(e.currentTarget)}
+                            onClick={(e) => openMenu(e.currentTarget)}
                             sx={{ p: 0 }}
-                            aria-controls={accountMenuOpen ? 'account-menu' : undefined}
+                            aria-controls={isMenuOpen ? 'account-menu' : undefined}
                             aria-haspopup="true"
-                            aria-expanded={accountMenuOpen ? 'true' : undefined}
+                            aria-expanded={isMenuOpen ? 'true' : undefined}
                         >
                             <Avatar alt={user?.name} src={user?.imageUrl}/>
                         </IconButton>
 
                         <Menu
                             id="account-menu"
-                            anchorEl={accountMenuAnchorEl}
-                            open={accountMenuOpen}
-                            onClose={() => setAccountMenuAnchorEl(null)}
-                            onClick={() => setAccountMenuAnchorEl(null)}
+                            anchorEl={menuAnchorEl}
+                            open={isMenuOpen}
+                            onClose={closeMenu}
+                            onClick={closeMenu}
                         >
                             <MenuItem onClick={onLogout}>
                                 <ListItemIcon>
@@ -69,7 +69,7 @@ export default function HeaderNav() {
                     </Box>
                 </Toolbar>
             </Container>
-            <Backdrop open={accountMenuOpen} sx={{ zIndex: (theme) => theme.zIndex.appBar + 1 }}/>
+            <Backdrop open={isMenuOpen} sx={{ zIndex: (theme) => theme.zIndex.appBar + 1 }}/>
         </AppBar>
     );
 }
