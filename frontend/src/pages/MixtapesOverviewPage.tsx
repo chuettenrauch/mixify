@@ -6,7 +6,6 @@ import useMixtapes from "../hooks/useMixtapes";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import {useNavigate} from "react-router-dom";
-import mixtape from "../types/mixtape";
 import useForm from "../hooks/useForm";
 
 export default function MixtapesOverviewPage() {
@@ -18,7 +17,7 @@ export default function MixtapesOverviewPage() {
         navigate(`/mixtapes/${mixtape.id}`);
     }
 
-    const removeMixtapeFromList = (deletedMixtape: mixtape) => {
+    const removeMixtapeFromList = (deletedMixtape: Mixtape) => {
         setMixtapes(mixtapes.filter(mixtape => mixtape.id !== deletedMixtape.id));
     }
 
