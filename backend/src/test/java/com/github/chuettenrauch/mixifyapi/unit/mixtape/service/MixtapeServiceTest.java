@@ -153,6 +153,9 @@ class MixtapeServiceTest {
     @Test
     void updateById_whenNotLoggedIn_thenThrowUnauthorizedException() {
         // given
+        String id = "123";
+        Mixtape mixtape = new Mixtape();
+
         UserService userService = mock(UserService.class);
         when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
 
@@ -160,7 +163,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(UnauthorizedException.class, () -> sut.updateById("123", new Mixtape()));
+        assertThrows(UnauthorizedException.class, () -> sut.updateById(id, mixtape));
 
         // then
         verify(mixtapeRepository, never()).save(any());
@@ -169,6 +172,8 @@ class MixtapeServiceTest {
     @Test
     void updateById_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowMixtapeNotFoundException() {
         // given
+        String id = "123";
+        Mixtape mixtape = new Mixtape();
         User user = new User();
 
         UserService userService = mock(UserService.class);
@@ -179,7 +184,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.updateById("123", new Mixtape()));
+        assertThrows(MixtapeNotFoundException.class, () -> sut.updateById(id, mixtape));
 
         // then
         verify(mixtapeRepository, never()).save(any());
