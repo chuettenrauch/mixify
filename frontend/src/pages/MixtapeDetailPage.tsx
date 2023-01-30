@@ -7,6 +7,7 @@ import {Container, Divider, Fab, Typography} from "@mui/material";
 import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
+import TrackCard from "../components/TrackCard";
 
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
@@ -46,7 +47,9 @@ export default function MixtapeDetailPage() {
                         <Typography>Your mixtape has no tracks yet.</Typography>
                         <Typography sx={{display: "flex", alignItems: "center"}}><InfoIcon color="primary"/> You can add up to 12 tracks.</Typography>
                     </>
-                    : <></>
+                    : mixtape.tracks.map(track => (
+                        <TrackCard track={track}/>
+                    ))
                 }
             </Container>
 
