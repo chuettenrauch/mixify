@@ -37,6 +37,12 @@ export namespace MixtapeApi {
         return response.data;
     }
 
+    export async function deleteMixtape(mixtape: Mixtape): Promise<any> {
+        const response = await client.delete(`/${mixtape.id}`);
+
+        return response.data;
+    }
+
     export async function updateMixtape(mixtape: Mixtape): Promise<Mixtape> {
         const response = await client.put(`/${mixtape.id}`, mixtape);
 
