@@ -10,16 +10,23 @@ import {
     Typography
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MixtapeForm from "./MixtapeForm";
+import ConfirmDialog from "./ConfirmDialog";
+import useConfirmDialog from "../hooks/useConfirmDialog";
+import {MixtapeApi} from "../api/mixify-api";
+import {toast} from "react-toastify";
 
-export default function MixtapeCard({mixtape, onEdit}: {
+export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
+    onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const [mixtapeMenu, setMixtapeMenu] = React.useState<null | HTMLElement>(null);
+    const [mixtapeMenu, setMixtapeMenu] = useState<null | HTMLElement>(null);
     const [isMixtapeFormOpen, setIsMixtapeFormOpen] = useState(false);
+
+    const {isConfirmDialogOpen: isDeleteConfirmDialogOpen, openConfirmDialog: openDeleteConfirmDialog, closeConfirmDialog: closeDeleteConfirmDialog} = useConfirmDialog();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
     const mixtapeMenuOpen = Boolean(mixtapeMenu);
@@ -28,9 +35,18 @@ export default function MixtapeCard({mixtape, onEdit}: {
         setIsMixtapeFormOpen(true);
     }
 
-    const closeMixtapeForm= () => {
+    const closeMixtapeForm = () => {
         setIsMixtapeFormOpen(false);
     }
+
+    const handleDeleteConfirmed = useCallback(async () => {
+        await MixtapeApi.deleteMixtape(mixtape);
+
+        onDelete(mixtape);
+        closeDeleteConfirmDialog();
+
+        toast.success("Successfully deleted mixtape.");
+    }, [onDelete, mixtape, closeDeleteConfirmDialog]);
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
@@ -80,7 +96,7 @@ export default function MixtapeCard({mixtape, onEdit}: {
                         </ListItemIcon>
                         Edit
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={openDeleteConfirmDialog}>
                         <ListItemIcon>
                             <CloseIcon fontSize="small"/>
                         </ListItemIcon>
@@ -89,7 +105,15 @@ export default function MixtapeCard({mixtape, onEdit}: {
                 </Menu>
             </CardActions>
 
-            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={onEdit} onClose={closeMixtapeForm}/>
+            <ConfirmDialog
+                open={isDeleteConfirmDialogOpen}
+                title={`Do you really want to delete the mixtape "${mixtape.title}"?`}
+                onCancel={closeDeleteConfirmDialog}
+               onConfirm={handleDeleteConfirmed}
+            />
+
+            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={onEdit}
+                         onClose={closeMixtapeForm}/>
             <Backdrop open={mixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
         </Card>
     );
