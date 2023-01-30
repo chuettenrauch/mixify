@@ -312,7 +312,7 @@ class MixtapeControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.createLoginUser(user);
 
-        User otherUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
         this.userRepository.save(otherUser);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
@@ -371,6 +371,77 @@ class MixtapeControllerTest {
         this.mvc.perform(put("/api/mixtapes/" + mixtape.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expectedJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
+    }
+
+    @Test
+    void get_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
+        this.mvc.perform(get("/api/mixtapes/123"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DirtiesContext
+    void get_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
+        // given
+        OAuth2User oAuth2User = this.createLoginUser();
+
+        // when + then
+        this.mvc.perform(get("/api/mixtapes/123")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void get_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+        // given
+        OAuth2User oAuth2User = this.createLoginUser();
+
+        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
+        this.userRepository.save(otherUser);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtape);
+
+        // when + then
+        this.mvc.perform(get("/api/mixtapes/" + mixtape.getId())
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void get_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
+        // given
+        String expectedJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "existing description",
+                    "image": null,
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.createLoginUser(user);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);
+
+        // when + then
+        this.mvc.perform(get("/api/mixtapes/" + mixtape.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isOk())
