@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React, {useCallback, useState} from "react";
+import React, {useCallback} from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MixtapeForm from "./MixtapeForm";
 import ConfirmDialog from "./ConfirmDialog";
@@ -18,18 +18,18 @@ import useConfirmDialog from "../hooks/useConfirmDialog";
 import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import useForm from "../hooks/useForm";
+import useMenu from "../hooks/useMenu";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const [mixtapeMenu, setMixtapeMenu] = useState<null | HTMLElement>(null);
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {isConfirmDialogOpen: isDeleteConfirmDialogOpen, openConfirmDialog: openDeleteConfirmDialog, closeConfirmDialog: closeDeleteConfirmDialog} = useConfirmDialog();
+    const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
-    const mixtapeMenuOpen = Boolean(mixtapeMenu);
 
     const handleDeleteConfirmed = useCallback(async () => {
         await MixtapeApi.deleteMixtape(mixtape);
@@ -63,10 +63,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             </CardActionArea>
 
             <CardActions>
-                <IconButton onClick={(e) => setMixtapeMenu(e.currentTarget)}
-                            aria-controls={mixtapeMenuOpen ? mixtapeMenuId : undefined}
+                <IconButton onClick={(e) => openMenu(e.currentTarget)}
+                            aria-controls={isMenuOpen ? mixtapeMenuId : undefined}
                             aria-haspopup="true"
-                            aria-expanded={mixtapeMenuOpen ? 'true' : undefined}
+                            aria-expanded={isMenuOpen ? 'true' : undefined}
                             sx={{
                                 alignSelf: "flex-start",
                                 position: "absolute",
@@ -77,10 +77,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 </IconButton>
                 <Menu
                     id={mixtapeMenuId}
-                    anchorEl={mixtapeMenu}
-                    open={mixtapeMenuOpen}
-                    onClose={() => setMixtapeMenu(null)}
-                    onClick={() => setMixtapeMenu(null)}
+                    anchorEl={menuAnchorEl}
+                    open={isMenuOpen}
+                    onClose={closeMenu}
+                    onClick={closeMenu}
                 >
                     <MenuItem onClick={openMixtapeForm}>
                         <ListItemIcon>
@@ -104,9 +104,15 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                onConfirm={handleDeleteConfirmed}
             />
 
-            <MixtapeForm title="Edit mixtape" open={isMixtapeFormOpen} mixtape={mixtape} onSave={onEdit}
-                         onClose={closeMixtapeForm}/>
-            <Backdrop open={mixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+            <MixtapeForm
+                title="Edit mixtape"
+                open={isMixtapeFormOpen}
+                mixtape={mixtape}
+                onSave={onEdit}
+                onClose={closeMixtapeForm}
+            />
+
+            <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
         </Card>
     );
 }
