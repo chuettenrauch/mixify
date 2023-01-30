@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
+import com.github.chuettenrauch.mixifyapi.mixtape.exception.MixtapeNotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
@@ -26,5 +27,15 @@ public class MixtapeService {
         User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 
         return this.mixtapeRepository.findAllByCreatedBy(user);
+    }
+
+    public void deleteById(String id) {
+        User user = this.userService.getAuthenticatedUser()
+                .orElseThrow(UnauthorizedException::new);
+
+        Mixtape mixtape = this.mixtapeRepository.findByIdAndCreatedBy(id, user)
+                .orElseThrow(MixtapeNotFoundException::new);
+
+        this.mixtapeRepository.deleteById(mixtape.getId());
     }
 }

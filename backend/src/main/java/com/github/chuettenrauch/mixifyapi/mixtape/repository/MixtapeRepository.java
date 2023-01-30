@@ -6,8 +6,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MixtapeRepository extends MongoRepository<Mixtape, String> {
     List<Mixtape> findAllByCreatedBy(User createdBy);
+
+    Optional<Mixtape> findByIdAndCreatedBy(String id, User createdBy);
 }
