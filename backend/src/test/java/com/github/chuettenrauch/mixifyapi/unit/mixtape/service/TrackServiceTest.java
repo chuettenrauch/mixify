@@ -284,7 +284,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void deleteByIdForMixtape_whenTrackExistsOnMixtape_thenDelete() {
+    void deleteByIdForMixtape_whenTrackExistsOnMixtape_thenDeleteAndUpdateMixtape() {
         // given
         Track track = new Track();
         track.setId("234");
@@ -305,5 +305,6 @@ class TrackServiceTest {
 
         // then
         verify(trackRepository).deleteById(track.getId());
+        verify(mixtapeService).updateById(mixtapeWithTrack.getId(), mixtapeWithTrack);
     }
 }
