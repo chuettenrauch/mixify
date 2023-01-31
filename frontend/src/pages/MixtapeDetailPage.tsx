@@ -3,13 +3,14 @@ import React from "react";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import MixtapeDetails from "../components/MixtapeDetails";
-import {Container, Divider, Fab, Typography} from "@mui/material";
+import {Container, Divider, Fab, Stack, Typography} from "@mui/material";
 import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
 import TrackCard from "../components/TrackCard";
 import SearchTrackForm from "../components/SearchTrackForm";
 import useForm from "../hooks/useForm";
+import MessageContainer from "../components/MessageContainer";
 
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
@@ -49,17 +50,18 @@ export default function MixtapeDetailPage() {
             <Divider sx={{width: "100%"}}/>
 
             <Typography variant="h2" component="h2" textTransform={"uppercase"}>Tracks</Typography>
-            <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: 200}}>
+
+            <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtape.tracks.length === 0
-                    ? <>
+                    ? <MessageContainer minHeight={200}>
                         <Typography>Your mixtape has no tracks yet.</Typography>
                         <Typography sx={{display: "flex", alignItems: "center"}}><InfoIcon color="primary"/> You can add up to 12 tracks.</Typography>
-                    </>
+                    </MessageContainer>
                     : mixtape.tracks.map(track => (
                         <TrackCard key={track.id} track={track}/>
                     ))
                 }
-            </Container>
+            </Stack>
 
             <Fab color="primary" size="medium" onClick={openSearchTrackForm} aria-label="add track" sx={{
                 position: "fixed",
