@@ -24,8 +24,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -211,6 +210,9 @@ class TrackControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
         Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
 
@@ -265,5 +267,79 @@ class TrackControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(givenJson));
+    }
+
+    @Test
+    void delete_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/123"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void delete_whenMixtapeNotFound_thenReturnNotFound() throws Exception {
+        // given
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+        // given
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_whenTrackExists_thenReturnOk() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isOk());
     }
 }

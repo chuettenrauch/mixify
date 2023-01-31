@@ -32,4 +32,10 @@ public class Mixtape {
     @CreatedBy
     @DocumentReference(lazy = true)
     private User createdBy;
+
+    public boolean hasTrackWithId(String id) {
+        return this.getTracks()
+                .stream()
+                .anyMatch(t -> t.getId() != null && t.getId().equals(id));
+    }
 }
