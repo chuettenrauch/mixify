@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.service;
 
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.TrackRepository;
@@ -16,11 +17,23 @@ public class TrackService {
     public Track saveForMixtape(String mixtapeId, Track track) {
         Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
 
-        this.trackRepository.save(track);
+        Track savedTrack = this.trackRepository.save(track);
 
         mixtape.getTracks().add(track);
         this.mixtapeService.updateById(mixtape.getId(), mixtape);
 
-        return track;
+        return savedTrack;
     }
+
+    public Track updateByIdForMixtape(String mixtapeId, String id, Track track) {
+        track.setId(id);
+        this.mixtapeService.findById(mixtapeId);
+
+        if (!this.trackRepository.existsById(track.getId())) {
+            throw new NotFoundException();
+        }
+
+        return this.trackRepository.save(track);
+    }
+
 }

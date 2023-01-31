@@ -16,4 +16,9 @@ public class TrackController {
     public Track create(@PathVariable String mixtapeId, @RequestBody Track track) {
         return this.trackService.saveForMixtape(mixtapeId, track);
     }
+
+    @PutMapping("/{id}")
+    public Track update(@PathVariable String mixtapeId, @PathVariable String id, @RequestBody Track track) {
+        return this.trackService.updateByIdForMixtape(mixtapeId, id, track);
+    }
 }
