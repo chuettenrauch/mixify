@@ -23,6 +23,8 @@ public class File {
     private long size;
     private String createdBy;
 
+    private String url;
+
     @JsonIgnore
     private InputStream content;
 
@@ -32,6 +34,7 @@ public class File {
         this.contentType = contentType;
         this.size = size;
         this.createdBy = createdBy;
+        this.url = String.format("/api/files/%s", this.id);
     }
 
     public static File create(GridFsResource gridFsResource) throws IOException {

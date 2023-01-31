@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -82,14 +82,14 @@ class FileControllerTest {
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
 
-        String expectedJson = String.format("""
+        String expectedJson = """
                 {
-                    "fileName": "%s",
-                    "contentType": "%s",
-                    "size": %d,
-                    "createdBy" : "%s"
+                    "fileName": "file.txt",
+                    "contentType": "text/plain",
+                    "size": 10,
+                    "createdBy" : "123"
                 }
-                """, file.getOriginalFilename(), file.getContentType(), file.getSize(), user.getId());
+                """;
 
         // when + then
         this.mvc.perform(multipart("/api/files")
@@ -98,7 +98,8 @@ class FileControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson))
-                .andExpect(jsonPath("$.id", notNullValue()));
+                .andExpect(jsonPath("$.id", notNullValue()))
+                .andExpect(jsonPath("$.url", matchesPattern("/api/files/[\\w]+")));
     }
 
     @Test

@@ -54,19 +54,6 @@ class MixtapeControllerTest {
     @DirtiesContext
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
-        String expectedJson = """
-                {
-                    "title": "Best mixtape ever",
-                    "description": "some nice description",
-                    "createdBy": {
-                        "id": "123",
-                        "name": "alvin",
-                        "imageUrl": "/path/to/image"
-                    },
-                    "tracks": []
-                }
-                """;
-
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.createLoginUser(user);
 
@@ -77,7 +64,21 @@ class MixtapeControllerTest {
                 {
                     "title": "Best mixtape ever",
                     "description": "some nice description",
-                    "image": "%s"
+                    "imageUrl": "/api/files/%s"
+                }
+                """, uploadedFile.getId());
+
+        String expectedJson = String.format("""
+                {
+                    "title": "Best mixtape ever",
+                    "description": "some nice description",
+                    "imageUrl": "/api/files/%s",
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
                 }
                 """, uploadedFile.getId());
 
@@ -95,35 +96,6 @@ class MixtapeControllerTest {
 
     @Test
     @DirtiesContext
-    void create_whenImageDoesNotBelongToLoggedInUser_thenReturnBadRequest() throws Exception {
-        // given
-        User fileOwner = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(fileOwner);
-
-        OAuth2User oAuth2User = this.createLoginUser();
-
-        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.fileService.saveFileForUser(file, fileOwner);
-
-        String givenJson = String.format("""
-                {
-                    "title": "Best mixtape ever",
-                    "description": "some nice description",
-                    "image": "%s"
-                }
-                """, uploadedFile.getId());
-
-        // when + then
-        this.mvc.perform(post("/api/mixtapes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(givenJson)
-                        .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DirtiesContext
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
@@ -137,7 +109,7 @@ class MixtapeControllerTest {
                     "id": "123",
                     "title": "Best mixtape ever",
                     "description": "some nice description",
-                    "image": "%s"
+                    "imageUrl": "/api/files/%s"
                 }
                 """, uploadedFile.getId());
 
@@ -187,7 +159,7 @@ class MixtapeControllerTest {
                                 "id": "123",
                                 "title": "mixtape of logged in user",
                                 "description": "description",
-                                "image": null,
+                                "imageUrl": "/path/to/mixtape/image",
                                 "createdBy": {
                                     "id": "123",
                                     "name": "alvin",
@@ -204,7 +176,7 @@ class MixtapeControllerTest {
         User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
         this.userRepository.save(otherUser);
 
-        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", null, new ArrayList<>(), LocalDateTime.now(), loggedInUser);
+        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), loggedInUser);
         Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
 
         this.mixtapeRepository.saveAll(List.of(mixtapeOfLoggedInUser, mixtapeOfOtherUser));
@@ -349,7 +321,7 @@ class MixtapeControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
 
         String expectedJson = """
@@ -357,7 +329,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "updated description",
-                    "image": null,
+                    "imageUrl": "/path/to/mixtape/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -424,7 +396,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "existing description",
-                    "image": null,
+                    "imageUrl": "/path/to/mixtape/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -437,7 +409,7 @@ class MixtapeControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
 
         // when + then

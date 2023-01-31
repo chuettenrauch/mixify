@@ -1,6 +1,5 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
-import com.github.chuettenrauch.mixifyapi.file.validation.IsOwnedByAuthenticatedUser;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +21,7 @@ public class Mixtape {
     private String id;
     private String title;
     private String description;
-
-    @IsOwnedByAuthenticatedUser
-    private String image;
+    private String imageUrl;
 
     @DocumentReference(lazy = true)
     private List<Track> tracks = new ArrayList<>();
