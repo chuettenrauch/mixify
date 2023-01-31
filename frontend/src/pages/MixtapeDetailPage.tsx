@@ -56,7 +56,7 @@ export default function MixtapeDetailPage() {
                         <Typography sx={{display: "flex", alignItems: "center"}}><InfoIcon color="primary"/> You can add up to 12 tracks.</Typography>
                     </>
                     : mixtape.tracks.map(track => (
-                        <TrackCard track={track}/>
+                        <TrackCard key={track.id} track={track}/>
                     ))
                 }
             </Container>
@@ -69,7 +69,7 @@ export default function MixtapeDetailPage() {
                 <AddIcon/>
             </Fab>
 
-            <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>
+            {isSearchTrackFormOpen && <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>}
         </Container>
     );
 }

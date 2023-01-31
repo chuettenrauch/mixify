@@ -91,22 +91,28 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                     </MenuItem>
                 </Menu>
 
-                <ConfirmDialog
+                {isDeleteConfirmDialogOpen &&
+                  <ConfirmDialog
                     open={isDeleteConfirmDialogOpen}
                     title={`Do you really want to delete your "${mixtape.title}" mixtape?`}
                     onCancel={closeDeleteConfirmDialog}
                     onConfirm={handleDeleteConfirmed}
-                />
+                  />
+                }
 
-                <MixtapeForm
+                {isMixtapeFormOpen &&
+                  <MixtapeForm
                     title="Edit mixtape"
                     open={isMixtapeFormOpen}
                     mixtape={mixtape}
                     onSave={onEdit}
                     onClose={closeMixtapeForm}
-                />
+                  />
+                }
 
-                <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+                {isMenuOpen &&
+                  <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+                }
             </Container>
 
             <Box>
