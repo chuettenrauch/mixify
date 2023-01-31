@@ -21,4 +21,9 @@ public class TrackController {
     public Track update(@PathVariable String mixtapeId, @PathVariable String id, @RequestBody Track track) {
         return this.trackService.updateByIdForMixtape(mixtapeId, id, track);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable String mixtapeId, @PathVariable String id) {
+        this.trackService.deleteByIdForMixtape(mixtapeId, id);
+    }
 }

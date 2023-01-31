@@ -27,13 +27,25 @@ public class TrackService {
 
     public Track updateByIdForMixtape(String mixtapeId, String id, Track track) {
         track.setId(id);
-        this.mixtapeService.findById(mixtapeId);
+        Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
 
-        if (!this.trackRepository.existsById(track.getId())) {
+        if (!mixtape.hasTrackWithId(track.getId()) || !this.trackRepository.existsById(id)) {
             throw new NotFoundException();
         }
 
         return this.trackRepository.save(track);
     }
 
+    public void deleteByIdForMixtape(String mixtapeId, String id) {
+        Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
+
+        if (!mixtape.hasTrackWithId(id) || !this.trackRepository.existsById(id)) {
+            throw new NotFoundException();
+        }
+
+        this.trackRepository.deleteById(id);
+
+        mixtape.removeTrackWithId(id);
+        this.mixtapeService.updateById(mixtape.getId(), mixtape);
+    }
 }
