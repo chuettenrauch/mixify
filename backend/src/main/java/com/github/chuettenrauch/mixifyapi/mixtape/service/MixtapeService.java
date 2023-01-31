@@ -2,7 +2,7 @@ package com.github.chuettenrauch.mixifyapi.mixtape.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException;
-import com.github.chuettenrauch.mixifyapi.mixtape.exception.MixtapeNotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
@@ -39,7 +39,7 @@ public class MixtapeService {
                 .orElseThrow(UnauthorizedException::new);
 
         if (!this.mixtapeRepository.existsByIdAndCreatedBy(id, user)) {
-            throw new MixtapeNotFoundException();
+            throw new NotFoundException();
         }
 
         mixtape.setId(id);
@@ -52,7 +52,7 @@ public class MixtapeService {
                 .orElseThrow(UnauthorizedException::new);
 
         if (!this.mixtapeRepository.existsByIdAndCreatedBy(id, user)) {
-            throw new MixtapeNotFoundException();
+            throw new NotFoundException();
         }
 
         this.mixtapeRepository.deleteById(id);
@@ -63,6 +63,6 @@ public class MixtapeService {
                 .orElseThrow(UnauthorizedException::new);
 
         return this.mixtapeRepository.findByIdAndCreatedBy(id, user)
-                .orElseThrow(MixtapeNotFoundException::new);
+                .orElseThrow(NotFoundException::new);
     }
 }

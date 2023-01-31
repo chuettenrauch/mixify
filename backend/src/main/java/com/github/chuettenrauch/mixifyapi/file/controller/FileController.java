@@ -1,6 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.file.controller;
 
-import com.github.chuettenrauch.mixifyapi.file.exception.FileOperationUnauthorizedException;
+import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.file.service.FileService;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
@@ -25,7 +25,7 @@ public class FileController {
     @PostMapping
     public File uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         User authenticatedUser = this.userService.getAuthenticatedUser()
-                .orElseThrow(FileOperationUnauthorizedException::new);
+                .orElseThrow(UnauthorizedException::new);
 
         return this.fileService.saveFileForUser(file, authenticatedUser);
     }
@@ -33,7 +33,7 @@ public class FileController {
     @GetMapping("/{id}")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String id) throws IOException {
         User authenticatedUser = this.userService.getAuthenticatedUser()
-                .orElseThrow(FileOperationUnauthorizedException::new);
+                .orElseThrow(UnauthorizedException::new);
 
         File file = this.fileService.findFileByIdForUser(id, authenticatedUser);
 

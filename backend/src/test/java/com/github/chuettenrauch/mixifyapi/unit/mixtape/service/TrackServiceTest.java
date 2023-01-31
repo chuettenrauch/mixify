@@ -1,7 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.unit.mixtape.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
-import com.github.chuettenrauch.mixifyapi.mixtape.exception.MixtapeNotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.TrackRepository;
@@ -36,7 +36,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void saveForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowMixtapeNotFoundException() {
+    void saveForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowNotFoundException() {
         // given
         String mixtapeId = "123";
         Track track = new Track();
@@ -44,11 +44,11 @@ class TrackServiceTest {
         TrackRepository trackRepository = mock(TrackRepository.class);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(MixtapeNotFoundException.class);
+        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.saveForMixtape(mixtapeId, track));
+        assertThrows(NotFoundException.class, () -> sut.saveForMixtape(mixtapeId, track));
 
         // then
         verify(trackRepository, never()).save(any());

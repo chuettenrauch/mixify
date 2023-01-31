@@ -2,7 +2,7 @@ package com.github.chuettenrauch.mixifyapi.unit.mixtape.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException;
-import com.github.chuettenrauch.mixifyapi.mixtape.exception.MixtapeNotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
@@ -109,7 +109,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void deleteById_whenMixtapeDoesNotExistOrDoesNotBelongToUser_thenThrowMixtapeNotFoundException() {
+    void deleteById_whenMixtapeDoesNotExistOrDoesNotBelongToUser_thenThrowNotFoundException() {
         // given
         String id = "123";
         User user = new User();
@@ -122,7 +122,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.deleteById("123"));
+        assertThrows(NotFoundException.class, () -> sut.deleteById("123"));
 
         // then
         verify(mixtapeRepository, never()).deleteById(any());
@@ -170,7 +170,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void updateById_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowMixtapeNotFoundException() {
+    void updateById_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowNotFoundException() {
         // given
         String id = "123";
         Mixtape mixtape = new Mixtape();
@@ -184,7 +184,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.updateById(id, mixtape));
+        assertThrows(NotFoundException.class, () -> sut.updateById(id, mixtape));
 
         // then
         verify(mixtapeRepository, never()).save(any());
@@ -236,7 +236,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void getById_whenMixtapeNotFoundOrDoesNotBelongToUser_thenThrowMixtapeNotFoundException() {
+    void getById_whenMixtapeNotFoundOrDoesNotBelongToUser_thenThrowNotFoundException() {
         // given
         String id = "123";
         User user = new User();
@@ -249,7 +249,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.findById(id));
+        assertThrows(NotFoundException.class, () -> sut.findById(id));
 
         // then
         verify(mixtapeRepository).findByIdAndCreatedBy(id, user);
