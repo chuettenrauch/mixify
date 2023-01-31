@@ -100,13 +100,36 @@ class MixtapeTest {
         Track track = new Track();
         track.setId("123");
 
-        List<Track> expected = List.of(track);
+        Track otherTrack = new Track();
+        otherTrack.setId("123");
+
+        List<Track> expected = List.of(otherTrack, track);
 
         // when
         Mixtape sut = new Mixtape();
         sut.setTracks(expected);
 
         sut.removeTrackWithId("some-other-id");
+
+        // then
+        List<Track> actual = sut.getTracks();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void removeTrackWithId_whenTrackHasNoId_thenKeepTracksAsBefore() {
+        // given
+        Track track = new Track();
+        Track otherTrack = new Track();
+
+        List<Track> expected = List.of(otherTrack, track);
+
+        // when
+        Mixtape sut = new Mixtape();
+        sut.setTracks(expected);
+
+        sut.removeTrackWithId("some-id");
 
         // then
         List<Track> actual = sut.getTracks();

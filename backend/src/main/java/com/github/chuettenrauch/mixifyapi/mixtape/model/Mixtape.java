@@ -42,7 +42,7 @@ public class Mixtape {
     public void removeTrackWithId(String id) {
         this.setTracks(this.getTracks()
                 .stream()
-                .filter(t -> t.getId() != null && !t.getId().equals(id))
+                .filter(t -> t.getId() == null || !t.getId().equals(id))
                 .toList()
         );
     }
