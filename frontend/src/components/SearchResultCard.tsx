@@ -10,12 +10,16 @@ import React from "react";
 import formatDuration from "format-duration";
 import AudioButton from "./AudioButton";
 
-export default function SearchResultCard({searchResult}: {
+export default function SearchResultCard({searchResult, onClick}: {
     searchResult: Spotify.Track,
+    onClick: (selectedSearchResult: Spotify.Track) => void,
 }) {
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <CardActionArea sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2, flex: 1}}>
+            <CardActionArea
+                onClick={() => onClick(searchResult)}
+                sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2, flex: 1}}
+            >
                 <CardMedia
                     component="img"
                     image={searchResult.album.images[0]?.url}

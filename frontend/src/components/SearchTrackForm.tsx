@@ -4,6 +4,8 @@ import React, {FormEvent, useState} from "react";
 import {Clear as ClearIcon, MusicNote as MusicNoteIcon, Search as SearchIcon} from "@mui/icons-material";
 import useSpotifyApi from "../hooks/useSpotifyApi";
 import SearchResultCard from "./SearchResultCard";
+import AddTrackForm from "./AddTrackForm";
+import useForm from "../hooks/useForm";
 
 export default function SearchTrackForm({open, onClose}: {
     open: boolean,
@@ -12,6 +14,9 @@ export default function SearchTrackForm({open, onClose}: {
     const spotifyApi = useSpotifyApi();
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<Spotify.Track[]>([]);
+    const [selectedSearchResult, setSelectedSearchResult] = useState<Spotify.Track|null>(null);
+
+    const {isFormOpen: isAddTrackFormOpen, openForm: openAddTrackForm, closeForm: closeAddTrackForm} = useForm();
 
     const searchTracks = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -23,6 +28,11 @@ export default function SearchTrackForm({open, onClose}: {
     const clearSearchTerm = () => {
         setSearchTerm("");
         setSearchResults([]);
+    }
+
+    const onSelectSearchResult = (selectedSearchResult: Spotify.Track) => {
+        setSelectedSearchResult(selectedSearchResult);
+        openAddTrackForm();
     }
 
     return (
@@ -45,7 +55,7 @@ export default function SearchTrackForm({open, onClose}: {
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title="Add track" onClose={onClose}/>
+                <FormHeader title="Search track" onClose={onClose}/>
 
                 <Stack
                     component="form"
@@ -96,10 +106,12 @@ export default function SearchTrackForm({open, onClose}: {
                     : <Stack spacing={2} sx={{width: "100%"}}>
                         <Typography variant="h2" textTransform="uppercase">Results</Typography>
                         {searchResults.map(searchResult => (
-                            <SearchResultCard key={searchResult.id} searchResult={searchResult}/>
+                            <SearchResultCard key={searchResult.id} searchResult={searchResult} onClick={onSelectSearchResult}/>
                         ))}
                     </Stack>
                 }
+
+                {selectedSearchResult && <AddTrackForm open={isAddTrackFormOpen} onBack={closeAddTrackForm} onClose={onClose} selectedSpotifyTrack={selectedSearchResult}/>}
 
             </Container>
         </Modal>
