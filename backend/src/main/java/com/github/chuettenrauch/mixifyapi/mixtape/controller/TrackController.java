@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/mixtapes/{mixtapeId}")
+@RequestMapping("/api/mixtapes/{mixtapeId}/tracks")
 @RequiredArgsConstructor
 public class TrackController {
 

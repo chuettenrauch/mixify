@@ -46,7 +46,7 @@ class TrackControllerTest {
 
     @Test
     void create_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(post("/api/mixtapes/123"))
+        this.mvc.perform(post("/api/mixtapes/123/tracks"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -67,7 +67,7 @@ class TrackControllerTest {
                 """;
 
         // when + then
-        this.mvc.perform(post("/api/mixtapes/123")
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenJson)
                         .with(oauth2Login().oauth2User(oAuth2User))
@@ -96,7 +96,7 @@ class TrackControllerTest {
                 """;
 
         // when + then
-        this.mvc.perform(post("/api/mixtapes/123")
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenJson)
                         .with(oauth2Login().oauth2User(oAuth2User))
@@ -125,7 +125,7 @@ class TrackControllerTest {
                 """;
 
         // when + then
-        this.mvc.perform(post("/api/mixtapes/123")
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(givenJson)
                         .with(oauth2Login().oauth2User(oAuth2User))
