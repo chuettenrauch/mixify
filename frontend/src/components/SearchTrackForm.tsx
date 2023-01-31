@@ -1,33 +1,31 @@
 import {Container, IconButton, Modal, Stack, TextField, Typography} from "@mui/material";
 import FormHeader from "./FormHeader";
-import React, {FormEvent, useState} from "react";
+import React, {FormEvent} from "react";
 import {Clear as ClearIcon, MusicNote as MusicNoteIcon, Search as SearchIcon} from "@mui/icons-material";
-import useSpotifyApi from "../hooks/useSpotifyApi";
 import SearchResultCard from "./SearchResultCard";
 import AddTrackForm from "./AddTrackForm";
 import useForm from "../hooks/useForm";
+import useSpotifyTrackSearch from "../hooks/useSpotifyTrackSearch";
 
 export default function SearchTrackForm({open, onClose}: {
     open: boolean,
     onClose: () => void,
 }) {
-    const spotifyApi = useSpotifyApi();
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [searchResults, setSearchResults] = useState<Spotify.Track[]>([]);
-    const [selectedSearchResult, setSelectedSearchResult] = useState<Spotify.Track|null>(null);
-
     const {isFormOpen: isAddTrackFormOpen, openForm: openAddTrackForm, closeForm: closeAddTrackForm} = useForm();
 
-    const searchTracks = async (e: FormEvent<HTMLFormElement>) => {
+    const {
+        searchTerm,
+        setSearchTerm,
+        searchResults,
+        selectedSearchResult,
+        setSelectedSearchResult,
+        searchTracks,
+        resetSearch
+    } = useSpotifyTrackSearch();
+
+    const onSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const results: Spotify.Track[] = await spotifyApi.searchTracks(searchTerm);
-        setSearchResults(results);
-    }
-
-    const clearSearchTerm = () => {
-        setSearchTerm("");
-        setSearchResults([]);
+        searchTracks(searchTerm);
     }
 
     const onSelectSearchResult = (selectedSearchResult: Spotify.Track) => {
@@ -62,7 +60,7 @@ export default function SearchTrackForm({open, onClose}: {
                     spacing={2}
                     width="100%"
                     maxWidth={(theme) => theme.breakpoints.values.sm}
-                    onSubmit={searchTracks}
+                    onSubmit={onSearchSubmit}
                 >
                     <TextField
                         variant="standard"
@@ -76,7 +74,7 @@ export default function SearchTrackForm({open, onClose}: {
                                 <>
                                     <IconButton
                                         sx={{ visibility: searchTerm ? "visible" : "hidden" }}
-                                        onClick={clearSearchTerm}
+                                        onClick={resetSearch}
                                     >
                                         <ClearIcon/>
                                     </IconButton>
