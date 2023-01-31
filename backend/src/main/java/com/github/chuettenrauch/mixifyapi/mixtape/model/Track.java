@@ -13,4 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Track {
     @Id
     private String id;
+    private String name;
+    private String artist;
+    private String imageUrl;
+    private String description;
+    private String providerUri;
 }

@@ -19,7 +19,7 @@ public class TrackService {
         this.trackRepository.save(track);
 
         mixtape.getTracks().add(track);
-        this.mixtapeService.save(mixtape);
+        this.mixtapeService.updateById(mixtape.getId(), mixtape);
 
         return track;
     }

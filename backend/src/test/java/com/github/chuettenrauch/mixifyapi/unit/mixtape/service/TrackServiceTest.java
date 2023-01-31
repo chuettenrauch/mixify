@@ -80,6 +80,6 @@ class TrackServiceTest {
         assertEquals(track, actual);
 
         verify(trackRepository).save(track);
-        verify(mixtapeService).save(mixtapeWithTrackAdded);
+        verify(mixtapeService).updateById(mixtapeWithTrackAdded.getId(), mixtapeWithTrackAdded);
     }
 }
