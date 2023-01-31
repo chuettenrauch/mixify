@@ -87,9 +87,10 @@ class TrackServiceTest {
     void updateByIdForMixtape_whenNotLoggedIn_thenThrowUnauthorizedException() {
         // given
         String mixtapeId = "123";
+        String trackId = "234";
 
         Track track = new Track();
-        track.setId("234");
+        track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
         when(mixtapeService.findById(mixtapeId)).thenThrow(UnauthorizedException.class);
@@ -98,7 +99,7 @@ class TrackServiceTest {
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(UnauthorizedException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+        assertThrows(UnauthorizedException.class, () -> sut.updateByIdForMixtape(mixtapeId, trackId, track));
 
         // then
         verify(trackRepository, never()).save(any());
@@ -108,9 +109,10 @@ class TrackServiceTest {
     void updateByIdForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowNotFoundException() {
         // given
         String mixtapeId = "123";
+        String trackId = "234";
 
         Track track = new Track();
-        track.setId("234");
+        track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
         when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
@@ -119,7 +121,7 @@ class TrackServiceTest {
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, trackId, track));
 
         // then
         verify(trackRepository, never()).save(any());
@@ -129,9 +131,10 @@ class TrackServiceTest {
     void updateByIdForMixtape_whenTrackDoesNotExist_thenThrowNotFoundException() {
         // given
         String mixtapeId = "123";
+        String trackId = "234";
 
         Track track = new Track();
-        track.setId("234");
+        track.setId(trackId);
 
         Mixtape mixtapeWithTrack = new Mixtape();
         mixtapeWithTrack.setTracks(List.of(track));
@@ -144,7 +147,7 @@ class TrackServiceTest {
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, trackId, track));
 
         // then
         verify(trackRepository, never()).save(any());
@@ -154,9 +157,10 @@ class TrackServiceTest {
     void updateByIdForMixtape_whenDoesNotExistOnMixtape_thenThrowNotFoundException() {
         // given
         String mixtapeId = "123";
+        String trackId = "234";
 
         Track track = new Track();
-        track.setId("234");
+        track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
         when(mixtapeService.findById(mixtapeId)).thenReturn(new Mixtape());
@@ -165,7 +169,7 @@ class TrackServiceTest {
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, trackId, track));
 
         // then
         verify(trackRepository, never()).save(any());
@@ -243,11 +247,14 @@ class TrackServiceTest {
     @Test
     void deleteByIdForMixtape_whenTrackDoesNotExist_thenThrowNotFoundException() {
         // given
+        String trackId = "234";
+        String mixtapeId = "123";
+
         Track track = new Track();
-        track.setId("234");
+        track.setId(trackId);
 
         Mixtape mixtapeWithTrack = new Mixtape();
-        mixtapeWithTrack.setId("123");
+        mixtapeWithTrack.setId(mixtapeId);
         mixtapeWithTrack.setTracks(List.of(track));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
@@ -258,7 +265,7 @@ class TrackServiceTest {
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(NotFoundException.class, () -> sut.deleteByIdForMixtape(mixtapeWithTrack.getId(), track.getId()));
+        assertThrows(NotFoundException.class, () -> sut.deleteByIdForMixtape(mixtapeId, trackId));
 
         // then
         verify(trackRepository, never()).deleteById(any());
