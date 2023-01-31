@@ -38,4 +38,12 @@ public class Mixtape {
                 .stream()
                 .anyMatch(t -> t.getId() != null && t.getId().equals(id));
     }
+
+    public void removeTrackWithId(String id) {
+        this.setTracks(this.getTracks()
+                .stream()
+                .filter(t -> t.getId() != null && !t.getId().equals(id))
+                .toList()
+        );
+    }
 }

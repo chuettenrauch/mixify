@@ -44,5 +44,8 @@ public class TrackService {
         }
 
         this.trackRepository.deleteById(id);
+
+        mixtape.removeTrackWithId(id);
+        this.mixtapeService.updateById(mixtape.getId(), mixtape);
     }
 }

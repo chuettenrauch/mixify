@@ -69,4 +69,48 @@ class MixtapeTest {
         // then
         assertFalse(actual);
     }
+
+    @Test
+    void removeTrackWithId_whenTrackExistsOnMixtape_thenRemoveTrackFromTracks() {
+        // given
+        Track track = new Track();
+        track.setId("123");
+
+        Track otherTrack = new Track();
+        otherTrack.setId("234");
+
+        List<Track> given = List.of(otherTrack, track);
+        List<Track> expected = List.of(otherTrack);
+
+        // when
+        Mixtape sut = new Mixtape();
+        sut.setTracks(given);
+
+        sut.removeTrackWithId(track.getId());
+
+        // then
+        List<Track> actual = sut.getTracks();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void removeTrackWithId_whenTrackDoesNotExistOnMixtape_thenKeepTracksAsBefore() {
+        // given
+        Track track = new Track();
+        track.setId("123");
+
+        List<Track> expected = List.of(track);
+
+        // when
+        Mixtape sut = new Mixtape();
+        sut.setTracks(expected);
+
+        sut.removeTrackWithId("some-other-id");
+
+        // then
+        List<Track> actual = sut.getTracks();
+
+        assertEquals(expected, actual);
+    }
 }
