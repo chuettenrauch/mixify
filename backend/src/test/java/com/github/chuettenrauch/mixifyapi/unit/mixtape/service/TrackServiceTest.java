@@ -1,7 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.unit.mixtape.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
-import com.github.chuettenrauch.mixifyapi.mixtape.exception.MixtapeNotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.TrackRepository;
@@ -36,7 +36,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void saveForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowMixtapeNotFoundException() {
+    void saveForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowNotFoundException() {
         // given
         String mixtapeId = "123";
         Track track = new Track();
@@ -44,11 +44,11 @@ class TrackServiceTest {
         TrackRepository trackRepository = mock(TrackRepository.class);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(MixtapeNotFoundException.class);
+        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
-        assertThrows(MixtapeNotFoundException.class, () -> sut.saveForMixtape(mixtapeId, track));
+        assertThrows(NotFoundException.class, () -> sut.saveForMixtape(mixtapeId, track));
 
         // then
         verify(trackRepository, never()).save(any());
@@ -81,5 +81,97 @@ class TrackServiceTest {
 
         verify(trackRepository).save(track);
         verify(mixtapeService).updateById(mixtapeWithTrackAdded.getId(), mixtapeWithTrackAdded);
+    }
+
+    @Test
+    void updateByIdForMixtape_whenNotLoggedIn_thenThrowUnauthorizedException() {
+        // given
+        String mixtapeId = "123";
+
+        Track track = new Track();
+        track.setId("234");
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        when(mixtapeService.findById(mixtapeId)).thenThrow(UnauthorizedException.class);
+
+        TrackRepository trackRepository = mock(TrackRepository.class);
+
+        // when
+        TrackService sut = new TrackService(trackRepository, mixtapeService);
+        assertThrows(UnauthorizedException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+
+        // then
+        verify(trackRepository, never()).save(any());
+    }
+
+    @Test
+    void updateByIdForMixtape_whenMixtapeDoesNotExistOrDoesNotBelongToLoggedInUser_thenThrowNotFoundException() {
+        // given
+        String mixtapeId = "123";
+
+        Track track = new Track();
+        track.setId("234");
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
+
+        TrackRepository trackRepository = mock(TrackRepository.class);
+
+        // when
+        TrackService sut = new TrackService(trackRepository, mixtapeService);
+        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+
+        // then
+        verify(trackRepository, never()).save(any());
+    }
+
+    @Test
+    void updateByIdForMixtape_whenTrackDoesNotExistOnMixtape_thenThrowNotFoundException() {
+        // given
+        String mixtapeId = "123";
+
+        Track track = new Track();
+        track.setId("234");
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        when(mixtapeService.findById(mixtapeId)).thenReturn(new Mixtape());
+
+        TrackRepository trackRepository = mock(TrackRepository.class);
+        when(trackRepository.existsById(track.getId())).thenReturn(false);
+
+        // when
+        TrackService sut = new TrackService(trackRepository, mixtapeService);
+        assertThrows(NotFoundException.class, () -> sut.updateByIdForMixtape(mixtapeId, track.getId(), track));
+
+        // then
+        verify(trackRepository, never()).save(any());
+    }
+
+    @Test
+    void updateByIdForMixtape_whenTrackExists_thenEnsureIdFromUrlAndSaveTrack() {
+        // given
+        String mixtapeId = "123";
+        String trackIdFromUrl = "id-from-url";
+
+        Track track = new Track();
+        track.setId("id-from-json");
+
+        Track expectedTrack = new Track();
+        expectedTrack.setId(trackIdFromUrl);
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        when(mixtapeService.findById(mixtapeId)).thenReturn(new Mixtape());
+
+        TrackRepository trackRepository = mock(TrackRepository.class);
+        when(trackRepository.existsById(trackIdFromUrl)).thenReturn(true);
+        when(trackRepository.save(expectedTrack)).thenReturn(expectedTrack);
+
+        // when
+        TrackService sut = new TrackService(trackRepository, mixtapeService);
+        Track actual = sut.updateByIdForMixtape(mixtapeId, trackIdFromUrl, track);
+
+        // then
+        assertEquals(expectedTrack, actual);
+        verify(trackRepository).save(expectedTrack);
     }
 }

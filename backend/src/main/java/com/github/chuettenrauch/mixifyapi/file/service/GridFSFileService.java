@@ -1,7 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.file.service;
 
-import com.github.chuettenrauch.mixifyapi.file.exception.FileNotFoundException;
-import com.github.chuettenrauch.mixifyapi.file.exception.InvalidFileException;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.BadRequestException;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.mongodb.BasicDBObjectBuilder;
@@ -27,7 +27,7 @@ public class GridFSFileService implements FileService {
 
     public File saveFileForUser(MultipartFile file, User user) throws IOException {
         if (file.isEmpty()) {
-            throw new InvalidFileException();
+            throw new BadRequestException();
         }
 
         DBObject metadata = BasicDBObjectBuilder
@@ -63,6 +63,6 @@ public class GridFSFileService implements FileService {
 
         GridFSFile gridFSFile = this.gridFsOperations.findOne(query);
 
-        return Optional.ofNullable(gridFSFile).orElseThrow(FileNotFoundException::new);
+        return Optional.ofNullable(gridFSFile).orElseThrow(NotFoundException::new);
     }
 }

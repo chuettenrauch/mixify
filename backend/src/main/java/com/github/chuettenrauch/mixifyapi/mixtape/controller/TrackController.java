@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/mixtapes/{mixtapeId}")
+@RequestMapping("/api/mixtapes/{mixtapeId}/tracks")
 @RequiredArgsConstructor
 public class TrackController {
 
@@ -15,5 +15,10 @@ public class TrackController {
     @PostMapping
     public Track create(@PathVariable String mixtapeId, @RequestBody Track track) {
         return this.trackService.saveForMixtape(mixtapeId, track);
+    }
+
+    @PutMapping("/{id}")
+    public Track update(@PathVariable String mixtapeId, @PathVariable String id, @RequestBody Track track) {
+        return this.trackService.updateByIdForMixtape(mixtapeId, id, track);
     }
 }
