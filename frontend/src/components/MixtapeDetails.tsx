@@ -47,7 +47,7 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                 <Box sx={{flex: 1}}>
                     <CardMedia
                         component="img"
-                        image={`/api/files/${mixtape.image}`}
+                        image={mixtape.imageUrl}
                         alt={mixtape.title}
                         sx={{width: 130, height: 130, lineHeight: 0, border: "1px solid grey", flex: 1}}
                     />

@@ -12,7 +12,7 @@ import {toast} from "react-toastify";
 const initialMixtapeData = {
     title: "",
     description: "",
-    image: "",
+    imageUrl: "",
 }
 
 export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
@@ -40,7 +40,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
     const onImageUpload = (fileMetadata: FileMetadata) => {
         setMixtapeForm({
             ...mixtapeForm,
-            image: fileMetadata.id
+            imageUrl: fileMetadata.url
         });
     }
 
@@ -75,7 +75,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
             }}>
                 <FormHeader title={title} onClose={onClose}/>
 
-                <ImageUpload imageUrl={mixtape ? `/api/files/${mixtape.image}` : null} onUpload={onImageUpload}/>
+                <ImageUpload imageUrl={mixtape ? mixtape.imageUrl : null} onUpload={onImageUpload}/>
 
                 <Stack
                     component="form"
@@ -110,9 +110,9 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         required
                         readOnly
                         hidden
-                        id="image"
-                        name="image"
-                        value={mixtapeForm.image}
+                        id="imageUrl"
+                        name="imageUrl"
+                        value={mixtapeForm.imageUrl}
                     />
 
                     <Button type="submit" variant="contained" startIcon={<SaveIcon/>}>

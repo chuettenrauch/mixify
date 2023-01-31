@@ -1,5 +1,5 @@
 type FileMetadata = {
-    id: string
+    url: string
 }
 
 export default FileMetadata;

@@ -51,7 +51,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
                 <CardMedia
                     component="img"
-                    image={`/api/files/${mixtape.image}`}
+                    image={mixtape.imageUrl}
                     alt={mixtape.title}
                     sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
                 />
