@@ -7,13 +7,14 @@ import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
+import com.github.chuettenrauch.mixifyapi.utils.TestUserHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
@@ -44,6 +44,13 @@ class MixtapeControllerTest {
     @Autowired
     private MixtapeRepository mixtapeRepository;
 
+    private TestUserHelper testUserHelper;
+
+    @BeforeEach
+    void setup() {
+        this.testUserHelper = new TestUserHelper(this.userRepository);
+    }
+
     @Test
     void create_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
         this.mvc.perform(post("/api/mixtapes"))
@@ -55,7 +62,7 @@ class MixtapeControllerTest {
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
         File uploadedFile = this.fileService.saveFileForUser(file, user);
@@ -99,7 +106,7 @@ class MixtapeControllerTest {
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
         File uploadedFile = this.fileService.saveFileForUser(file, user);
@@ -133,10 +140,8 @@ class MixtapeControllerTest {
     @DirtiesContext
     void getAll_whenLoggedIn_thenReturnEmptyListIfNoMixtapesForTheLoggedInUserExist() throws Exception {
         // given
-        OAuth2User oAuth2User = this.createLoginUser();
-
-        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(otherUser);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
+        User otherUser = this.testUserHelper.createUser("234");
 
         Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", "", new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
@@ -171,10 +176,9 @@ class MixtapeControllerTest {
                         """;
 
         User loggedInUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(loggedInUser);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(loggedInUser);
 
-        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(otherUser);
+        User otherUser = this.testUserHelper.createUser("234");
 
         Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), loggedInUser);
         Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
@@ -197,7 +201,7 @@ class MixtapeControllerTest {
 
     @Test
     void delete_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
-        OAuth2User oAuth2User = this.createLoginUser();
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
 
         this.mvc.perform(delete("/api/mixtapes/123")
                     .with(oauth2Login().oauth2User(oAuth2User))
@@ -208,10 +212,8 @@ class MixtapeControllerTest {
     @Test
     @DirtiesContext
     void delete_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
-        OAuth2User oAuth2User = this.createLoginUser();
-
-        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(otherUser);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
+        User otherUser = this.testUserHelper.createUser("234");
 
         Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
@@ -226,7 +228,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void delete_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
@@ -251,7 +253,7 @@ class MixtapeControllerTest {
     void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         String givenJson = """
                 {
@@ -282,10 +284,9 @@ class MixtapeControllerTest {
     void update_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(otherUser);
+        User otherUser = this.testUserHelper.createUser("234");
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtape);
@@ -319,7 +320,7 @@ class MixtapeControllerTest {
     void update_whenLoggedInAndMixtapeExists_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
@@ -359,7 +360,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void get_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
-        OAuth2User oAuth2User = this.createLoginUser();
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
 
         // when + then
         this.mvc.perform(get("/api/mixtapes/123")
@@ -372,10 +373,8 @@ class MixtapeControllerTest {
     @DirtiesContext
     void get_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
-        OAuth2User oAuth2User = this.createLoginUser();
-
-        User otherUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
-        this.userRepository.save(otherUser);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
+        User otherUser = this.testUserHelper.createUser("234");
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtape);
@@ -407,7 +406,7 @@ class MixtapeControllerTest {
                 """;
 
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        OAuth2User oAuth2User = this.createLoginUser(user);
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
         this.mixtapeRepository.save(mixtape);
@@ -418,20 +417,6 @@ class MixtapeControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
-    }
-
-    private OAuth2User createLoginUser() {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-
-        return this.createLoginUser(user);
-    }
-
-    private OAuth2User createLoginUser(User user) {
-        this.userRepository.save(user);
-
-        return new DefaultOAuth2User(null, Map.of(
-                "email", user.getEmail()
-        ), "email");
     }
 
 }
