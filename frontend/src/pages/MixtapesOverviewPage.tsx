@@ -36,7 +36,7 @@ export default function MixtapesOverviewPage() {
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtapes.length === 0
                     ? <MessageContainer>
-                        <Typography>Your don't have any mixtapes, yet.</Typography>
+                        <Typography>You don't have any mixtapes, yet.</Typography>
                     </MessageContainer>
                     : mixtapes.map(mixtape => (
                         <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage}
