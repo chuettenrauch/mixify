@@ -1,6 +1,6 @@
 import Track from "../types/track";
 import {
-    Backdrop,
+    Backdrop, Box,
     Card,
     CardActions,
     CardContent,
@@ -26,7 +26,12 @@ export default function TrackCard({mixtape, track, onEdit, onDelete}: {
     onEdit: (savedTrack: Track) => void,
     onDelete: (deletedTrack: Track) => void,
 }) {
-    const {menuAnchorEl: trackMenuAnchorEl, isMenuOpen: isTrackMenuOpen, openMenu: openTrackMenu, closeMenu: closeTrackMenu} = useMenu();
+    const {
+        menuAnchorEl: trackMenuAnchorEl,
+        isMenuOpen: isTrackMenuOpen,
+        openMenu: openTrackMenu,
+        closeMenu: closeTrackMenu
+    } = useMenu();
     const {isFormOpen: isTrackFormOpen, openForm: openTrackForm, closeForm: closeTrackForm} = useForm();
 
     const {
@@ -47,55 +52,61 @@ export default function TrackCard({mixtape, track, onEdit, onDelete}: {
     };
 
     return (
-        <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <Container sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
-                <CardMedia
-                    component="img"
-                    image={track.imageUrl}
-                    alt={track.name}
-                    sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
-                />
+        <Card elevation={5} sx={{display: "flex", flexDirection: "column"}}>
+            <Container sx={{display: "flex", position: "relative", p: 0}}>
+                <Container sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
+                    <CardMedia
+                        component="img"
+                        image={track.imageUrl}
+                        alt={track.name}
+                        sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
+                    />
 
-                <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-                    <Typography variant="h3">{track.name}</Typography>
-                    <Typography>{track.artist}</Typography>
-                </CardContent>
+                    <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                        <Typography variant="h3">{track.name}</Typography>
+                        <Typography>{track.artist}</Typography>
+                    </CardContent>
+                </Container>
+
+                <CardActions>
+                    <IconButton onClick={(e) => openTrackMenu(e.currentTarget)}
+                                aria-controls={isTrackMenuOpen ? trackMenuId : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={isTrackMenuOpen ? 'true' : undefined}
+                                sx={{
+                                    alignSelf: "flex-start",
+                                    position: "absolute",
+                                    top: (theme) => theme.spacing(1),
+                                    right: 0,
+                                }}>
+                        <MoreVertIcon/>
+                    </IconButton>
+                    <Menu
+                        id={trackMenuId}
+                        anchorEl={trackMenuAnchorEl}
+                        open={isTrackMenuOpen}
+                        onClose={closeTrackMenu}
+                        onClick={closeTrackMenu}
+                    >
+                        <MenuItem onClick={openTrackForm}>
+                            <ListItemIcon>
+                                <EditIcon fontSize="small"/>
+                            </ListItemIcon>
+                            Edit
+                        </MenuItem>
+                        <MenuItem onClick={openDeleteConfirmDialog}>
+                            <ListItemIcon>
+                                <CloseIcon fontSize="small"/>
+                            </ListItemIcon>
+                            Delete
+                        </MenuItem>
+                    </Menu>
+                </CardActions>
             </Container>
 
-            <CardActions>
-                <IconButton onClick={(e) => openTrackMenu(e.currentTarget)}
-                            aria-controls={isTrackMenuOpen ? trackMenuId : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={isTrackMenuOpen ? 'true' : undefined}
-                            sx={{
-                                alignSelf: "flex-start",
-                                position: "absolute",
-                                top: (theme) => theme.spacing(1),
-                                right: 0,
-                            }}>
-                    <MoreVertIcon/>
-                </IconButton>
-                <Menu
-                    id={trackMenuId}
-                    anchorEl={trackMenuAnchorEl}
-                    open={isTrackMenuOpen}
-                    onClose={closeTrackMenu}
-                    onClick={closeTrackMenu}
-                >
-                    <MenuItem onClick={openTrackForm}>
-                        <ListItemIcon>
-                            <EditIcon fontSize="small"/>
-                        </ListItemIcon>
-                        Edit
-                    </MenuItem>
-                    <MenuItem onClick={openDeleteConfirmDialog}>
-                        <ListItemIcon>
-                            <CloseIcon fontSize="small"/>
-                        </ListItemIcon>
-                        Delete
-                    </MenuItem>
-                </Menu>
-            </CardActions>
+            <Box sx={{p: 2, pt: 0}}>
+                <Typography textAlign="justify">{track.description}</Typography>
+            </Box>
 
             {isDeleteConfirmDialogOpen &&
               <ConfirmDialog

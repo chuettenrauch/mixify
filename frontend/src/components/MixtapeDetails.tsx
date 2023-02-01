@@ -116,7 +116,7 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
             </Container>
 
             <Box>
-                <Typography>{mixtape.description}</Typography>
+                <Typography textAlign="justify">{mixtape.description}</Typography>
             </Box>
         </Container>
     );
