@@ -117,8 +117,8 @@ class TrackControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
-        this.mixtapeRepository.save(mixtapeOfOtherUser);
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
                 {
@@ -139,6 +139,44 @@ class TrackControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(givenJson))
                 .andExpect(jsonPath("$.id", notNullValue()));
+    }
+
+    @Test
+    @DirtiesContext
+    void create_whenNumOfTracksExceedsMaxLimit_thenReturnBadRequest() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        List<Track> tracks = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            Track track = new Track();
+            track.setId(String.valueOf(i));
+
+            this.trackRepository.save(track);
+            tracks.add(track);
+        }
+
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, tracks, LocalDateTime.now(), user);
+        this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "name": "The Chipmunks Song",
+                    "artist": "Alvin & The Chipmunks",
+                    "imageUrl": "/path/to/image",
+                    "description": null,
+                    "providerUri": "spotify:track:12345"
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isBadRequest());
     }
 
     @Test
