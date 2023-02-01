@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
 import com.github.chuettenrauch.mixifyapi.user.model.User;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Mixtape {
     private String description;
     private String imageUrl;
 
+    @Size(max = 12)
     @DocumentReference(lazy = true)
     private List<Track> tracks = new ArrayList<>();
 

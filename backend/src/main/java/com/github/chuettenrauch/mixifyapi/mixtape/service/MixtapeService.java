@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.service;
 
+import com.github.chuettenrauch.mixifyapi.exception.BadRequestException;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException;
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
@@ -7,10 +8,13 @@ import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +23,8 @@ public class MixtapeService {
     private final MixtapeRepository mixtapeRepository;
 
     private final UserService userService;
+
+    private final Validator validator;
 
     public Mixtape save(Mixtape mixtape) {
         if (mixtape.getId() != null) {
@@ -44,6 +50,8 @@ public class MixtapeService {
 
         mixtape.setId(id);
 
+        this.validate(mixtape);
+
         return this.mixtapeRepository.save(mixtape);
     }
 
@@ -64,5 +72,12 @@ public class MixtapeService {
 
         return this.mixtapeRepository.findByIdAndCreatedBy(id, user)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    private void validate(Mixtape mixtape) {
+        Set<ConstraintViolation<Mixtape>> errors = validator.validate(mixtape);
+        if (!errors.isEmpty()) {
+            throw new BadRequestException();
+        }
     }
 }
