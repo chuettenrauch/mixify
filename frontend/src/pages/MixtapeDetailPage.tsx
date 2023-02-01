@@ -13,6 +13,8 @@ import useForm from "../hooks/useForm";
 import MessageContainer from "../components/MessageContainer";
 import Track from "../types/track";
 
+const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
+
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
     const {id} = useParams<{id: string}>();
@@ -24,6 +26,8 @@ export default function MixtapeDetailPage() {
         openForm: openSearchTrackForm,
         closeForm: closeSearchTrackForm
     } = useForm();
+
+    const trackLimitReached = mixtape?.tracks && mixtape.tracks.length >= trackLimitPerMixtape;
 
     const navigateToMixtapesOverviewPage = () => {
         navigate("/mixtapes");
@@ -64,11 +68,21 @@ export default function MixtapeDetailPage() {
 
             <Typography variant="h2" component="h2" textTransform={"uppercase"}>Tracks</Typography>
 
+            {trackLimitReached &&
+                <Typography sx={{display: "flex", alignItems: "center"}}>
+                    <InfoIcon color="primary"/>
+                    {`You reached the maximum number of ${trackLimitPerMixtape} tracks.`}
+                </Typography>
+            }
+
             <Stack spacing={2} sx={{width: "100%"}}>
                 {mixtape.tracks.length === 0
                     ? <MessageContainer minHeight={200}>
                         <Typography>Your mixtape has no tracks yet.</Typography>
-                        <Typography sx={{display: "flex", alignItems: "center"}}><InfoIcon color="primary"/> You can add up to 12 tracks.</Typography>
+                        <Typography sx={{display: "flex", alignItems: "center"}}>
+                            <InfoIcon color="primary"/>
+                            {`You can add up to ${trackLimitPerMixtape} tracks.`}
+                        </Typography>
                     </MessageContainer>
                     : mixtape.tracks.map(track => (
                         <TrackCard key={track.id} track={track}/>
@@ -76,13 +90,15 @@ export default function MixtapeDetailPage() {
                 }
             </Stack>
 
-            <Fab color="primary" size="medium" onClick={openSearchTrackForm} aria-label="add track" sx={{
-                position: "fixed",
-                bottom: (theme) => theme.spacing(9),
-                right: (theme) => theme.spacing(2)}
-            }>
+            {!trackLimitReached &&
+              <Fab color="primary" size="medium" onClick={openSearchTrackForm} aria-label="add track" sx={{
+                  position: "fixed",
+                  bottom: (theme) => theme.spacing(9),
+                  right: (theme) => theme.spacing(2)
+              }}>
                 <AddIcon/>
-            </Fab>
+              </Fab>
+            }
 
             {isSearchTrackFormOpen && <SearchTrackForm mixtape={mixtape} open={isSearchTrackFormOpen} onSave={addTrack} onClose={closeSearchTrackForm}/>}
         </Container>
