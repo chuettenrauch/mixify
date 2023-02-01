@@ -1,4 +1,4 @@
-import {Container, Fab, Stack} from "@mui/material";
+import {Container, Fab, Stack, Typography} from "@mui/material";
 import MixtapeCard from "../components/MixtapeCard";
 import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
@@ -7,6 +7,8 @@ import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import {useNavigate} from "react-router-dom";
 import useForm from "../hooks/useForm";
+import React from "react";
+import MessageContainer from "../components/MessageContainer";
 
 export default function MixtapesOverviewPage() {
     const navigate = useNavigate();
@@ -32,9 +34,14 @@ export default function MixtapesOverviewPage() {
             <PageHeader title="Your Mixtapes"/>
 
             <Stack spacing={2} sx={{width: "100%"}}>
-                {mixtapes.map(mixtape => (
-                    <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage} onDelete={removeMixtapeFromList}/>
-                ))}
+                {mixtapes.length === 0
+                    ? <MessageContainer>
+                        <Typography>You don't have any mixtapes, yet.</Typography>
+                    </MessageContainer>
+                    : mixtapes.map(mixtape => (
+                        <MixtapeCard key={mixtape.id} mixtape={mixtape} onEdit={navigateToMixtapeDetailPage}
+                                     onDelete={removeMixtapeFromList}/>
+                    ))}
             </Stack>
 
             <Fab color="primary" size="medium" onClick={openMixtapeForm} aria-label="add" sx={{
