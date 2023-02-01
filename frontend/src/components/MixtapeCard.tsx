@@ -26,7 +26,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
+    const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
 
     const {
@@ -69,10 +69,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             </CardActionArea>
 
             <CardActions>
-                <IconButton onClick={(e) => openMenu(e.currentTarget)}
-                            aria-controls={isMenuOpen ? mixtapeMenuId : undefined}
+                <IconButton onClick={(e) => openMixtapeMenu(e.currentTarget)}
+                            aria-controls={isMixtapeMenuOpen ? mixtapeMenuId : undefined}
                             aria-haspopup="true"
-                            aria-expanded={isMenuOpen ? 'true' : undefined}
+                            aria-expanded={isMixtapeMenuOpen ? 'true' : undefined}
                             sx={{
                                 alignSelf: "flex-start",
                                 position: "absolute",
@@ -83,10 +83,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 </IconButton>
                 <Menu
                     id={mixtapeMenuId}
-                    anchorEl={menuAnchorEl}
-                    open={isMenuOpen}
-                    onClose={closeMenu}
-                    onClick={closeMenu}
+                    anchorEl={mixtapeAnchorEl}
+                    open={isMixtapeMenuOpen}
+                    onClose={closeMixtapeMenu}
+                    onClick={closeMixtapeMenu}
                 >
                     <MenuItem onClick={openMixtapeForm}>
                         <ListItemIcon>
@@ -122,8 +122,8 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
               />
             }
 
-            {isMenuOpen &&
-              <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+            {isMixtapeMenuOpen &&
+              <Backdrop open={isMixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
             }
         </Card>
     );

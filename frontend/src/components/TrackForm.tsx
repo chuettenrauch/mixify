@@ -10,13 +10,14 @@ import {Save as SaveIcon} from "@mui/icons-material";
 import {TrackApi} from "../api/mixify-api";
 import Mixtape from "../types/mixtape";
 
-export default function AddTrackForm({mixtape, selectedSpotifyTrack, track, open, onSave, onBack, onClose}: {
+export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, open, onSave, onBack, onClose}: {
+    title: string,
     mixtape: Mixtape,
     selectedSpotifyTrack?: Spotify.Track,
     track?: Track,
     open: boolean,
     onSave: (savedTrack: Track) => void,
-    onBack: () => void,
+    onBack?: () => void,
     onClose: () => void,
 }) {
     const [trackForm, setTrackForm] = useState<Form.Track | Track>(getInitialState(selectedSpotifyTrack, track));
@@ -67,7 +68,7 @@ export default function AddTrackForm({mixtape, selectedSpotifyTrack, track, open
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title="Add track" onBack={onBack} onClose={onClose}/>
+                <FormHeader title={title} onBack={onBack} onClose={onClose}/>
 
                 <Box sx={{alignSelf: "flex-start"}}>
                     <Typography variant="h2">{trackForm.name}</Typography>
@@ -153,13 +154,7 @@ function getInitialState(selectedSpotifyTrack: Spotify.Track | undefined, track:
     }
 
     if (track) {
-        return {
-            name: track.name,
-            artist: track.artist,
-            imageUrl: track.imageUrl,
-            providerUri: track.providerUri,
-            description: track.description,
-        }
+        return track;
     }
 
     return {

@@ -3,7 +3,7 @@ import FormHeader from "./FormHeader";
 import React, {FormEvent} from "react";
 import {Clear as ClearIcon, MusicNote as MusicNoteIcon, Search as SearchIcon} from "@mui/icons-material";
 import SearchResultCard from "./SearchResultCard";
-import AddTrackForm from "./AddTrackForm";
+import TrackForm from "./TrackForm";
 import useForm from "../hooks/useForm";
 import useSpotifyTrackSearch from "../hooks/useSpotifyTrackSearch";
 import Mixtape from "../types/mixtape";
@@ -114,7 +114,8 @@ export default function SearchTrackForm({mixtape, open, onSave, onClose}: {
                 }
 
                 {isAddTrackFormOpen && selectedSearchResult &&
-                    <AddTrackForm
+                    <TrackForm
+                        title="Add track"
                         mixtape={mixtape}
                         open={isAddTrackFormOpen}
                         onSave={onSave}
