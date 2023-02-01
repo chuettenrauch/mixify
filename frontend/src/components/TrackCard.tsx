@@ -48,21 +48,19 @@ export default function TrackCard({mixtape, track, onEdit, onDelete}: {
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <CardMedia
-                component="img"
-                image={track.imageUrl}
-                alt={track.name}
-                sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
-            />
+            <Container sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
+                <CardMedia
+                    component="img"
+                    image={track.imageUrl}
+                    alt={track.name}
+                    sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
+                />
 
-            <CardContent sx={{display: "flex", alignItems: "stretch"}}>
-                <Container
-                    sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 0}}>
-                    <Container sx={{p: 0}}>
-                        <Typography variant="h3">{track.name}</Typography>
-                    </Container>
-                </Container>
-            </CardContent>
+                <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                    <Typography variant="h3">{track.name}</Typography>
+                    <Typography>{track.artist}</Typography>
+                </CardContent>
+            </Container>
 
             <CardActions>
                 <IconButton onClick={(e) => openTrackMenu(e.currentTarget)}
