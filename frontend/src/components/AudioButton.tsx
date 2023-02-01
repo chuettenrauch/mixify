@@ -10,12 +10,18 @@ export default function AudioButton({src, type = "audio/mpeg"}: {
     const [playing, setPlaying] = useState<boolean>(false);
 
     const onPlay = () => {
-        if (player.current?.paused) {
+        if (!player.current) {
+            return;
+        }
+
+        player.current.volume = 0.5;
+
+        if (player.current.paused) {
             setPlaying(true);
-            player.current?.play();
+            player.current.play();
         } else {
             setPlaying(false);
-            player.current?.pause();
+            player.current.pause();
         }
     }
 
