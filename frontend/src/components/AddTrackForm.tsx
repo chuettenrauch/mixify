@@ -8,11 +8,14 @@ import Track from "../types/track";
 import {toast} from "react-toastify";
 import {Save as SaveIcon} from "@mui/icons-material";
 import {TrackApi} from "../api/mixify-api";
+import Mixtape from "../types/mixtape";
 
-export default function AddTrackForm({selectedSpotifyTrack, track, open, onBack, onClose}: {
+export default function AddTrackForm({mixtape, selectedSpotifyTrack, track, open, onSave, onBack, onClose}: {
+    mixtape: Mixtape,
     selectedSpotifyTrack?: Spotify.Track,
     track?: Track,
     open: boolean,
+    onSave: (savedTrack: Track) => void,
     onBack: () => void,
     onClose: () => void,
 }) {
@@ -21,11 +24,11 @@ export default function AddTrackForm({selectedSpotifyTrack, track, open, onBack,
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // const savedTrack: Track = track
-        //     ? await TrackApi.updateTrack(trackForm as Track)
-        //     : await TrackApi.createTrack(trackForm);
-        //
-        // onSave(savedTrack);
+        const savedTrack: Track = track
+            ? await TrackApi.updateTrack(mixtape, trackForm as Track)
+            : await TrackApi.createTrack(mixtape, trackForm);
+
+        onSave(savedTrack);
         onClose();
 
         toast.success("Successfully saved track.");

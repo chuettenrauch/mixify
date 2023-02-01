@@ -10,6 +10,7 @@ import {toast} from "react-toastify";
 import TrackCard from "../components/TrackCard";
 import SearchTrackForm from "../components/SearchTrackForm";
 import useForm from "../hooks/useForm";
+import Track from "../types/track";
 
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
@@ -34,6 +35,18 @@ export default function MixtapeDetailPage() {
 
     if (!mixtape) {
         return null;
+    }
+
+    const addTrack = (savedTrack: Track) => {
+        let tracks: Track[];
+
+        if (mixtape.tracks.findIndex(track => track.id === savedTrack.id) === -1) {
+            tracks = [...mixtape.tracks, savedTrack];
+        } else {
+            tracks = mixtape.tracks.map(track => track.id === savedTrack.id ? savedTrack : track);
+        }
+
+        setMixtape({...mixtape, tracks})
     }
 
     return (
@@ -69,7 +82,7 @@ export default function MixtapeDetailPage() {
                 <AddIcon/>
             </Fab>
 
-            {isSearchTrackFormOpen && <SearchTrackForm open={isSearchTrackFormOpen} onClose={closeSearchTrackForm}/>}
+            {isSearchTrackFormOpen && <SearchTrackForm mixtape={mixtape} open={isSearchTrackFormOpen} onSave={addTrack} onClose={closeSearchTrackForm}/>}
         </Container>
     );
 }
