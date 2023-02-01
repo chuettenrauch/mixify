@@ -43,15 +43,15 @@ export default function MixtapeDetailPage() {
     }
 
     const addTrack = (savedTrack: Track) => {
-        let tracks: Track[];
+       setMixtape({...mixtape, tracks: [...mixtape.tracks, savedTrack]});
+    }
 
-        if (mixtape.tracks.findIndex(track => track.id === savedTrack.id) === -1) {
-            tracks = [...mixtape.tracks, savedTrack];
-        } else {
-            tracks = mixtape.tracks.map(track => track.id === savedTrack.id ? savedTrack : track);
-        }
+    const updateTrack = (updatedTrack: Track) => {
+        setMixtape({...mixtape, tracks: mixtape.tracks.map(track => track.id === updatedTrack.id ? updatedTrack : track)});
+    }
 
-        setMixtape({...mixtape, tracks})
+    const deleteTrack = (deletedTrack: Track) => {
+        setMixtape({...mixtape, tracks: mixtape.tracks.filter(track => track.id !== deletedTrack.id)});
     }
 
     return (
@@ -85,7 +85,7 @@ export default function MixtapeDetailPage() {
                         </Typography>
                     </MessageContainer>
                     : mixtape.tracks.map(track => (
-                        <TrackCard key={track.id} track={track}/>
+                        <TrackCard key={track.id} mixtape={mixtape} track={track} onEdit={updateTrack} onDelete={deleteTrack}/>
                     ))
                 }
             </Stack>

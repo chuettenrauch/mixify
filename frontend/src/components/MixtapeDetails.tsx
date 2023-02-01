@@ -21,7 +21,7 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
+    const {menuAnchorEl: trackMenuAnchorEl, isMenuOpen: isTrackMenuOpen, openMenu: openTrackMenu, closeMenu: closeTrackMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
 
     const {
@@ -58,10 +58,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                     <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                 </Container>
 
-                <IconButton onClick={(e) => openMenu(e.currentTarget)}
-                            aria-controls={isMenuOpen ? mixtapeMenuId : undefined}
+                <IconButton onClick={(e) => openTrackMenu(e.currentTarget)}
+                            aria-controls={isTrackMenuOpen ? mixtapeMenuId : undefined}
                             aria-haspopup="true"
-                            aria-expanded={isMenuOpen ? 'true' : undefined}
+                            aria-expanded={isTrackMenuOpen ? 'true' : undefined}
                             sx={{
                                 alignSelf: "flex-start",
                                 position: "absolute",
@@ -72,10 +72,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                 </IconButton>
                 <Menu
                     id={mixtapeMenuId}
-                    anchorEl={menuAnchorEl}
-                    open={isMenuOpen}
-                    onClose={closeMenu}
-                    onClick={closeMenu}
+                    anchorEl={trackMenuAnchorEl}
+                    open={isTrackMenuOpen}
+                    onClose={closeTrackMenu}
+                    onClick={closeTrackMenu}
                 >
                     <MenuItem onClick={openMixtapeForm}>
                         <ListItemIcon>
@@ -110,8 +110,8 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                   />
                 }
 
-                {isMenuOpen &&
-                  <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+                {isTrackMenuOpen &&
+                  <Backdrop open={isTrackMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
                 }
             </Container>
 

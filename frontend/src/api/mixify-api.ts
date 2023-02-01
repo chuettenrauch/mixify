@@ -75,7 +75,7 @@ export namespace TrackApi {
     }
 
     export async function updateTrack(mixtape: Mixtape, track: Track): Promise<Track> {
-        const response = await client.put(`/${mixtape.id}/tracks/${track.id}`, mixtape);
+        const response = await client.put(`/${mixtape.id}/tracks/${track.id}`, track);
 
         return response.data;
     }
