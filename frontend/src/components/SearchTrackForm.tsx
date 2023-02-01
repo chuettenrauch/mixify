@@ -109,7 +109,14 @@ export default function SearchTrackForm({open, onClose}: {
                     </Stack>
                 }
 
-                {selectedSearchResult && <AddTrackForm open={isAddTrackFormOpen} onBack={closeAddTrackForm} onClose={onClose} selectedSpotifyTrack={selectedSearchResult}/>}
+                {isAddTrackFormOpen && selectedSearchResult &&
+                    <AddTrackForm
+                        open={isAddTrackFormOpen}
+                        onBack={closeAddTrackForm}
+                        onClose={onClose}
+                        selectedSpotifyTrack={selectedSearchResult}
+                    />
+                }
 
             </Container>
         </Modal>
