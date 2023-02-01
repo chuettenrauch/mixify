@@ -6,9 +6,13 @@ import SearchResultCard from "./SearchResultCard";
 import AddTrackForm from "./AddTrackForm";
 import useForm from "../hooks/useForm";
 import useSpotifyTrackSearch from "../hooks/useSpotifyTrackSearch";
+import Mixtape from "../types/mixtape";
+import Track from "../types/track";
 
-export default function SearchTrackForm({open, onClose}: {
+export default function SearchTrackForm({mixtape, open, onSave, onClose}: {
+    mixtape: Mixtape,
     open: boolean,
+    onSave: (savedTrack: Track) => void,
     onClose: () => void,
 }) {
     const {isFormOpen: isAddTrackFormOpen, openForm: openAddTrackForm, closeForm: closeAddTrackForm} = useForm();
@@ -109,7 +113,16 @@ export default function SearchTrackForm({open, onClose}: {
                     </Stack>
                 }
 
-                {selectedSearchResult && <AddTrackForm open={isAddTrackFormOpen} onBack={closeAddTrackForm} onClose={onClose} selectedSpotifyTrack={selectedSearchResult}/>}
+                {isAddTrackFormOpen && selectedSearchResult &&
+                    <AddTrackForm
+                        mixtape={mixtape}
+                        open={isAddTrackFormOpen}
+                        onSave={onSave}
+                        onBack={closeAddTrackForm}
+                        onClose={onClose}
+                        selectedSpotifyTrack={selectedSearchResult}
+                    />
+                }
 
             </Container>
         </Modal>

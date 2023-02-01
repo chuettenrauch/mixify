@@ -50,7 +50,14 @@ export default function ImageUpload({imageUrl = null, onUpload}: {
             maxWidth={(theme) => theme.breakpoints.values.sm}
             sx={{position: "relative"}}
         >
-            <Container sx={{height: 0, overflow: "hidden", paddingTop: "100%", position: "relative"}}>
+            <Container sx={{
+                height: 0,
+                overflow: "hidden",
+                paddingTop: "100%",
+                position: "relative",
+                border: "1px solid grey",
+                borderRadius: 1
+            }}>
                 {imagePreview
                     ? <img src={imagePreview} alt="preview" style={{
                         position: "absolute",

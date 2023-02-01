@@ -3,6 +3,7 @@ import axios from "axios";
 import Mixtape from "../types/mixtape";
 import Form from "../types/forms";
 import FileMetadata from "../types/file-metadata";
+import Track from "../types/track";
 
 export namespace UserApi {
     const client = axios.create({
@@ -51,6 +52,30 @@ export namespace MixtapeApi {
 
     export async function updateMixtape(mixtape: Mixtape): Promise<Mixtape> {
         const response = await client.put(`/${mixtape.id}`, mixtape);
+
+        return response.data;
+    }
+}
+
+export namespace TrackApi {
+    const client = axios.create({
+        baseURL: "/api/mixtapes"
+    });
+
+    export async function createTrack(mixtape: Mixtape, trackForm: Form.Track): Promise<Track> {
+        const response = await client.post(`/${mixtape.id}/tracks`, trackForm);
+
+        return response.data;
+    }
+
+    export async function deleteTrack(mixtape: Mixtape, track: Track): Promise<any> {
+        const response = await client.delete(`/${mixtape.id}/tracks/${track.id}`);
+
+        return response.data;
+    }
+
+    export async function updateTrack(mixtape: Mixtape, track: Track): Promise<Track> {
+        const response = await client.put(`/${mixtape.id}/tracks/${track.id}`, mixtape);
 
         return response.data;
     }
