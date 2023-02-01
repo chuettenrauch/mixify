@@ -1,10 +1,7 @@
-type Track = {
+import Form from "./forms";
+
+type Track = Form.Track & {
     id: string,
-    name: string,
-    artist: string,
-    imageUrl: string,
-    description: string,
-    providerUri: string,
 }
 
 export default Track;

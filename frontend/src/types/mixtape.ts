@@ -1,11 +1,9 @@
 import User from "./user";
 import Track from "./track";
+import Form from "./forms";
 
-type Mixtape = {
+type Mixtape = Form.Mixtape & {
     id: string,
-    title: string,
-    description: string,
-    imageUrl: string,
     createdAt: string,
     createdBy: User,
     tracks: Track[],
