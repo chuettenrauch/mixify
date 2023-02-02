@@ -1,7 +1,7 @@
 import Mixtape from "../types/mixtape";
 import {
     Backdrop,
-    Card, CardActionArea, CardActions, CardContent, CardMedia,
+    Card, CardActionArea, CardActions, CardContent,
     Container,
     IconButton,
     ListItemIcon,
@@ -20,6 +20,7 @@ import {toast} from "react-toastify";
 import useForm from "../hooks/useForm";
 import useMenu from "../hooks/useMenu";
 import {Link} from "react-router-dom";
+import CardImage from "./CardImage";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -48,14 +49,17 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
-                <CardMedia
-                    component="img"
-                    image={mixtape.imageUrl}
-                    alt={mixtape.title}
-                    sx={{width: 100, height: 100, lineHeight: 0, border: "1px solid grey"}}
-                />
+            <CardActions sx={{p: 2, pr: 0}}>
+                <CardImage image={{src: mixtape.imageUrl, alt: mixtape.title, size: 100}} link={`/play/${mixtape.id}`}/>
+            </CardActions>
 
+            <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "stretch",
+                p: 0,
+                paddingBlock: 2
+            }}>
                 <CardContent sx={{display: "flex", alignItems: "stretch"}}>
                     <Container
                         sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 0}}>

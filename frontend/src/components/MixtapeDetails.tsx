@@ -3,7 +3,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import MixtapeForm from "./MixtapeForm";
 import {
     Backdrop, Box,
-    CardMedia, Container,
+    Container,
     IconButton, ListItemIcon, Menu, MenuItem,
     Typography
 } from "@mui/material";
@@ -15,6 +15,7 @@ import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import MixtapeUtils from "../utils/mixtape-utils";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
+import CardImage from "./CardImage";
 
 export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -45,12 +46,7 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
         <Container sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
             <Container sx={{display: "flex", width: "100%", p: 0, position: "relative"}}>
                 <Box sx={{flex: 1}}>
-                    <CardMedia
-                        component="img"
-                        image={mixtape.imageUrl}
-                        alt={mixtape.title}
-                        sx={{width: 130, height: 130, lineHeight: 0, border: "1px solid grey", flex: 1}}
-                    />
+                    <CardImage image={{src: mixtape.imageUrl, alt: mixtape.title, size: 130}} link={`/play/${mixtape.id}`}/>
                 </Box>
 
                 <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
