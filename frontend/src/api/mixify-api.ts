@@ -1,4 +1,4 @@
-import User from "../types/user";
+import {AuthenticatedUser} from "../types/user";
 import axios from "axios";
 import Mixtape from "../types/mixtape";
 import Form from "../types/forms";
@@ -10,7 +10,7 @@ export namespace UserApi {
         baseURL: "/api/users"
     });
 
-    export async function getAuthenticatedUser(): Promise<User> {
+    export async function getAuthenticatedUser(): Promise<AuthenticatedUser> {
         const response = await client.get("/me");
 
         return response.data;

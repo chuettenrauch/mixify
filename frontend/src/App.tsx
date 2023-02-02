@@ -24,7 +24,6 @@ function App() {
                                 <Route path="/" element={<Navigate to="/mixtapes"/>}/>
                                 <Route path="/mixtapes" element={<MixtapesOverviewPage/>}/>
                                 <Route path="/mixtapes/:id" element={<MixtapeDetailPage/>}/>
-                                <Route path="/play" element={<PlayMixtapePage/>}/>
                                 <Route path="/play/:id" element={<PlayMixtapePage/>}/>
                             </Route>
                         </Route>

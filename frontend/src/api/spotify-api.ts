@@ -24,6 +24,16 @@ class SpotifyApi {
 
         return response.data.tracks.items ?? [];
     }
+
+    async addTracks(uris: string[], deviceId: string) {
+        return await this.client.put(
+            `/me/player/play?device_id=${deviceId}`,
+            {
+                uris: uris,
+                position_ms: 0,
+            },
+        );
+    }
 }
 
 export default SpotifyApi;

@@ -9,6 +9,10 @@ export default function useSpotifyTrackSearch() {
     const [selectedSearchResult, setSelectedSearchResult] = useState<Spotify.Track | null>(null);
 
     const searchTracks = async (q: string) => {
+        if (!spotifyApi) {
+            return;
+        }
+
         const results: Spotify.Track[] = await spotifyApi.searchTracks(q);
         setSearchResults(results);
     }
