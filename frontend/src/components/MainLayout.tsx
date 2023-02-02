@@ -19,21 +19,23 @@ export default function MainLayout() {
 
     return (
         <>
-            <HeaderNav/>
+            {user &&
+                /* @ts-ignore */
+                <WebPlaybackSDK
+                  initialDeviceName="Mixify"
+                  getOAuthToken={getAccessToken}
+                  initialVolume={0.5}
+                  connectOnInitialized={true}
+                >
+                  <HeaderNav/>
 
-            {/* @ts-ignore */}
-            <WebPlaybackSDK
-                initialDeviceName="Mixify"
-                getOAuthToken={getAccessToken}
-                initialVolume={0.5}
-                connectOnInitialized={false}
-            >
-                <Container maxWidth="md" sx={{p: 2, mb: 10}}>
+                  <Container maxWidth="md" sx={{p: 2, mb: 10}}>
                     <Outlet/>
-                </Container>
-            </WebPlaybackSDK>
+                  </Container>
 
-            <BottomNav/>
+                  <BottomNav/>
+                </WebPlaybackSDK>
+            }
         </>
     );
 }
