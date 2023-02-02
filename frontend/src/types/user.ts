@@ -1,9 +1,12 @@
 type User = {
-    id?: string,
+    id: string,
     name: string,
-    imageUrl: string,
-    providerAccessToken?: string,
-    providerRefreshToken?: string
+    imageUrl: string
+}
+
+export type AuthenticatedUser = User & {
+    providerAccessToken: string,
+    providerRefreshToken: string
 }
 
 export default User;

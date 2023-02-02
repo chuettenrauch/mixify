@@ -1,7 +1,7 @@
-import User from "../types/user";
+import {AuthenticatedUser} from "../types/user";
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
 
-const UserContext = createContext<{user: User|null, setUser: Dispatch<SetStateAction<User|null>>}>({
+const UserContext = createContext<{user: AuthenticatedUser|null, setUser: Dispatch<SetStateAction<AuthenticatedUser|null>>}>({
     user: null,
     setUser: () => undefined
 });
@@ -9,7 +9,7 @@ const UserContext = createContext<{user: User|null, setUser: Dispatch<SetStateAc
 export function UserProvider({children}: {
     children: ReactNode|ReactNode[]
 }) {
-    const [user, setUser] = useState<User|null>(null);
+    const [user, setUser] = useState<AuthenticatedUser|null>(null);
 
     return (
         <UserContext.Provider value={{user, setUser}}>
