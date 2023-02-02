@@ -25,7 +25,7 @@ class SpotifyApi {
         return response.data.tracks.items ?? [];
     }
 
-    async queueTracks(uris: string[], deviceId: string) {
+    async addTracks(uris: string[], deviceId: string) {
         return await this.client.put(
             `/me/player/play?device_id=${deviceId}`,
             {

@@ -1,44 +1,40 @@
 import {Location, useLocation, useParams} from "react-router-dom";
 import useMixtape from "../hooks/useMixtape";
-import localStorage from  "react-secure-storage";
+import localStorage from "react-secure-storage";
 import {useEffect} from "react";
 import StorageKey from "../utils/local-storage-utils";
-import {usePlayerDevice, useSpotifyPlayer, useWebPlaybackSDKReady} from "react-spotify-web-playback-sdk";
-import useSpotifyApi from "../hooks/useSpotifyApi";
+import useMixtapePlayer from "../hooks/useMixtapePlayer";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
     const {id} = useParams<{ id: string }>();
     const {mixtape} = useMixtape(id);
 
-    const ready = useWebPlaybackSDKReady();
-    const player = useSpotifyPlayer();
-    const device = usePlayerDevice();
-
-    const spotifyApi = useSpotifyApi();
-
-    useEffect(() => {
-        if (!player) {
-            return;
-        }
-
-        return ensurePlayerIsPausedIfUserLeavesPage(player);
-    }, [player]);
+    const {playerReady, addTracksToPlayer, startPlayer, pausePlayer} = useMixtapePlayer();
 
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
 
     useEffect(() => {
-        if (!spotifyApi || !mixtape || !device || device.status !== "ready") {
+        if (!playerReady || !mixtape) {
             return;
         }
 
         (async() => {
             const uris = mixtape.tracks.map(track => track.providerUri);
-            await spotifyApi?.queueTracks(uris, device.device_id);
+            await addTracksToPlayer(uris)
         })();
-    }, [ready, spotifyApi, device, mixtape]);
+    }, [playerReady, addTracksToPlayer, mixtape])
+
+    // ensure that player is stopped, if user leaves the page
+    useEffect(() => {
+        return () => {
+            (async () => {
+                await pausePlayer();
+            })();
+        }
+    }, [pausePlayer])
 
     return (
         <>
@@ -46,12 +42,16 @@ export default function PlayMixtapePage() {
             {mixtape &&
               <p>{mixtape.title}</p>
             }
+
+            {playerReady &&
+              <>
+                <p>Player is ready for use</p>
+                <button onClick={() => startPlayer()}>Resume</button>
+                <button onClick={() => pausePlayer()}>Pause</button>
+              </>
+            }
         </>
     );
-}
-
-function ensurePlayerIsPausedIfUserLeavesPage(player: Spotify.Player): () => void {
-    return () => player.pause();
 }
 
 function updateLastPlayUrlInLocalStorage(currentLocation: Location) {
