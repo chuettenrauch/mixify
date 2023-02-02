@@ -1,6 +1,6 @@
 import {
     AppBar,
-    Avatar, Backdrop,
+    Backdrop,
     Box,
     Container,
     IconButton,
@@ -17,6 +17,7 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import logo from "../logo.png";
 import useMenu from "../hooks/useMenu";
+import UserAvatar from "./UserAvatar";
 
 export default function HeaderNav() {
     const {user, setUser} = useUserContext();
@@ -42,15 +43,17 @@ export default function HeaderNav() {
                     </Box>
 
                     <Box sx={{ marginLeft: "auto" }}>
-                        <IconButton
+                        {user &&
+                          <IconButton
                             onClick={(e) => openMenu(e.currentTarget)}
-                            sx={{ p: 0 }}
+                            sx={{p: 0}}
                             aria-controls={isMenuOpen ? 'account-menu' : undefined}
                             aria-haspopup="true"
                             aria-expanded={isMenuOpen ? 'true' : undefined}
-                        >
-                            <Avatar alt={user?.name} src={user?.imageUrl}/>
-                        </IconButton>
+                          >
+                            <UserAvatar user={user}/>
+                          </IconButton>
+                        }
 
                         <Menu
                             id="account-menu"
