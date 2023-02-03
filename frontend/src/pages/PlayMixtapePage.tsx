@@ -10,6 +10,7 @@ import {PlayCircle as PlayCircleIcon} from "@mui/icons-material";
 import UserAvatar from "../components/UserAvatar";
 import MixtapeUtils from "../utils/mixtape-utils";
 import FlippableImageCard from "../components/FlippableImageCard";
+import SwipeableEdgeDrawer from "../components/SwipeableEdgeDrawer";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
@@ -85,6 +86,8 @@ export default function PlayMixtapePage() {
                 <button onClick={() => pausePlayer()}>Pause</button>
               </>
             }
+
+            <SwipeableEdgeDrawer/>
         </Container>
     );
 }
