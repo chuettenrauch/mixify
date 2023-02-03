@@ -14,7 +14,6 @@ export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
         <Card
             square={true}
             variant="outlined"
-            raised={true}
             sx={{
                 position: "fixed",
                 bottom: (theme) => theme.spacing(7),

@@ -70,7 +70,7 @@ export default function PlayMixtapePage() {
             const uris = mixtape.tracks.map(track => track.providerUri);
             await spotifyApi?.addTracks(uris, device?.device_id ?? "");
         })();
-    }, [device, mixtape])
+    }, [device, mixtape, spotifyApi])
 
     useEffect(() => {
         if (!state || !mixtape || state.paused) {
@@ -88,12 +88,12 @@ export default function PlayMixtapePage() {
                 setPlayedTracks([...playedTracks, track]);
             }
         }
-    }, [state, mixtape]);
+    }, [state, mixtape, playedTracks]);
 
     // ensure that player is stopped, if user leaves the page
     useEffect(() => {
         return () => {
-            pausePlayer();
+            player?.pause();
         }
     }, [player])
 
