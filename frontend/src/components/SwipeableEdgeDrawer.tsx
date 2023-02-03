@@ -2,45 +2,38 @@ import * as React from "react";
 import { Global } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { grey } from "@mui/material/colors";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import {IconButton, Paper} from "@mui/material";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 
-const drawerBleeding = 100;
+const drawerBleeding = 110;
 
 export default function SwipeableEdgeDrawer() {
     const [open, setOpen] = React.useState(false);
-
-    const toggleDrawer = (newOpen: boolean) => () => {
-        setOpen(newOpen);
-    };
 
     const container = window !== undefined ? () => window.document.body : undefined;
 
     return (
         <Box sx={{
             height: "100%",
-            backgroundColor: "background.paper",
         }}>
             <CssBaseline />
             <Global
                 styles={{
                     ".MuiDrawer-root > .MuiPaper-root": {
-                        height: `calc(70vh - ${drawerBleeding}px)`,
+                        height: `calc(69vh - ${drawerBleeding}px)`,
                         overflow: "visible", // tried to set to scroll and auto
                     },
                 }}
             />
-            <Box sx={{ textAlign: "center", pt: 1 }}>
-                <Button onClick={toggleDrawer(true)}>Open</Button>
-            </Box>
             <SwipeableDrawer
                 container={container}
                 anchor="bottom"
                 open={open}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
+                onClose={() => setOpen(false)}
+                onOpen={() => setOpen(true)}
                 swipeAreaWidth={drawerBleeding}
                 disableSwipeToOpen={false}
                 ModalProps={{
@@ -50,16 +43,18 @@ export default function SwipeableEdgeDrawer() {
                     zIndex: (theme) => theme.zIndex.appBar - 2,
                 }}
             >
-                <Box
+                <Paper
+                    data-drawer-handle
+                    variant="outlined"
                     sx={{
                         position: "relative",
-                        marginTop: `${-drawerBleeding}px`,
+                        marginTop: `${-drawerBleeding + 5}px`,
                         borderTopLeftRadius: 8,
                         borderTopRightRadius: 8,
                         visibility: "visible",
                         right: 0,
                         left: 0,
-                        backgroundColor: "background.paper",
+                        backgroundColor: grey[300],
                     }}
                 >
                     {/* Pull Handle */}
@@ -72,7 +67,17 @@ export default function SwipeableEdgeDrawer() {
                         top: 8,
                         left: "calc(50% - 15px)",
                     }} />
-                    <Typography sx={{ p: 2, color: "text.secondary" }}>12 Tracks</Typography>
+                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <Typography textTransform="uppercase" sx={{p: 2}}>Show tracks</Typography>
+                        {open
+                            ? <IconButton size="large" onClick={() => setOpen(false)}>
+                                <KeyboardArrowDown fontSize="inherit"/>
+                            </IconButton>
+                            : <IconButton size="large" onClick={() => setOpen(true)}>
+                                <KeyboardArrowUp fontSize="inherit"/>
+                            </IconButton>
+                        }
+                    </Box>
                     <Box sx={{
                         maxHeight: `calc(70vh - ${drawerBleeding}px)`,
                         overflow: "auto",
@@ -85,7 +90,7 @@ export default function SwipeableEdgeDrawer() {
                             Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer
                         </Typography>
                     </Box>
-                </Box>
+                </Paper>
             </SwipeableDrawer>
         </Box>
     );
