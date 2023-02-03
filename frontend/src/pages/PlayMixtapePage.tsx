@@ -21,6 +21,7 @@ import Track from "../types/track";
 import PlayerTrackView from "../components/PlayerTrackView";
 import useOpenClose from "../hooks/useOpenClose";
 import {
+    Info as InfoIcon,
     PlayCircle as PlayCircleIcon,
 } from "@mui/icons-material";
 import FlippableImageCard from "../components/FlippableImageCard";
@@ -140,19 +141,33 @@ export default function PlayMixtapePage() {
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <Typography variant="h2" textTransform="uppercase">by {mixtape.createdBy.name}</Typography>
                     <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
+                    <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                 </Box>
             </Box>
 
-            <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0, width: "100%"}}>
-                {playedTracks.map((track, index) => (
-                    <ListItem key={track.id} sx={{p: 0}}>
-                        <Container sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
-                            <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
-                            <SimpleTrackCard track={track}/>
-                        </Container>
-                    </ListItem>
-                ))}
-            </List>
+            {playedTracks &&
+              <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0, width: "100%"}}>
+                  {playedTracks.map((track, index) => (
+                      <ListItem key={track.id} sx={{p: 0}}>
+                          <Container
+                              sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
+                              <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
+                              <SimpleTrackCard track={track}/>
+                          </Container>
+                      </ListItem>
+                  ))}
+              </List>
+            }
+
+            {playedTracks.length !== mixtape.tracks.length &&
+                <Typography sx={{display: "flex", alignItems: "center"}}>
+                  <InfoIcon color="primary" sx={{mr: 1}}/>
+                    {playedTracks.length === 0
+                        ? "Start listening to this mixtape to reveal the tracks."
+                        : "Continue listening to reveal the remaining tracks."
+                    }
+                </Typography>
+            }
 
             {currentTrack && state && !state.paused &&
               <MiniPlayer track={currentTrack} onPrevious={playPreviousTrack} onPause={pausePlayer} onClick={openTrackView}/>
