@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
-const drawerBleeding = 56;
+const drawerBleeding = 100;
 
 export default function SwipeableEdgeDrawer() {
     const [open, setOpen] = React.useState(false);
@@ -21,13 +21,13 @@ export default function SwipeableEdgeDrawer() {
     return (
         <Box sx={{
             height: "100%",
-            backgroundColor: (theme) => theme.palette.background.default,
+            backgroundColor: "background.paper",
         }}>
             <CssBaseline />
             <Global
                 styles={{
                     ".MuiDrawer-root > .MuiPaper-root": {
-                        height: `calc(50% - ${drawerBleeding}px)`,
+                        height: `calc(70vh - ${drawerBleeding}px)`,
                         overflow: "visible", // tried to set to scroll and auto
                     },
                 }}
@@ -46,6 +46,9 @@ export default function SwipeableEdgeDrawer() {
                 ModalProps={{
                     keepMounted: true,
                 }}
+                sx={{
+                    zIndex: (theme) => theme.zIndex.appBar - 2,
+                }}
             >
                 <Box
                     sx={{
@@ -56,7 +59,7 @@ export default function SwipeableEdgeDrawer() {
                         visibility: "visible",
                         right: 0,
                         left: 0,
-                        backgroundColor: grey[300],
+                        backgroundColor: "background.paper",
                     }}
                 >
                     {/* Pull Handle */}
@@ -71,10 +74,9 @@ export default function SwipeableEdgeDrawer() {
                     }} />
                     <Typography sx={{ p: 2, color: "text.secondary" }}>12 Tracks</Typography>
                     <Box sx={{
-                        maxHeight: "300px",
+                        maxHeight: `calc(70vh - ${drawerBleeding}px)`,
                         overflow: "auto",
                         p: 2,
-                        pb: 20,
                     }}>
                         <Typography>
                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
