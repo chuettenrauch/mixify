@@ -36,9 +36,8 @@ export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
                         image={track.imageUrl}
                         alt={track.name}
                         sx={{
-                            width: "auto",
-                            maxWidth: "auto",
-                            maxHeight: "100%",
+                            width: (theme) => theme.spacing(7),
+                            height: (theme) => theme.spacing(7),
                             objectFit: "cover",
                             lineHeight: 0,
                             border: "1px solid grey",
