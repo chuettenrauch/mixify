@@ -1,5 +1,5 @@
 import {Box, Button, Container, Modal, Stack, TextField, Typography} from "@mui/material";
-import FormHeader from "./FormHeader";
+import ModalHeader from "./ModalHeader";
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import Form from "../types/forms";
 import ImageUpload from "./ImageUpload";
@@ -68,7 +68,7 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title={title} onBack={onBack} onClose={onClose}/>
+                <ModalHeader title={title} onBack={onBack} onClose={onClose}/>
 
                 <Box sx={{alignSelf: "flex-start"}}>
                     <Typography variant="h2">{trackForm.name}</Typography>

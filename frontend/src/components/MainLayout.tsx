@@ -1,7 +1,7 @@
 import HeaderNav from "./HeaderNav";
 import BottomNav from "./BottomNav";
 import {Outlet} from "react-router-dom";
-import {Container} from "@mui/material";
+import {Box, Container} from "@mui/material";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {useUserContext} from "../context/userContext";
 import {useCallback} from "react";
@@ -18,7 +18,7 @@ export default function MainLayout() {
     }, [user]);
 
     return (
-        <>
+        <Box sx={{maxHeight: window.innerHeight, overflow: "scroll"}}>
             {user &&
                 /* @ts-ignore */
                 <WebPlaybackSDK
@@ -36,6 +36,6 @@ export default function MainLayout() {
                   <BottomNav/>
                 </WebPlaybackSDK>
             }
-        </>
+        </Box>
     );
 }
