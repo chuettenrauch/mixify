@@ -16,7 +16,8 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
 }) {
     const [open, setOpen] = React.useState(false);
 
-    const container = window !== undefined ? () => window.document.body : undefined;
+    const drawerHeight = `${window.innerHeight * 0.8 - drawerBleeding}px`;
+    const container = () => window.document.body;
 
     return (
         <Box sx={{
@@ -26,8 +27,8 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
             <Global
                 styles={{
                     ".MuiDrawer-root > .MuiPaper-root": {
-                        height: `calc(85vh - ${drawerBleeding}px)`,
-                        overflow: "visible", // tried to set to scroll and auto
+                        height: drawerHeight,
+                        overflow: "visible",
                     },
                     ".MuiBox-root .PrivateSwipeArea-root": {
                         zIndex: 1000
@@ -86,8 +87,8 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
                         }
                     </Box>
                     <Box sx={{
-                        height: `calc(85vh - ${drawerBleeding}px)`,
-                        maxHeight: `calc(85vh - ${drawerBleeding}px)`,
+                        height: drawerHeight,
+                        maxHeight: drawerHeight,
                         overflow: "auto",
                         p: 2,
                     }}>
