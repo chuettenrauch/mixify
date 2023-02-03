@@ -55,7 +55,7 @@ export default function PlayMixtapePage() {
             const uris = mixtape.tracks.map(track => track.providerUri);
             await spotifyApi?.addTracks(uris, device?.device_id ?? "");
         })();
-    }, [spotifyApi, device, mixtape])
+    }, [device, mixtape])
 
     useEffect(() => {
         if (!state || !mixtape || state.paused) {
