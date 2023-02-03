@@ -18,7 +18,7 @@ export default function MainLayout() {
     }, [user]);
 
     return (
-        <Box sx={{maxHeight: window.innerHeight, overflow: "hidden"}}>
+        <Box sx={{maxHeight: window.innerHeight, overflow: "scroll"}}>
             {user &&
                 /* @ts-ignore */
                 <WebPlaybackSDK

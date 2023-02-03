@@ -1,55 +1,81 @@
 import {Location, useLocation, useParams} from "react-router-dom";
 import useMixtape from "../hooks/useMixtape";
 import localStorage from "react-secure-storage";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import StorageKey from "../utils/local-storage-utils";
-import useMixtapePlayer from "../hooks/useMixtapePlayer";
 import {
-    Box,
     Container,
-    IconButton, List, ListItem,
+    List, ListItem,
     Typography
 } from "@mui/material";
 import PageHeader from "../components/PageHeader";
-import {
-    PlayCircle as PlayCircleIcon
-} from "@mui/icons-material";
-import UserAvatar from "../components/UserAvatar";
-import MixtapeUtils from "../utils/mixtape-utils";
-import FlippableImageCard from "../components/FlippableImageCard";
 import SwipeableEdgeDrawer from "../components/SwipeableEdgeDrawer";
 import SimpleTrackCard from "../components/SimpleTrackCard";
+import {
+    usePlaybackState,
+    usePlayerDevice,
+    useSpotifyPlayer,
+} from "react-spotify-web-playback-sdk";
+import useSpotifyApi from "../hooks/useSpotifyApi";
+import Track from "../types/track";
+import PlayerMixtapeView from "../components/PlayerMixtapeView";
+import PlayerTrackView from "../components/PlayerTrackView";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
     const {id} = useParams<{ id: string }>();
     const {mixtape} = useMixtape(id);
 
-    const {playerReady, addTracksToPlayer, startPlayer, pausePlayer} = useMixtapePlayer();
+    const [currentTrack, setCurrentTrack] = useState<Track | null>();
+
+    const player = useSpotifyPlayer();
+    const device = usePlayerDevice();
+    const state = usePlaybackState();
+    const spotifyApi = useSpotifyApi();
+
+    const startPlayer = async () => {
+        return player?.resume();
+    };
+
+    const pausePlayer = async () => {
+        setCurrentTrack(null);
+        return player?.pause();
+    };
 
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
 
     useEffect(() => {
-        if (!playerReady || !mixtape) {
+        if (!mixtape || !device || device.status === "not_ready") {
             return;
         }
 
         (async() => {
             const uris = mixtape.tracks.map(track => track.providerUri);
-            await addTracksToPlayer(uris)
+            await spotifyApi?.addTracks(uris, device?.device_id ?? "");
         })();
-    }, [playerReady, addTracksToPlayer, mixtape])
+    }, [spotifyApi, device, mixtape])
+
+    useEffect(() => {
+        if (!state || !mixtape || state.paused) {
+            return;
+        }
+
+        const playingUri = state.track_window.current_track.uri;
+        const track = mixtape.tracks.find(track => track.providerUri === playingUri);
+
+        if (track) {
+            setCurrentTrack(track);
+        }
+    }, [state, mixtape]);
 
     // ensure that player is stopped, if user leaves the page
     useEffect(() => {
         return () => {
-            (async () => {
-                await pausePlayer();
-            })();
+            player?.pause();
         }
-    }, [pausePlayer])
+    }, [player])
 
     if (!mixtape) {
         return null;
@@ -64,35 +90,10 @@ export default function PlayMixtapePage() {
             p: 0,
         }}>
             <PageHeader title={mixtape.title}/>
-            <FlippableImageCard image={{src: mixtape.imageUrl, alt: mixtape.title}} textOnBack={mixtape.description}>
-                {playerReady &&
-                  <IconButton size="large" component="button" onClick={() => startPlayer()} aria-label="play" sx={{
-                      display: "block",
-                      m: 4,
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "80%",
-                      height: "80%",
-                      zIndex: 1,
-                  }}>
-                    <PlayCircleIcon sx={{width: "70%", height: "100%"}}/>
-                  </IconButton>
-                }
-            </FlippableImageCard>
 
-            <Box sx={{display: "flex", gap: 1, width: "100%"}}>
-                <UserAvatar user={mixtape.createdBy} sx={{width: 60, height: 60}}/>
-                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-                    <Typography variant="h2" textTransform="uppercase">by {mixtape.createdBy.name}</Typography>
-                    <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
-                </Box>
-            </Box>
-
-            {playerReady &&
-              <>
-                <button onClick={() => pausePlayer()}>Pause</button>
-              </>
+            {currentTrack
+                ? <PlayerTrackView track={currentTrack} ready={!!device} onPause={() => pausePlayer()} onPrevious={() => player?.previousTrack()}/>
+                : <PlayerMixtapeView mixtape={mixtape} ready={!!device} onPlay={() => startPlayer()}/>
             }
 
             <SwipeableEdgeDrawer title="Show tracks" drawerBleeding={130}>

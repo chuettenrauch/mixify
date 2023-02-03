@@ -7,7 +7,7 @@ import Image from "../types/image";
 export default function FlippableImageCard({image, textOnBack, children}: {
     image: Image,
     textOnBack: string
-    children: ReactNode
+    children?: ReactNode
 }) {
     const [isImageFlipped, setIsImageFlipped] = useState<boolean>(false);
 

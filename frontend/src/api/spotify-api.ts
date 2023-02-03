@@ -2,6 +2,7 @@ import axios, {Axios} from "axios";
 
 class SpotifyApi {
     private client: Axios;
+    private alreadyAddedTracks: boolean = false;
 
     constructor(token: string) {
         this.client = axios.create({
@@ -26,13 +27,24 @@ class SpotifyApi {
     }
 
     async addTracks(uris: string[], deviceId: string) {
-        return await this.client.put(
+        if (this.alreadyAddedTracks) {
+            return;
+        }
+
+        const response = await this.client.put(
             `/me/player/play?device_id=${deviceId}`,
             {
                 uris: uris,
-                position_ms: 0,
             },
         );
+
+        this.alreadyAddedTracks = true;
+
+        setTimeout(() => {
+            this.alreadyAddedTracks = false;
+        }, 3000);
+
+        return response;
     }
 }
 
