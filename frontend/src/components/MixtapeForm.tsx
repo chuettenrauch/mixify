@@ -1,6 +1,6 @@
 import {Button, Container, Modal, Stack, TextField} from "@mui/material";
 import React, {ChangeEvent, FormEvent, useState} from "react";
-import FormHeader from "./FormHeader";
+import ModalHeader from "./ModalHeader";
 import Form from "../types/forms";
 import Mixtape from "../types/mixtape";
 import {Save as SaveIcon} from "@mui/icons-material";
@@ -73,7 +73,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title={title} onClose={onClose}/>
+                <ModalHeader title={title} onClose={onClose}/>
 
                 <ImageUpload imageUrl={mixtape ? mixtape.imageUrl : null} onUpload={onImageUpload}/>
 

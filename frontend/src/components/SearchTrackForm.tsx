@@ -1,5 +1,5 @@
 import {Container, IconButton, Modal, Stack, TextField, Typography} from "@mui/material";
-import FormHeader from "./FormHeader";
+import ModalHeader from "./ModalHeader";
 import React, {FormEvent} from "react";
 import {Clear as ClearIcon, MusicNote as MusicNoteIcon, Search as SearchIcon} from "@mui/icons-material";
 import SearchResultCard from "./SearchResultCard";
@@ -57,7 +57,7 @@ export default function SearchTrackForm({mixtape, open, onSave, onClose}: {
                 position: "relative",
                 overflow: "scroll"
             }}>
-                <FormHeader title="Search track" onClose={onClose}/>
+                <ModalHeader title="Search track" onClose={onClose}/>
 
                 <Stack
                     component="form"
