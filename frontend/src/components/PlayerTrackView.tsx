@@ -50,10 +50,10 @@ export default function PlayerTrackView({open, mixtape, track, ready, onPause, o
 
                     {ready &&
                       <Box sx={{display: "flex", justifyContent: "center"}}>
-                        <IconButton sx={{fontSize: 100, p: 0}} onClick={onPrevious}>
+                        <IconButton color="primary" sx={{fontSize: 100, p: 0}} onClick={onPrevious}>
                           <SkipPreviousIcon fontSize="inherit"/>
                         </IconButton>
-                        <IconButton sx={{fontSize: 100, p: 0}} onClick={onPause}>
+                        <IconButton color="primary" sx={{fontSize: 100, p: 0}} onClick={onPause}>
                           <PauseCircleIcon fontSize="inherit"/>
                         </IconButton>
                       </Box>

@@ -52,10 +52,10 @@ export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
                 </CardActionArea>
 
                 <CardActions>
-                    <IconButton sx={{fontSize: 40, p: 0}} onClick={onPrevious}>
+                    <IconButton color="primary" sx={{fontSize: 40, p: 0}} onClick={onPrevious}>
                         <SkipPreviousIcon fontSize="inherit"/>
                     </IconButton>
-                    <IconButton sx={{fontSize: 40, p: 0}} onClick={onPause}>
+                    <IconButton color="primary" sx={{fontSize: 40, p: 0}} onClick={onPause}>
                         <PauseCircleIcon fontSize="inherit"/>
                     </IconButton>
                 </CardActions>
