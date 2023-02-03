@@ -4,13 +4,21 @@ import localStorage from "react-secure-storage";
 import React, {useEffect} from "react";
 import StorageKey from "../utils/local-storage-utils";
 import useMixtapePlayer from "../hooks/useMixtapePlayer";
-import {Box, Container, IconButton, Typography} from "@mui/material";
+import {
+    Box,
+    Container,
+    IconButton, List, ListItem,
+    Typography
+} from "@mui/material";
 import PageHeader from "../components/PageHeader";
-import {PlayCircle as PlayCircleIcon} from "@mui/icons-material";
+import {
+    PlayCircle as PlayCircleIcon
+} from "@mui/icons-material";
 import UserAvatar from "../components/UserAvatar";
 import MixtapeUtils from "../utils/mixtape-utils";
 import FlippableImageCard from "../components/FlippableImageCard";
 import SwipeableEdgeDrawer from "../components/SwipeableEdgeDrawer";
+import SimpleTrackCard from "../components/SimpleTrackCard";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
@@ -87,7 +95,18 @@ export default function PlayMixtapePage() {
               </>
             }
 
-            <SwipeableEdgeDrawer/>
+            <SwipeableEdgeDrawer title="Show tracks" drawerBleeding={110}>
+                <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
+                    {mixtape.tracks.map((track, index) => (
+                        <ListItem sx={{p: 0}}>
+                            <Container sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
+                                <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
+                                <SimpleTrackCard track={track}/>
+                            </Container>
+                        </ListItem>
+                    ))}
+                </List>
+            </SwipeableEdgeDrawer>
         </Container>
     );
 }

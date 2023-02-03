@@ -7,10 +7,13 @@ import Typography from "@mui/material/Typography";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import {IconButton, Paper} from "@mui/material";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
+import {ReactNode} from "react";
 
-const drawerBleeding = 110;
-
-export default function SwipeableEdgeDrawer() {
+export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
+    title: string,
+    drawerBleeding: number,
+    children: ReactNode | ReactNode[],
+}) {
     const [open, setOpen] = React.useState(false);
 
     const container = window !== undefined ? () => window.document.body : undefined;
@@ -68,7 +71,7 @@ export default function SwipeableEdgeDrawer() {
                         left: "calc(50% - 15px)",
                     }} />
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                        <Typography textTransform="uppercase" sx={{p: 2}}>Show tracks</Typography>
+                        <Typography textTransform="uppercase" sx={{p: 2}}>{title}</Typography>
                         {open
                             ? <IconButton size="large" onClick={() => setOpen(false)}>
                                 <KeyboardArrowDown fontSize="inherit"/>
@@ -79,16 +82,12 @@ export default function SwipeableEdgeDrawer() {
                         }
                     </Box>
                     <Box sx={{
+                        height: `calc(70vh - ${drawerBleeding}px)`,
                         maxHeight: `calc(70vh - ${drawerBleeding}px)`,
                         overflow: "auto",
                         p: 2,
                     }}>
-                        <Typography>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
-                            Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer
-                        </Typography>
+                        {children}
                     </Box>
                 </Paper>
             </SwipeableDrawer>
