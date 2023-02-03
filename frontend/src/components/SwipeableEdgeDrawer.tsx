@@ -26,12 +26,16 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
             <Global
                 styles={{
                     ".MuiDrawer-root > .MuiPaper-root": {
-                        height: `calc(69vh - ${drawerBleeding}px)`,
+                        height: `calc(85vh - ${drawerBleeding}px)`,
                         overflow: "visible", // tried to set to scroll and auto
                     },
+                    ".MuiBox-root .PrivateSwipeArea-root": {
+                        zIndex: 1000
+                    }
                 }}
             />
             <SwipeableDrawer
+                data-drawer
                 container={container}
                 anchor="bottom"
                 open={open}
@@ -51,7 +55,7 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
                     variant="outlined"
                     sx={{
                         position: "relative",
-                        marginTop: `${-drawerBleeding + 5}px`,
+                        marginTop: `${-drawerBleeding}px`,
                         borderTopLeftRadius: 8,
                         borderTopRightRadius: 8,
                         visibility: "visible",
@@ -70,7 +74,7 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
                         top: 8,
                         left: "calc(50% - 15px)",
                     }} />
-                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3}}>
                         <Typography textTransform="uppercase" sx={{p: 2}}>{title}</Typography>
                         {open
                             ? <IconButton size="large" onClick={() => setOpen(false)}>
@@ -82,8 +86,8 @@ export default function SwipeableEdgeDrawer({title, drawerBleeding, children}: {
                         }
                     </Box>
                     <Box sx={{
-                        height: `calc(70vh - ${drawerBleeding}px)`,
-                        maxHeight: `calc(70vh - ${drawerBleeding}px)`,
+                        height: `calc(85vh - ${drawerBleeding}px)`,
+                        maxHeight: `calc(85vh - ${drawerBleeding}px)`,
                         overflow: "auto",
                         p: 2,
                     }}>

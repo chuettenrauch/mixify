@@ -95,7 +95,7 @@ export default function PlayMixtapePage() {
               </>
             }
 
-            <SwipeableEdgeDrawer title="Show tracks" drawerBleeding={110}>
+            <SwipeableEdgeDrawer title="Show tracks" drawerBleeding={130}>
                 <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
                     {mixtape.tracks.map((track, index) => (
                         <ListItem sx={{p: 0}}>
