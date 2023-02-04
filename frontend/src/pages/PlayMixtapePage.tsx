@@ -1,7 +1,7 @@
 import {Location, useLocation, useParams} from "react-router-dom";
 import useMixtape from "../hooks/useMixtape";
 import localStorage from "react-secure-storage";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import StorageKey from "../utils/local-storage-utils";
 import {
     Box,
@@ -43,6 +43,12 @@ export default function PlayMixtapePage() {
     const state = usePlaybackState();
     const spotifyApi = useSpotifyApi();
 
+    const addTracks = useCallback((tracks: Track[], startIndex: number) => {
+        const uris = tracks.map(track => track.providerUri);
+
+        return spotifyApi?.addTracks(uris, uris[startIndex], device?.device_id ?? "");
+    }, [spotifyApi, device]);
+
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
@@ -53,10 +59,9 @@ export default function PlayMixtapePage() {
         }
 
         (async () => {
-            const uris = mixtape.tracks.map(track => track.providerUri);
-            await spotifyApi?.addTracks(uris, device?.device_id ?? "");
+            addTracks(mixtape.tracks, 0);
         })();
-    }, [device, mixtape, spotifyApi])
+    }, [device, mixtape, spotifyApi, addTracks])
 
     useEffect(() => {
         if (!state || !mixtape || state.paused) {
@@ -109,14 +114,14 @@ export default function PlayMixtapePage() {
                 </Box>
             </Box>
 
-            {playedTracks &&
+            {mixtape && playedTracks &&
               <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0, width: "100%"}}>
                   {playedTracks.map((track, index) => (
                       <ListItem key={track.id} sx={{p: 0}}>
                           <Container
                               sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
                               <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
-                              <FlippableTrackCard track={track} mixtape={mixtape}/>
+                              <FlippableTrackCard track={track} mixtape={mixtape} onImageClick={() => addTracks(mixtape.tracks || [], index)}/>
                           </Container>
                       </ListItem>
                   ))}

@@ -18,8 +18,8 @@ import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import useForm from "../hooks/useForm";
 import useMenu from "../hooks/useMenu";
-import {Link} from "react-router-dom";
-import CardImage from "./CardImage";
+import {Link, useNavigate} from "react-router-dom";
+import CardImageWithPlayButton from "./CardImageWithPlayButton";
 import {useBackdrop} from "../context/backdropContext";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
@@ -27,6 +27,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
+    const navigate = useNavigate();
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {enableBackdrop} = useBackdrop();
@@ -55,7 +56,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
             <CardActions sx={{p: 2, pr: 0}}>
-                <CardImage image={{src: mixtape.imageUrl, alt: mixtape.title, size: 100}} link={`/play/${mixtape.id}`}/>
+                <CardImageWithPlayButton
+                    image={{src: mixtape.imageUrl, alt: mixtape.title, size: 100}}
+                    onClick={() => navigate(`/play/${mixtape.id}`)}
+                />
             </CardActions>
 
             <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{
