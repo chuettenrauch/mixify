@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import StorageKey from "../utils/local-storage-utils";
 import {
     Box,
-    Container, IconButton,
+    Container,
     List, ListItem,
     Typography
 } from "@mui/material";
@@ -22,7 +22,6 @@ import PlayerTrackView from "../components/PlayerTrackView";
 import useOpenClose from "../hooks/useOpenClose";
 import {
     Info as InfoIcon,
-    PlayCircle as PlayCircleIcon,
 } from "@mui/icons-material";
 import FlippableImageCard from "../components/FlippableImageCard";
 import UserAvatar from "../components/UserAvatar";
@@ -43,10 +42,6 @@ export default function PlayMixtapePage() {
     const device = usePlayerDevice();
     const state = usePlaybackState();
     const spotifyApi = useSpotifyApi();
-
-    const startPlayer = async () => {
-        return player?.resume();
-    };
 
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
@@ -88,11 +83,6 @@ export default function PlayMixtapePage() {
         }
     }, [player])
 
-    const onMixtapePlay = () => {
-        startPlayer();
-        openTrackView();
-    }
-
     if (!mixtape) {
         return null;
     }
@@ -108,24 +98,7 @@ export default function PlayMixtapePage() {
         }}>
             <PageHeader title={mixtape.title}/>
 
-            <FlippableImageCard image={{src: mixtape.imageUrl, alt: mixtape.title}}
-                                textOnBack={mixtape.description}>
-                {device && state && state.paused &&
-                  <IconButton size="large" component="button" onClick={onMixtapePlay} aria-label="play"
-                              sx={{
-                                  display: "block",
-                                  m: 4,
-                                  position: "absolute",
-                                  top: 0,
-                                  left: 0,
-                                  width: "80%",
-                                  height: "80%",
-                                  zIndex: 1,
-                              }}>
-                    <PlayCircleIcon sx={{width: "70%", height: "100%"}}/>
-                  </IconButton>
-                }
-            </FlippableImageCard>
+            <FlippableImageCard image={{src: mixtape.imageUrl, alt: mixtape.title}} textOnBack={mixtape.description}/>
 
             <Box sx={{display: "flex", gap: 1, width: "100%"}}>
                 <UserAvatar user={mixtape.createdBy} sx={{width: 60, height: 60}}/>
