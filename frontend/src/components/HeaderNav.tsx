@@ -1,6 +1,5 @@
 import {
     AppBar,
-    Backdrop,
     Box,
     Container,
     IconButton,
@@ -9,7 +8,7 @@ import {
     MenuItem,
     Toolbar,
 } from "@mui/material";
-import React from "react";
+import React, {useEffect} from "react";
 import {useUserContext} from "../context/userContext";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {UserApi} from "../api/mixify-api";
@@ -18,12 +17,18 @@ import {useNavigate} from "react-router-dom";
 import logo from "../logo.png";
 import useMenu from "../hooks/useMenu";
 import UserAvatar from "./UserAvatar";
+import {useBackdrop} from "../context/backdropContext";
 
 export default function HeaderNav() {
     const {user, setUser} = useUserContext();
     const navigate = useNavigate();
 
     const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
+    const {enableBackdrop} = useBackdrop();
+
+    useEffect(() => {
+        enableBackdrop(isMenuOpen);
+    }, [isMenuOpen, enableBackdrop])
 
     const onLogout = async () => {
         await UserApi.logout();
@@ -72,10 +77,6 @@ export default function HeaderNav() {
                     </Box>
                 </Toolbar>
             </Container>
-
-            {isMenuOpen &&
-              <Backdrop open={isMenuOpen} sx={{zIndex: (theme) => theme.zIndex.appBar + 1}}/>
-            }
         </AppBar>
     );
 }

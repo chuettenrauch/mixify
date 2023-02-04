@@ -7,11 +7,11 @@ import {Container, Divider, Fab, Stack, Typography} from "@mui/material";
 import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
-import TrackCard from "../components/TrackCard";
 import SearchTrackForm from "../components/SearchTrackForm";
 import useForm from "../hooks/useForm";
 import MessageContainer from "../components/MessageContainer";
 import Track from "../types/track";
+import FlippableTrackCard from "../components/FlippableTrackCard";
 
 const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
 
@@ -85,7 +85,7 @@ export default function MixtapeDetailPage() {
                         </Typography>
                     </MessageContainer>
                     : mixtape.tracks.map(track => (
-                        <TrackCard key={track.id} mixtape={mixtape} track={track} onEdit={updateTrack} onDelete={deleteTrack}/>
+                        <FlippableTrackCard key={track.id} mixtape={mixtape} track={track} onEdit={updateTrack} onDelete={deleteTrack}/>
                     ))
                 }
             </Stack>

@@ -1,5 +1,5 @@
 import {Box, Container, IconButton, Modal, Typography} from "@mui/material";
-import {PauseCircle as PauseCircleIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
+import {Pause as PauseIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
 import FlippableImageCard from "./FlippableImageCard";
 import React from "react";
 import Track from "../types/track";
@@ -50,11 +50,11 @@ export default function PlayerTrackView({open, mixtape, track, ready, onPause, o
 
                     {ready &&
                       <Box sx={{display: "flex", justifyContent: "center"}}>
-                        <IconButton color="primary" sx={{fontSize: 100, p: 0}} onClick={onPrevious}>
+                        <IconButton color="primary" sx={{fontSize: 80, p: 0}} onClick={onPrevious}>
                           <SkipPreviousIcon fontSize="inherit"/>
                         </IconButton>
-                        <IconButton color="primary" sx={{fontSize: 100, p: 0}} onClick={onPause}>
-                          <PauseCircleIcon fontSize="inherit"/>
+                        <IconButton color="primary" sx={{fontSize: 80, p: 0}} onClick={onPause}>
+                          <PauseIcon fontSize="inherit"/>
                         </IconButton>
                       </Box>
                     }

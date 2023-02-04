@@ -1,6 +1,5 @@
 import Mixtape from "../types/mixtape";
 import {
-    Backdrop,
     Card, CardActionArea, CardActions, CardContent,
     Container,
     IconButton,
@@ -10,7 +9,7 @@ import {
     Typography
 } from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React from "react";
+import React, {useEffect} from "react";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MixtapeForm from "./MixtapeForm";
 import ConfirmDialog from "./ConfirmDialog";
@@ -21,6 +20,7 @@ import useForm from "../hooks/useForm";
 import useMenu from "../hooks/useMenu";
 import {Link} from "react-router-dom";
 import CardImage from "./CardImage";
+import {useBackdrop} from "../context/backdropContext";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -29,6 +29,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
 }) {
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
+    const {enableBackdrop} = useBackdrop();
 
     const {
         isConfirmDialogOpen: isDeleteConfirmDialogOpen,
@@ -37,6 +38,10 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     } = useConfirmDialog();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
+
+    useEffect(() => {
+        enableBackdrop(isMixtapeMenuOpen);
+    }, [isMixtapeMenuOpen, enableBackdrop])
 
     const handleDeleteConfirmed = async () => {
         await MixtapeApi.deleteMixtape(mixtape);
@@ -124,10 +129,6 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 onSave={onEdit}
                 onClose={closeMixtapeForm}
               />
-            }
-
-            {isMixtapeMenuOpen &&
-              <Backdrop open={isMixtapeMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
             }
         </Card>
     );

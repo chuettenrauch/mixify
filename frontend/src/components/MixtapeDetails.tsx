@@ -2,12 +2,12 @@ import Mixtape from "../types/mixtape";
 import ConfirmDialog from "./ConfirmDialog";
 import MixtapeForm from "./MixtapeForm";
 import {
-    Backdrop, Box,
+    Box,
     Container,
     IconButton, ListItemIcon, Menu, MenuItem,
     Typography
 } from "@mui/material";
-import React from "react";
+import React, {useEffect} from "react";
 import useMenu from "../hooks/useMenu";
 import useForm from "../hooks/useForm";
 import useConfirmDialog from "../hooks/useConfirmDialog";
@@ -16,14 +16,16 @@ import {toast} from "react-toastify";
 import MixtapeUtils from "../utils/mixtape-utils";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
 import CardImage from "./CardImage";
+import {useBackdrop} from "../context/backdropContext";
 
 export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
-    const {menuAnchorEl: trackMenuAnchorEl, isMenuOpen: isTrackMenuOpen, openMenu: openTrackMenu, closeMenu: closeTrackMenu} = useMenu();
+    const {menuAnchorEl: mixtapeMenuAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
+    const {enableBackdrop} = useBackdrop();
 
     const {
         isConfirmDialogOpen: isDeleteConfirmDialogOpen,
@@ -32,6 +34,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     } = useConfirmDialog();
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
+
+    useEffect(() => {
+        enableBackdrop(isMixtapeMenuOpen);
+    }, [enableBackdrop, isMixtapeMenuOpen]);
 
     const handleDeleteConfirmed = async () => {
         await MixtapeApi.deleteMixtape(mixtape);
@@ -54,10 +60,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                     <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                 </Container>
 
-                <IconButton onClick={(e) => openTrackMenu(e.currentTarget)}
-                            aria-controls={isTrackMenuOpen ? mixtapeMenuId : undefined}
+                <IconButton onClick={(e) => openMixtapeMenu(e.currentTarget)}
+                            aria-controls={isMixtapeMenuOpen ? mixtapeMenuId : undefined}
                             aria-haspopup="true"
-                            aria-expanded={isTrackMenuOpen ? 'true' : undefined}
+                            aria-expanded={isMixtapeMenuOpen ? 'true' : undefined}
                             sx={{
                                 alignSelf: "flex-start",
                                 position: "absolute",
@@ -68,10 +74,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                 </IconButton>
                 <Menu
                     id={mixtapeMenuId}
-                    anchorEl={trackMenuAnchorEl}
-                    open={isTrackMenuOpen}
-                    onClose={closeTrackMenu}
-                    onClick={closeTrackMenu}
+                    anchorEl={mixtapeMenuAnchorEl}
+                    open={isMixtapeMenuOpen}
+                    onClose={closeMixtapeMenu}
+                    onClick={closeMixtapeMenu}
                 >
                     <MenuItem onClick={openMixtapeForm}>
                         <ListItemIcon>
@@ -104,10 +110,6 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                     onSave={onEdit}
                     onClose={closeMixtapeForm}
                   />
-                }
-
-                {isTrackMenuOpen &&
-                  <Backdrop open={isTrackMenuOpen} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
                 }
             </Container>
 

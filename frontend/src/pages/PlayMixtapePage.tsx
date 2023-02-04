@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import PageHeader from "../components/PageHeader";
-import SimpleTrackCard from "../components/SimpleTrackCard";
+import FlippableTrackCard from "../components/FlippableTrackCard";
 import {
     usePlaybackState,
     usePlayerDevice,
@@ -152,7 +152,7 @@ export default function PlayMixtapePage() {
                           <Container
                               sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
                               <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
-                              <SimpleTrackCard track={track}/>
+                              <FlippableTrackCard track={track} mixtape={mixtape}/>
                           </Container>
                       </ListItem>
                   ))}
