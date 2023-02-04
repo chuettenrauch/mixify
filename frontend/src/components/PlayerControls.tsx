@@ -7,11 +7,21 @@ export default function PlayerControls({size}: {
     size: number | string
 }) {
     const player = useSpotifyPlayer();
-    const state = usePlaybackState();
+    const state = usePlaybackState(true);
+
+    const onPrevious = () => {
+        if (!state) return;
+
+        if (state?.position < 5000) {
+            player?.previousTrack();
+        } else {
+            player?.seek(0);
+        }
+    }
 
     return (
         <>
-            <IconButton color="primary" sx={{fontSize: size, p: 0}} onClick={() => player?.previousTrack()}>
+            <IconButton color="primary" sx={{fontSize: size, p: 0}} onClick={onPrevious}>
                 <SkipPreviousIcon fontSize="inherit"/>
             </IconButton>
             {state && state.paused
