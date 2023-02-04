@@ -1,6 +1,6 @@
 import {IconButton, ListItemIcon, Menu, MenuItem} from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import React from "react";
+import React, {useEffect} from "react";
 import useMenu from "../hooks/useMenu";
 import useForm from "../hooks/useForm";
 import useConfirmDialog from "../hooks/useConfirmDialog";
@@ -10,6 +10,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import TrackForm from "./TrackForm";
 import Track from "../types/track";
 import Mixtape from "../types/mixtape";
+import {useBackdrop} from "../context/backdropContext";
 
 export default function TrackCardMenu({track, mixtape, onEdit, onDelete}: {
     track: Track,
@@ -32,6 +33,8 @@ export default function TrackCardMenu({track, mixtape, onEdit, onDelete}: {
         closeConfirmDialog: closeDeleteConfirmDialog
     } = useConfirmDialog();
 
+    const {enableBackdrop} = useBackdrop();
+
     const trackMenuId = `track-${track.id}-menu`;
 
     const handleDeleteConfirmed = async () => {
@@ -42,6 +45,10 @@ export default function TrackCardMenu({track, mixtape, onEdit, onDelete}: {
 
         closeDeleteConfirmDialog();
     };
+
+    useEffect(() => {
+        enableBackdrop(isTrackMenuOpen);
+    }, [isTrackMenuOpen, enableBackdrop])
 
     return (
         <>
