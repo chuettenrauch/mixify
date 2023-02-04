@@ -48,15 +48,6 @@ export default function PlayMixtapePage() {
         return player?.resume();
     };
 
-    const pausePlayer = async () => {
-        closeTrackView();
-        return player?.pause();
-    };
-
-    const playPreviousTrack = async () => {
-        return player?.previousTrack();
-    };
-
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
@@ -169,8 +160,8 @@ export default function PlayMixtapePage() {
                 </Typography>
             }
 
-            {currentTrack && state && !state.paused &&
-              <MiniPlayer track={currentTrack} onPrevious={playPreviousTrack} onPause={pausePlayer} onClick={openTrackView}/>
+            {currentTrack && state &&
+              <MiniPlayer track={currentTrack} onClick={openTrackView}/>
             }
 
             {currentTrack &&
@@ -180,8 +171,6 @@ export default function PlayMixtapePage() {
                 track={currentTrack}
                 ready={!!device}
                 onClose={() => closeTrackView()}
-                onPause={() => pausePlayer()}
-                onPrevious={() => playPreviousTrack()}
               />
             }
 

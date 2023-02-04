@@ -1,13 +1,11 @@
-import {Box, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
-import {Pause as PauseIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
+import {Box, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import PlayerProgressBar from "./PlayerProgressBar";
 import React from "react";
 import Track from "../types/track";
+import PlayerControls from "./PlayerControls";
 
-export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
+export default function MiniPlayer({track, onClick}: {
     track: Track,
-    onPause: () => void,
-    onPrevious: () => void,
     onClick: () => void,
 }) {
     return (
@@ -51,12 +49,7 @@ export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
                 </CardActionArea>
 
                 <CardActions>
-                    <IconButton color="primary" sx={{fontSize: 40, p: 0}} onClick={onPrevious}>
-                        <SkipPreviousIcon fontSize="inherit"/>
-                    </IconButton>
-                    <IconButton color="primary" sx={{fontSize: 40, p: 0}} onClick={onPause}>
-                        <PauseIcon fontSize="inherit"/>
-                    </IconButton>
+                    <PlayerControls size={40}/>
                 </CardActions>
             </Box>
             <PlayerProgressBar showDuration={false}/>

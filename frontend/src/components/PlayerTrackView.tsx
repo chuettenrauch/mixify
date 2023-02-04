@@ -1,19 +1,17 @@
-import {Box, Container, IconButton, Modal, Typography} from "@mui/material";
-import {Pause as PauseIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
+import {Box, Container, Modal, Typography} from "@mui/material";
 import FlippableImageCard from "./FlippableImageCard";
 import React from "react";
 import Track from "../types/track";
 import ModalHeader from "./ModalHeader";
 import PlayerProgressBar from "./PlayerProgressBar";
 import Mixtape from "../types/mixtape";
+import PlayerControls from "./PlayerControls";
 
-export default function PlayerTrackView({open, mixtape, track, ready, onPause, onPrevious, onClose}: {
+export default function PlayerTrackView({open, mixtape, track, ready, onClose}: {
     open: boolean,
     mixtape: Mixtape,
     track: Track,
     ready: boolean,
-    onPause: () => void,
-    onPrevious: () => void,
     onClose: () => void,
 }) {
     return (
@@ -50,12 +48,7 @@ export default function PlayerTrackView({open, mixtape, track, ready, onPause, o
 
                     {ready &&
                       <Box sx={{display: "flex", justifyContent: "center"}}>
-                        <IconButton color="primary" sx={{fontSize: 80, p: 0}} onClick={onPrevious}>
-                          <SkipPreviousIcon fontSize="inherit"/>
-                        </IconButton>
-                        <IconButton color="primary" sx={{fontSize: 80, p: 0}} onClick={onPause}>
-                          <PauseIcon fontSize="inherit"/>
-                        </IconButton>
+                        <PlayerControls size={80}/>
                       </Box>
                     }
                 </Box>
