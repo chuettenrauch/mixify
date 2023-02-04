@@ -6,11 +6,9 @@ import StorageKey from "../utils/local-storage-utils";
 import {
     Box,
     Container,
-    List, ListItem,
     Typography
 } from "@mui/material";
 import PageHeader from "../components/PageHeader";
-import FlippableTrackCard from "../components/FlippableTrackCard";
 import {
     usePlaybackState,
     usePlayerDevice,
@@ -20,13 +18,11 @@ import useSpotifyApi from "../hooks/useSpotifyApi";
 import Track from "../types/track";
 import PlayerTrackView from "../components/PlayerTrackView";
 import useOpenClose from "../hooks/useOpenClose";
-import {
-    Info as InfoIcon,
-} from "@mui/icons-material";
 import FlippableImageCard from "../components/FlippableImageCard";
 import UserAvatar from "../components/UserAvatar";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MiniPlayer from "../components/MiniPlayer";
+import PlayedTracksList from "../components/PlayedTracksList";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
@@ -114,29 +110,11 @@ export default function PlayMixtapePage() {
                 </Box>
             </Box>
 
-            {mixtape && playedTracks &&
-              <List sx={{display: "flex", flexDirection: "column", gap: 2, p: 0, width: "100%"}}>
-                  {playedTracks.map((track, index) => (
-                      <ListItem key={track.id} sx={{p: 0}}>
-                          <Container
-                              sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
-                              <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
-                              <FlippableTrackCard track={track} mixtape={mixtape} onImageClick={() => addTracks(mixtape.tracks || [], index)}/>
-                          </Container>
-                      </ListItem>
-                  ))}
-              </List>
-            }
-
-            {playedTracks.length !== mixtape.tracks.length &&
-                <Typography sx={{display: "flex", alignItems: "center"}}>
-                  <InfoIcon color="primary" sx={{mr: 1}}/>
-                    {playedTracks.length === 0
-                        ? "Start listening to this mixtape to reveal the tracks."
-                        : "Continue listening to reveal the remaining tracks."
-                    }
-                </Typography>
-            }
+            <PlayedTracksList
+                mixtape={mixtape}
+                playedTracks={playedTracks}
+                onTrackPlay={(trackIndex: number) => addTracks(mixtape.tracks || [], trackIndex)}
+            />
 
             {currentTrack && state &&
               <MiniPlayer track={currentTrack} onClick={openTrackView}/>
