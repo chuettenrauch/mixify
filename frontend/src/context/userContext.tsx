@@ -1,5 +1,5 @@
 import {AuthenticatedUser} from "../types/user";
-import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
+import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from "react";
 
 const UserContext = createContext<{user: AuthenticatedUser|null, setUser: Dispatch<SetStateAction<AuthenticatedUser|null>>}>({
     user: null,
@@ -11,8 +11,12 @@ export function UserProvider({children}: {
 }) {
     const [user, setUser] = useState<AuthenticatedUser|null>(null);
 
+    const userContext = useMemo(() => {
+        return {user, setUser}
+    }, [user, setUser]);
+
     return (
-        <UserContext.Provider value={{user, setUser}}>
+        <UserContext.Provider value={userContext}>
             {children}
         </UserContext.Provider>
     )

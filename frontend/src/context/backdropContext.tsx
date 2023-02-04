@@ -1,4 +1,4 @@
-import React, {createContext, Dispatch, ReactNode, SetStateAction, useContext, useState} from "react";
+import React, {createContext, Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from "react";
 import {Backdrop} from "@mui/material";
 
 const BackdropContext = createContext<{backdrop: boolean, enableBackdrop: Dispatch<SetStateAction<boolean>>}>({
@@ -11,8 +11,12 @@ export function BackdropProvider({children}: {
 }) {
     const [backdrop, enableBackdrop] = useState<boolean>(false);
 
+    const backdropContext = useMemo(() => {
+        return {backdrop, enableBackdrop}
+    }, [backdrop, enableBackdrop]);
+
     return (
-        <BackdropContext.Provider value={{backdrop, enableBackdrop}}>
+        <BackdropContext.Provider value={backdropContext}>
             {children}
 
             {backdrop &&
