@@ -26,7 +26,7 @@ class SpotifyApi {
         return response.data.tracks.items ?? [];
     }
 
-    async addTracks(uris: string[], deviceId: string) {
+    async addTracks(uris: string[], startUri: string, deviceId: string) {
         if (this.alreadyAddedTracks) {
             return;
         }
@@ -35,6 +35,9 @@ class SpotifyApi {
             `/me/player/play?device_id=${deviceId}`,
             {
                 uris: uris,
+                offset: {
+                    uri: startUri
+                }
             },
         );
 

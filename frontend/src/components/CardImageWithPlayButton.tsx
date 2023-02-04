@@ -1,12 +1,12 @@
 import {Box, CardMedia, IconButton} from "@mui/material";
 import React from "react";
 import {PlayCircle as PlayCircleIcon} from "@mui/icons-material";
-import {Link} from "react-router-dom";
 import Image from "../types/image";
 
-export default function CardImage({image, link}: {
+export default function CardImageWithPlayButton({image, opacity = 1, onClick}: {
     image: Image,
-    link: string,
+    opacity?: number,
+    onClick?: () => void,
 }) {
     return (
         <Box sx={{position: "relative"}}>
@@ -18,21 +18,24 @@ export default function CardImage({image, link}: {
                     width: image.size,
                     height: image.size,
                     lineHeight: 0,
-                    border: "1px solid grey"
+                    border: "1px solid grey",
+                    opacity: opacity,
                 }}
             />
-            <IconButton size="large" component={Link} to={link} aria-label="play" sx={{
-                display: "block",
-                m: 0,
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 1
-            }}>
+            {onClick &&
+              <IconButton size="large" onClick={() => onClick()} aria-label="play" sx={{
+                  display: "block",
+                  m: 0,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  zIndex: 1
+              }}>
                 <PlayCircleIcon sx={{width: "70%", height: "100%"}}/>
-            </IconButton>
+              </IconButton>
+            }
         </Box>
     )
 }

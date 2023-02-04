@@ -15,14 +15,16 @@ import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import MixtapeUtils from "../utils/mixtape-utils";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
-import CardImage from "./CardImage";
+import CardImageWithPlayButton from "./CardImageWithPlayButton";
 import {useBackdrop} from "../context/backdropContext";
+import {useNavigate} from "react-router-dom";
 
 export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
+    const navigate = useNavigate();
     const {menuAnchorEl: mixtapeMenuAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {enableBackdrop} = useBackdrop();
@@ -52,7 +54,10 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
         <Container sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
             <Container sx={{display: "flex", width: "100%", p: 0, position: "relative"}}>
                 <Box sx={{flex: 1}}>
-                    <CardImage image={{src: mixtape.imageUrl, alt: mixtape.title, size: 130}} link={`/play/${mixtape.id}`}/>
+                    <CardImageWithPlayButton
+                        image={{src: mixtape.imageUrl, alt: mixtape.title, size: 130}}
+                        onClick={() => navigate(`/play/${mixtape.id}`)}
+                    />
                 </Box>
 
                 <Container sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
