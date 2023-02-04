@@ -152,7 +152,7 @@ export default function PlayMixtapePage() {
                           <Container
                               sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}>
                               <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
-                              <FlippableTrackCard track={track}/>
+                              <FlippableTrackCard track={track} mixtape={mixtape}/>
                           </Container>
                       </ListItem>
                   ))}

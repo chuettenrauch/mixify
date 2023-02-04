@@ -1,16 +1,28 @@
-import {Card, CardActionArea, CardContent, CardMedia, Typography} from "@mui/material";
+import {
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Typography
+} from "@mui/material";
 import React, {useState} from "react";
 import Track from "../types/track";
 import ReactCardFlip from "react-card-flip";
+import Mixtape from "../types/mixtape";
+import TrackCardMenu from "./TrackCardMenu";
 
-export default function FlippableTrackCard({track}: {
+export default function FlippableTrackCard({track, mixtape, onEdit, onDelete}: {
     track: Track,
+    mixtape: Mixtape,
+    onEdit?: (savedTrack: Track) => void,
+    onDelete?: (deletedTrack: Track) => void,
 }) {
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
     return (
         <ReactCardFlip isFlipped={isFlipped} flipSpeedBackToFront={1} flipSpeedFrontToBack={1} containerStyle={{width: "100%"}}>
-            <Card elevation={5} sx={{display: "flex", flexDirection: "column", flex: 1}}>
+            <Card elevation={5} sx={{display: "flex", position: "relative", p: 0}}>
                 <CardActionArea sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}} onClick={() => setIsFlipped(true)}>
                     <CardMedia
                         component="img"
@@ -24,6 +36,12 @@ export default function FlippableTrackCard({track}: {
                         <Typography>{track.artist}</Typography>
                     </CardContent>
                 </CardActionArea>
+
+                {onEdit && onDelete &&
+                  <CardActions>
+                    <TrackCardMenu track={track} mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
+                  </CardActions>
+                }
             </Card>
 
             <Card elevation={5} sx={{}}>
