@@ -1,5 +1,5 @@
 import {Box, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
-import {PauseCircle as PauseCircleIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
+import {Pause as PauseIcon, SkipPrevious as SkipPreviousIcon} from "@mui/icons-material";
 import PlayerProgressBar from "./PlayerProgressBar";
 import React from "react";
 import Track from "../types/track";
@@ -55,7 +55,7 @@ export default function MiniPlayer({track, onPause, onPrevious, onClick}: {
                         <SkipPreviousIcon fontSize="inherit"/>
                     </IconButton>
                     <IconButton color="primary" sx={{fontSize: 40, p: 0}} onClick={onPause}>
-                        <PauseCircleIcon fontSize="inherit"/>
+                        <PauseIcon fontSize="inherit"/>
                     </IconButton>
                 </CardActions>
             </Box>
