@@ -22,7 +22,7 @@ export default function CardImageWithPlayButton({image, opacity = 1, onClick}: {
                     height: image.size,
                     lineHeight: 0,
                     border: "1px solid grey",
-                    opacity: opacity,
+                    opacity: globalConfig.canUsePlayer ? opacity : 1,
                 }}
             />
             {onClick && globalConfig.canUsePlayer &&

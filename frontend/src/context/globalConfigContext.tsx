@@ -13,7 +13,7 @@ export function GlobalConfigProvider({children}: {
 
     const globalConfigContext = useMemo(() => {
         return {
-            canUsePlayer: !error,
+            canUsePlayer: !(error && error.type === "account_error"),
         }
     }, [error]);
 
