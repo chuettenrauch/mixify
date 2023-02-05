@@ -45,6 +45,17 @@ export default function PlayMixtapePage() {
         return spotifyApi?.addTracks(uris, uris[startIndex], device?.device_id ?? "");
     }, [spotifyApi, device]);
 
+    // automatically reload, if connection to spotify did not work
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (device === null) {
+                window.location.reload();
+            }
+        }, 3000);
+
+        return () => clearTimeout(timeoutId);
+    }, [device]);
+
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
