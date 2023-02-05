@@ -28,9 +28,12 @@ import UserAvatar from "../components/UserAvatar";
 import MixtapeUtils from "../utils/mixtape-utils";
 import MiniPlayer from "../components/MiniPlayer";
 import PlayedTracksList from "../components/PlayedTracksList";
+import {useGlobalConfig} from "../context/globalConfigContext";
 
 export default function PlayMixtapePage() {
     const location = useLocation();
+    const globalConfig = useGlobalConfig();
+
     const {id} = useParams<{ id: string }>();
     const {mixtape} = useMixtape(id);
 
@@ -52,20 +55,20 @@ export default function PlayMixtapePage() {
     // automatically reload, if connection to spotify did not work
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            if (device === null) {
+            if (globalConfig.canUsePlayer && device === null) {
                 window.location.reload();
             }
         }, 3000);
 
         return () => clearTimeout(timeoutId);
-    }, [device]);
+    }, [device, globalConfig.canUsePlayer]);
 
     useEffect(() => {
         updateLastPlayUrlInLocalStorage(location);
     }, [location]);
 
     useEffect(() => {
-        if (!mixtape || !device || device.status === "not_ready") {
+        if (!globalConfig.canUsePlayer || !mixtape || !device || device.status === "not_ready") {
             return;
         }
 
@@ -73,7 +76,7 @@ export default function PlayMixtapePage() {
             const lastPlayedTrack = getLastPlayedTrackForMixtape(mixtape);
             addTracks(mixtape.tracks, lastPlayedTrack);
         })();
-    }, [device, mixtape, spotifyApi, addTracks])
+    }, [device, mixtape, spotifyApi, addTracks, globalConfig.canUsePlayer])
 
     useEffect(() => {
         if (!state || !mixtape || state.paused) {

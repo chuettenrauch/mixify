@@ -6,6 +6,7 @@ import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
 import {useUserContext} from "../context/userContext";
 import {useCallback} from "react";
 import {BackdropProvider} from "../context/backdropContext";
+import {GlobalConfigProvider} from "../context/globalConfigContext";
 
 export default function MainLayout() {
     const {user} = useUserContext();
@@ -23,12 +24,13 @@ export default function MainLayout() {
             <Box sx={{maxHeight: window.innerHeight, overflow: "scroll"}}>
                 {user &&
                     /* @ts-ignore */
-                    <WebPlaybackSDK
-                      initialDeviceName="Mixify"
-                      getOAuthToken={getAccessToken}
-                      initialVolume={0.5}
-                      connectOnInitialized={true}
-                    >
+                  <WebPlaybackSDK
+                    initialDeviceName="Mixify"
+                    getOAuthToken={getAccessToken}
+                    initialVolume={0.5}
+                    connectOnInitialized={true}
+                  >
+                    <GlobalConfigProvider>
                       <HeaderNav/>
 
                       <Container maxWidth="md" sx={{p: 2, mb: 10, minHeight: window.innerHeight}}>
@@ -36,7 +38,8 @@ export default function MainLayout() {
                       </Container>
 
                       <BottomNav/>
-                    </WebPlaybackSDK>
+                    </GlobalConfigProvider>
+                  </WebPlaybackSDK>
                 }
             </Box>
         </BackdropProvider>
