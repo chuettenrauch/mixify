@@ -18,7 +18,11 @@ export default function PlayedTracksList({mixtape, playedTracks, onTrackPlay}: {
                         <Container
                             sx={{display: "flex", justifyContent: "space-between", alignItems: "center", p: 0}}
                         >
-                            <Typography variant="h1" component="h3" sx={{mr: 2}}>{index + 1}</Typography>
+                            <Typography variant="h1" component="h3" sx={{
+                                mr: 2,
+                                width: "10%",
+                                textAlign: "center"
+                            }}>{index + 1}</Typography>
                             <FlippableTrackCard
                                 track={track}
                                 mixtape={mixtape}

@@ -1,8 +1,13 @@
-import {Location, useLocation, useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import useMixtape from "../hooks/useMixtape";
-import localStorage from "react-secure-storage";
 import React, {useCallback, useEffect, useState} from "react";
-import StorageKey from "../utils/local-storage-utils";
+import {
+    getLastPlayedTrackForMixtape,
+    getLastReachedTrackForMixtape,
+    setLastPlayedTrackForMixtape,
+    setLastReachedTrackForMixtape,
+    updateLastPlayUrlInLocalStorage
+} from "../utils/local-storage-utils";
 import {
     Box,
     Container,
@@ -32,7 +37,6 @@ export default function PlayMixtapePage() {
     const {isOpen: isTrackViewOpen, open: openTrackView, close: closeTrackView} = useOpenClose();
 
     const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
-    const [playedTracks, setPlayedTracks] = useState<Track[]>([]);
 
     const player = useSpotifyPlayer();
     const device = usePlayerDevice();
@@ -66,7 +70,8 @@ export default function PlayMixtapePage() {
         }
 
         (async () => {
-            addTracks(mixtape.tracks, 0);
+            const lastPlayedTrack = getLastPlayedTrackForMixtape(mixtape);
+            addTracks(mixtape.tracks, lastPlayedTrack);
         })();
     }, [device, mixtape, spotifyApi, addTracks])
 
@@ -81,12 +86,11 @@ export default function PlayMixtapePage() {
         if (track) {
             setCurrentTrack(track);
 
-            const alreadyPlayed = playedTracks.findIndex(played => played.id === track.id) !== -1;
-            if (!alreadyPlayed) {
-                setPlayedTracks([...playedTracks, track]);
-            }
+            const index = mixtape.tracks.indexOf(track);
+            setLastPlayedTrackForMixtape(mixtape, index);
+            setLastReachedTrackForMixtape(mixtape, index);
         }
-    }, [state, mixtape, playedTracks]);
+    }, [state, mixtape]);
 
     // ensure that player is stopped, if user leaves the page
     useEffect(() => {
@@ -123,7 +127,7 @@ export default function PlayMixtapePage() {
 
             <PlayedTracksList
                 mixtape={mixtape}
-                playedTracks={playedTracks}
+                playedTracks={mixtape.tracks.slice(0, getLastReachedTrackForMixtape(mixtape) + 1)}
                 onTrackPlay={(trackIndex: number) => addTracks(mixtape.tracks || [], trackIndex)}
             />
 
@@ -143,8 +147,4 @@ export default function PlayMixtapePage() {
 
         </Container>
     );
-}
-
-function updateLastPlayUrlInLocalStorage(currentLocation: Location) {
-    localStorage.setItem(StorageKey.LAST_PLAY_URL, currentLocation.pathname);
 }
