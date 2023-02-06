@@ -21,10 +21,11 @@ export default function ProtectedRoutes() {
     useEffect(() => {
         (async () => {
             try {
+                console.log("get new user from protected routes");
                 const authenticatedUser = await UserApi.getAuthenticatedUser();
                 setUser(authenticatedUser);
             } catch (e) {
-                // do nothing
+                setUser(null);
             } finally {
                 setLoading(false);
             }
