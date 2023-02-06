@@ -26,6 +26,11 @@ spring:
             user-info-uri: https://api.spotify.com/v1/me
             user-name-attribute: email
 
+server:
+  servlet:
+    session:
+      timeout: 1h
+
 app:
   oauth2:
     success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:http://localhost:3000}"
