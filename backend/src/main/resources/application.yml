@@ -25,6 +25,10 @@ spring:
             token-uri: https://accounts.spotify.com/api/token
             user-info-uri: https://api.spotify.com/v1/me
             user-name-attribute: email
+  servlet:
+    multipart:
+      max-file-size: 6MB
+      max-request-size: 6MB
 
 app:
   oauth2:
