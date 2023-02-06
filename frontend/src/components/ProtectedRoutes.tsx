@@ -1,12 +1,17 @@
-import {Navigate, Outlet, useLocation, useOutletContext} from "react-router-dom";
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
+import {createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from "react";
 import {UserApi} from "../api/mixify-api";
 import {AuthenticatedUser} from "../types/user";
 
-type UserContext = {
+type UserContextType = {
     user: AuthenticatedUser | null,
     setUser: Dispatch<SetStateAction<AuthenticatedUser | null>>
 };
+
+const UserContext = createContext<UserContextType>({
+    user: null,
+    setUser: () => undefined
+});
 
 export default function ProtectedRoutes() {
     const location = useLocation();
@@ -36,11 +41,13 @@ export default function ProtectedRoutes() {
 
     return (
         user
-            ? <Outlet context={userContext}/>
+            ? <UserContext.Provider value={userContext}>
+                <Outlet/>
+            </UserContext.Provider>
             : <Navigate to="/login"/>
     )
 }
 
 export function useAuthenticatedUser() {
-    return useOutletContext<UserContext>();
+    return useContext(UserContext);
 }

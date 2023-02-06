@@ -48,7 +48,7 @@ export default function PlayMixtapePage() {
 
     const addTracks = useCallback((tracks: Track[], startIndex: number) => {
         const uris = tracks.map(track => track.providerUri);
-
+console.log("add tracks in play page", spotifyApi)
         return spotifyApi?.addTracks(uris, uris[startIndex], device?.device_id ?? "");
     }, [spotifyApi, device]);
 
