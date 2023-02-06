@@ -1,9 +1,9 @@
 import SpotifyApi from "../api/spotify-api";
-import {useUserContext} from "../context/userContext";
 import {useMemo} from "react";
+import {useAuthenticatedUser} from "../components/ProtectedRoutes";
 
 export default function useSpotifyApi(): SpotifyApi|null {
-    const {user} = useUserContext();
+    const {user} = useAuthenticatedUser();
 
     return useMemo(() => {
         if (!user) {

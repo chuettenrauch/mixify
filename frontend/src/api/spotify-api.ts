@@ -1,15 +1,20 @@
-import axios, {Axios} from "axios";
+import axios, {AxiosInstance} from "axios";
+import {UserApi} from "./mixify-api";
 
 class SpotifyApi {
-    private client: Axios;
+    private readonly client: AxiosInstance;
     private alreadyAddedTracks: boolean = false;
+    private accessToken: string;
 
-    constructor(token: string) {
+    constructor(accessToken: string) {
         this.client = axios.create({
             baseURL: "https://api.spotify.com/v1",
         });
 
-        this.client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        this.accessToken = accessToken;
+
+        this.registerAccessTokenRequestInterceptor();
+        this.registerRefreshTokenResponseInterceptor();
     }
 
     async searchTracks(q: string, limit: number = 10, page: number = 1): Promise<Spotify.Track[]> {
@@ -48,6 +53,50 @@ class SpotifyApi {
         }, 3000);
 
         return response;
+    }
+
+    async refreshToken() {
+        const authenticatedUser = await UserApi.getAuthenticatedUser();
+        this.accessToken = authenticatedUser.providerAccessToken;
+    }
+
+    private registerAccessTokenRequestInterceptor() {
+        this.client.interceptors.request.use(
+            (config) => {
+                config.headers["Authorization"] = `Bearer ${this.accessToken}`;
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        )
+    }
+
+    private registerRefreshTokenResponseInterceptor() {
+        this.client.interceptors.response.use(
+            (response) => {
+                return response;
+            },
+            async (error) => {
+                const requestConfig = error.config;
+
+                if (error.response) {
+                    if (error.response.status === 401 && !requestConfig.retry) {
+                        requestConfig.retry = true;
+
+                        try {
+                            await this.refreshToken();
+
+                            return this.client(requestConfig);
+                        } catch (refreshError) {
+                            return Promise.reject(refreshError);
+                        }
+                    }
+                }
+
+                return Promise.reject(error);
+            }
+        )
     }
 }
 

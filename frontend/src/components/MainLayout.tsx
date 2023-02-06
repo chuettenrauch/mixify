@@ -3,13 +3,13 @@ import BottomNav from "./BottomNav";
 import {Outlet} from "react-router-dom";
 import {Box, Container} from "@mui/material";
 import {WebPlaybackSDK} from "react-spotify-web-playback-sdk";
-import {useUserContext} from "../context/userContext";
 import {useCallback} from "react";
 import {BackdropProvider} from "../context/backdropContext";
 import {GlobalConfigProvider} from "../context/globalConfigContext";
+import {useAuthenticatedUser} from "./ProtectedRoutes";
 
 export default function MainLayout() {
-    const {user} = useUserContext();
+    const {user} = useAuthenticatedUser();
 
     const getAccessToken = useCallback((callback: (token: string) => void) => {
         if (!user) {

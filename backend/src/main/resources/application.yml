@@ -30,6 +30,11 @@ spring:
       max-file-size: 6MB
       max-request-size: 6MB
 
+server:
+  servlet:
+    session:
+      timeout: 1h
+
 app:
   oauth2:
     success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:http://localhost:3000}"
