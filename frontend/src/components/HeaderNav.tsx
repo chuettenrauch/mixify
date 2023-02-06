@@ -9,7 +9,6 @@ import {
     Toolbar,
 } from "@mui/material";
 import React, {useEffect} from "react";
-import {useUserContext} from "../context/userContext";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {UserApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
@@ -18,9 +17,10 @@ import logo from "../logo.png";
 import useMenu from "../hooks/useMenu";
 import UserAvatar from "./UserAvatar";
 import {useBackdrop} from "../context/backdropContext";
+import {useAuthenticatedUser} from "./ProtectedRoutes";
 
 export default function HeaderNav() {
-    const {user, setUser} = useUserContext();
+    const {user, setUser} = useAuthenticatedUser();
     const navigate = useNavigate();
 
     const {menuAnchorEl, isMenuOpen, openMenu, closeMenu} = useMenu();
