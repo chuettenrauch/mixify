@@ -1,10 +1,30 @@
 import {Button, Container, Typography} from "@mui/material";
 import logo from "../logo.png";
 import React from "react";
+import {useSearchParams} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const authorizeUrl = `${process.env.REACT_APP_API_BASE_URL ?? ""}/oauth2/authorization/spotify`;
 
 export default function LoginPage() {
+    const [query] = useSearchParams();
+
+    if (query.has("error")) {
+        const errorCode = query.get("errorCode");
+        const errorMessage = errorCode && errorCode === "invalid_user_info_response"
+            ? "Mixify is currently in development mode. Your spotify account must be explicitly permitted to use this app."
+            : query.get("error");
+
+        toast.error(errorMessage, {
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: false,
+            theme: "colored",
+        });
+    }
+
     return (
         <Container maxWidth="md" sx={{
             display: "flex",
