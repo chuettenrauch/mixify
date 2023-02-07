@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MixtapeController.class)
 @ImportAutoConfiguration(classes = SecurityConfig.class)
-public class MixtapeControllerTest {
+class MixtapeControllerTest {
 
     @Autowired
     private MockMvc mvc;

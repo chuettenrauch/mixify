@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TrackController.class)
 @ImportAutoConfiguration(classes = SecurityConfig.class)
-public class TrackControllerTest {
+class TrackControllerTest {
 
     @Autowired
     private MockMvc mvc;
