@@ -1,5 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
+import com.github.chuettenrauch.mixifyapi.mixtape.validation.ImageUrl;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +15,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Track {
     @Id
     private String id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String artist;
+
+    @NotBlank
+    @ImageUrl
     private String imageUrl;
+
     private String description;
+
+    @NotBlank
     private String providerUri;
 }
