@@ -1,8 +1,8 @@
 namespace Form {
     export type Mixtape = {
-        title: string,
-        description: string,
-        imageUrl: string,
+        title: string | null,
+        description: string | null,
+        imageUrl: string | null,
     }
 
     export type Track = {

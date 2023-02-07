@@ -1,4 +1,4 @@
-import {Button, Container, Modal, Stack, TextField} from "@mui/material";
+import {Button, Container, FormControl, FormHelperText, Modal, Stack, TextField} from "@mui/material";
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import ModalHeader from "./ModalHeader";
 import Form from "../types/forms";
@@ -8,12 +8,15 @@ import {MixtapeApi} from "../api/mixify-api";
 import FileMetadata from "../types/file-metadata";
 import ImageUpload from "./ImageUpload";
 import {toast} from "react-toastify";
+import {isAxiosError} from "axios";
 
 const initialMixtapeData = {
-    title: "",
-    description: "",
-    imageUrl: "",
+    title: null,
+    description: null,
+    imageUrl: null,
 }
+
+const initialErrorData = initialMixtapeData;
 
 export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
     title: string,
@@ -23,18 +26,25 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
     onClose: () => void,
 }) {
     const [mixtapeForm, setMixtapeForm] = useState<Form.Mixtape | Mixtape>(mixtape ?? initialMixtapeData);
+    const [errors, setErrors] = useState<Form.Mixtape>(initialErrorData);
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const savedMixtape: Mixtape = mixtape
-            ? await MixtapeApi.updateMixtape(mixtapeForm as Mixtape)
-            : await MixtapeApi.createMixtape(mixtapeForm);
+        try {
+            const savedMixtape: Mixtape = mixtape
+                ? await MixtapeApi.updateMixtape(mixtapeForm as Mixtape)
+                : await MixtapeApi.createMixtape(mixtapeForm);
 
-        onSave(savedMixtape);
-        onClose();
+            onSave(savedMixtape);
+            onClose();
 
-        toast.success("Successfully saved mixtape.");
+            toast.success("Successfully saved mixtape.");
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                setErrors(e.response.data);
+            }
+        }
     };
 
     const onImageUpload = (fileMetadata: FileMetadata) => {
@@ -75,8 +85,6 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
             }}>
                 <ModalHeader title={title} onClose={onClose}/>
 
-                <ImageUpload imageUrl={mixtape ? mixtape.imageUrl : null} onUpload={onImageUpload}/>
-
                 <Stack
                     component="form"
                     spacing={2}
@@ -84,18 +92,24 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                     maxWidth={(theme) => theme.breakpoints.values.sm}
                     onSubmit={onSubmit}
                 >
+                    <FormControl error={!!errors.imageUrl}>
+                        <ImageUpload imageUrl={mixtape ? mixtape.imageUrl : null} onUpload={onImageUpload}/>
+                        <FormHelperText>{errors.imageUrl}</FormHelperText>
+                    </FormControl>
+
                     <TextField
-                        required
                         variant="standard"
                         id="title"
                         name="title"
                         value={mixtapeForm.title}
                         label="Title"
                         placeholder="Mixtape title"
+                        margin="none"
+                        error={!!errors.title}
+                        helperText={errors.title}
                         onChange={onInputChange}
                     />
                     <TextField
-                        required
                         multiline
                         rows={6}
                         id="description"
@@ -104,15 +118,16 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         label="Description"
                         placeholder="What is your mixtape about..."
                         margin="normal"
+                        error={!!errors.description}
+                        helperText={errors.description}
                         onChange={onInputChange}
                     />
                     <input
-                        required
                         readOnly
                         hidden
                         id="imageUrl"
                         name="imageUrl"
-                        value={mixtapeForm.imageUrl}
+                        value={mixtapeForm.imageUrl ?? ""}
                     />
 
                     <Button type="submit" variant="contained" startIcon={<SaveIcon/>}>

@@ -33,7 +33,7 @@ export default function FlippableTrackCard({track, mixtape, onImageClick, onEdit
                             onClick={onImageClick}
                         />
                     </CardActions>
-                    <CardActionArea sx={{p: 0}} onClick={() => setIsFlipped(true)}>
+                    <CardActionArea sx={{p: 0}} onClick={() => track.description ? setIsFlipped(true) : null}>
                         <CardContent sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                             <Typography variant="h3">{track.name}</Typography>
                             <Typography>{track.artist}</Typography>

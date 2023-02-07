@@ -1,12 +1,11 @@
 import {Box, Card, CardActionArea, CardMedia, Typography} from "@mui/material";
 import ReactCardFlip from "react-card-flip";
-import React, {ReactNode, useState} from "react";
+import React, {useState} from "react";
 import Image from "../types/image";
 
-export default function FlippableImageCard({image, textOnBack, children}: {
+export default function FlippableImageCard({image, textOnBack}: {
     image: Image,
-    textOnBack: string
-    children?: ReactNode
+    textOnBack: string | null
 }) {
     const [isImageFlipped, setIsImageFlipped] = useState<boolean>(false);
 
@@ -16,7 +15,7 @@ export default function FlippableImageCard({image, textOnBack, children}: {
             <Card elevation={10} sx={{display: "flex", flexDirection: "column", width: "100%", p: 2}}>
                 <CardActionArea
                     sx={{paddingTop: "100%", position: "relative"}}
-                    onClick={() => setIsImageFlipped(true)}
+                    onClick={() => textOnBack ? setIsImageFlipped(true) : null}
                 >
                     <CardMedia
                         component="img"
@@ -32,7 +31,6 @@ export default function FlippableImageCard({image, textOnBack, children}: {
                             border: "1px solid grey",
                         }}
                     />
-                    {children}
                 </CardActionArea>
             </Card>
 
