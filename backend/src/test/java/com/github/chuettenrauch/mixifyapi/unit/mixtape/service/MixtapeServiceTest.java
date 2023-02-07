@@ -1,6 +1,5 @@
 package com.github.chuettenrauch.mixifyapi.unit.mixtape.service;
 
-import com.github.chuettenrauch.mixifyapi.exception.BadRequestException;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException;
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
@@ -10,6 +9,7 @@ import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 
@@ -242,7 +242,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void updateById_whenNumOfTracksExceedsMaxLimit_thenThrowBadRequestException() {
+    void updateById_whenNumOfTracksExceedsMaxLimit_thenThrowConstraintViolationException() {
         // given
         String mixtapeId = "123";
 
@@ -258,13 +258,13 @@ class MixtapeServiceTest {
         when(mixtapeRepository.existsByIdAndCreatedBy(mixtape.getId(), user)).thenReturn(true);
 
         Validator validator = mock(Validator.class);
-        when(validator.validate(mixtape)).thenReturn(Set.of(
+        when(validator.validateProperty(mixtape, "tracks")).thenReturn(Set.of(
                 mock(ConstraintViolationForMixtape.class)
         ));
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService, validator);
-        assertThrows(BadRequestException.class, () -> sut.updateById(mixtapeId, mixtape));
+        assertThrows(ConstraintViolationException.class, () -> sut.updateById(mixtapeId, mixtape));
 
         // then
         verify(mixtapeRepository, never()).save(mixtape);
