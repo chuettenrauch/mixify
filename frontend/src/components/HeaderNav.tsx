@@ -12,7 +12,7 @@ import React, {useEffect} from "react";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {UserApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import logo from "../logo.png";
 import useMenu from "../hooks/useMenu";
 import UserAvatar from "./UserAvatar";
@@ -43,9 +43,11 @@ export default function HeaderNav() {
         <AppBar position="sticky">
             <Container maxWidth="md">
                 <Toolbar disableGutters>
-                    <Box sx={{ filter: "invert(1)", display: "flex", alignItems: "center"}}>
-                        <img src={logo} width="150" alt="mixify logo"/>
-                    </Box>
+                    <Link to="/">
+                        <Box sx={{filter: "invert(1)", display: "flex", alignItems: "center"}}>
+                            <img src={logo} width="150" alt="mixify logo"/>
+                        </Box>
+                    </Link>
 
                     <Box sx={{ marginLeft: "auto" }}>
                         {user &&
