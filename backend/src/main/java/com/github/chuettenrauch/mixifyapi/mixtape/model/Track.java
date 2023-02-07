@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
 import com.github.chuettenrauch.mixifyapi.mixtape.validation.ImageUrl;
+import com.github.chuettenrauch.mixifyapi.mixtape.validation.ProviderUri;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,6 @@ public class Track {
     private String description;
 
     @NotBlank
+    @ProviderUri
     private String providerUri;
 }

@@ -21,6 +21,7 @@ class ImageUrlValidatorTest {
             "https://some-url.de/with/path?and=query&params=1, true",
             "https://some-url.de/with/path?and=query&params=1#and-hash, true",
             "/api/files, false",
+            "/api/files/, false",
             "some/path/with/api/files/123/in/it, false",
             "/some/other/relative/url, false",
             "some-random-string, false",
