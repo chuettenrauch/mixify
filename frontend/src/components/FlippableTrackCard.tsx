@@ -29,7 +29,7 @@ export default function FlippableTrackCard({track, mixtape, onImageClick, onEdit
                     <CardActions sx={{p: 0}}>
                         <CardImageWithPlayButton
                             image={{src: track.imageUrl, alt: track.name, size: 100}}
-                            opacity={0.8}
+                            opacity={onImageClick ? 0.8 : 1}
                             onClick={onImageClick}
                         />
                     </CardActions>
