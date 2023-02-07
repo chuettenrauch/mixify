@@ -10,6 +10,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import 'react-toastify/dist/ReactToastify.css';
 import {Slide, ToastContainer} from "react-toastify";
 import theme from "./theme/theme";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                             <Route path="/mixtapes" element={<MixtapesOverviewPage/>}/>
                             <Route path="/mixtapes/:id" element={<MixtapeDetailPage/>}/>
                             <Route path="/play/:id" element={<PlayMixtapePage/>}/>
+                            <Route path="*" element={<NotFoundPage/>}/>
                         </Route>
                     </Route>
 
