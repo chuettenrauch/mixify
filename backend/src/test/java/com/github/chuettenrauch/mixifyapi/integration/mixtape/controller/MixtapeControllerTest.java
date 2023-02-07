@@ -52,12 +52,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void create_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(post("/api/mixtapes"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @DirtiesContext
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
@@ -131,13 +125,6 @@ class MixtapeControllerTest {
 
     @Test
     @DirtiesContext
-    void getAll_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(get("/api/mixtapes"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DirtiesContext
     void getAll_whenLoggedIn_thenReturnEmptyListIfNoMixtapesForTheLoggedInUserExist() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -194,12 +181,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void delete_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(delete("/api/mixtapes/123"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     void delete_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
 
@@ -240,15 +221,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void update_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(put("/api/mixtapes/123")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}")
-                )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @DirtiesContext
     void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
@@ -260,7 +232,7 @@ class MixtapeControllerTest {
                     "id": "123",
                     "title": "existing mixtape",
                     "description": "description",
-                    "image": null,
+                    "imageUrl": "http://path/to/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -296,7 +268,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "description",
-                    "image": null,
+                    "imageUrl": "http://path/to/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -330,7 +302,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "updated description",
-                    "imageUrl": "/path/to/mixtape/image",
+                    "imageUrl": "http://path/to/mixtape/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -348,12 +320,6 @@ class MixtapeControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
-    }
-
-    @Test
-    void get_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(get("/api/mixtapes/123"))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test

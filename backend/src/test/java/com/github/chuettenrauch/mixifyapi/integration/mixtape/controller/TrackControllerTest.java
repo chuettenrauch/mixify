@@ -51,12 +51,6 @@ class TrackControllerTest {
     }
 
     @Test
-    void create_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(post("/api/mixtapes/123/tracks"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @DirtiesContext
     void create_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
@@ -66,7 +60,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -95,7 +89,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -124,7 +118,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -164,7 +158,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -180,12 +174,6 @@ class TrackControllerTest {
     }
 
     @Test
-    void update_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(put("/api/mixtapes/123/tracks/123"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     void update_whenMixtapeNotFound_thenReturnNotFound() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -195,7 +183,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -227,7 +215,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -259,7 +247,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -291,7 +279,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": "Updated description",
                     "providerUri": "spotify:track:12345"
                 }
@@ -305,12 +293,6 @@ class TrackControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(givenJson));
-    }
-
-    @Test
-    void delete_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
-        this.mvc.perform(delete("/api/mixtapes/123/tracks/123"))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test

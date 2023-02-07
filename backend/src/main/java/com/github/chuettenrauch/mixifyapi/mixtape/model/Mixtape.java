@@ -1,6 +1,8 @@
 package com.github.chuettenrauch.mixifyapi.mixtape.model;
 
+import com.github.chuettenrauch.mixifyapi.mixtape.validation.ImageUrl;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +22,13 @@ import java.util.List;
 public class Mixtape {
     @Id
     private String id;
+
+    @NotBlank
     private String title;
+
     private String description;
+
+    @ImageUrl
     private String imageUrl;
 
     @Size(max = 12)
