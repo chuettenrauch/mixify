@@ -6,11 +6,11 @@ namespace Form {
     }
 
     export type Track = {
-        name: string,
-        artist: string,
-        imageUrl: string,
-        description: string,
-        providerUri: string,
+        name: string | null,
+        artist: string | null,
+        imageUrl: string | null,
+        description: string | null,
+        providerUri: string | null,
     }
 }
 

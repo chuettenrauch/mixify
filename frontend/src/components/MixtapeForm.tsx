@@ -41,7 +41,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
 
             toast.success("Successfully saved mixtape.");
         } catch (e) {
-            if (isAxiosError(e) && e.response) {
+            if (isAxiosError(e) && e.response && e.response.status === 400) {
                 setErrors(e.response.data);
             }
         }
