@@ -260,7 +260,7 @@ class MixtapeControllerTest {
                     "id": "123",
                     "title": "existing mixtape",
                     "description": "description",
-                    "image": null,
+                    "imageUrl": "http://path/to/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -296,7 +296,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "description",
-                    "image": null,
+                    "imageUrl": "http://path/to/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",
@@ -330,7 +330,7 @@ class MixtapeControllerTest {
                     "id": "234",
                     "title": "existing mixtape",
                     "description": "updated description",
-                    "imageUrl": "/path/to/mixtape/image",
+                    "imageUrl": "http://path/to/mixtape/image",
                     "createdBy": {
                         "id": "123",
                         "name": "alvin",

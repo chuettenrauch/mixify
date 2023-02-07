@@ -2,6 +2,7 @@ package com.github.chuettenrauch.mixifyapi.mixtape.controller;
 
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.service.TrackService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,12 @@ public class TrackController {
     private final TrackService trackService;
 
     @PostMapping
-    public Track create(@PathVariable String mixtapeId, @RequestBody Track track) {
+    public Track create(@PathVariable String mixtapeId, @Valid @RequestBody Track track) {
         return this.trackService.saveForMixtape(mixtapeId, track);
     }
 
     @PutMapping("/{id}")
-    public Track update(@PathVariable String mixtapeId, @PathVariable String id, @RequestBody Track track) {
+    public Track update(@Valid @PathVariable String mixtapeId, @PathVariable String id, @Valid @RequestBody Track track) {
         return this.trackService.updateByIdForMixtape(mixtapeId, id, track);
     }
 

@@ -10,6 +10,6 @@ public class ProviderUriValidator implements ConstraintValidator<ProviderUri, St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return value.matches("spotify:track:[\\w]+");
+        return value != null && value.matches("spotify:track:[\\w]+");
     }
 }

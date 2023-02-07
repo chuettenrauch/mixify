@@ -66,7 +66,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -95,7 +95,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -124,7 +124,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -164,7 +164,7 @@ class TrackControllerTest {
                 {
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -195,7 +195,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -227,7 +227,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -259,7 +259,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": null,
                     "providerUri": "spotify:track:12345"
                 }
@@ -291,7 +291,7 @@ class TrackControllerTest {
                     "id": "234",
                     "name": "The Chipmunks Song",
                     "artist": "Alvin & The Chipmunks",
-                    "imageUrl": "/path/to/image",
+                    "imageUrl": "http://path/to/image",
                     "description": "Updated description",
                     "providerUri": "spotify:track:12345"
                 }

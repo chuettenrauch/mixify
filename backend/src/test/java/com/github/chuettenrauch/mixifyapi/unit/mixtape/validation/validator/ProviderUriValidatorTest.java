@@ -18,6 +18,7 @@ class ProviderUriValidatorTest {
             "something:spotify:track:1231sdfdsf, false",
             "spotify:track:1231sdfdsf:something, false",
             "some-random-string, false",
+            ", false",
     })
     void isValid(String value, boolean expected) {
         // given

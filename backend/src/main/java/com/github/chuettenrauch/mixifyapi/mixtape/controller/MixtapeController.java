@@ -33,7 +33,7 @@ public class MixtapeController {
     }
 
     @PutMapping("/{id}")
-    public Mixtape update(@PathVariable String id, @RequestBody Mixtape mixtape) {
+    public Mixtape update(@PathVariable String id, @Valid @RequestBody Mixtape mixtape) {
         return this.mixtapeService.updateById(id, mixtape);
     }
 

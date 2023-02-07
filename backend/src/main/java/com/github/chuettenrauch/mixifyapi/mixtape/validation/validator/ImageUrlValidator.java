@@ -26,6 +26,6 @@ public class ImageUrlValidator implements ConstraintValidator<ImageUrl, String> 
     }
 
     private boolean isRelativeUrlToUploadedFile(String value) {
-        return value.matches("/api/files/[\\w]+");
+        return value != null && value.matches("/api/files/[\\w]+");
     }
 }
