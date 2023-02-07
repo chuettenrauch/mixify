@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = ProviderUriValidator.class)
 @Documented
 public @interface ProviderUri {
-    String message() default "Not a valid provider uri";
+    String message() default "not a valid provider uri";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

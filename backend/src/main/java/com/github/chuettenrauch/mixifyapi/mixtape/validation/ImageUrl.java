@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = ImageUrlValidator.class)
 @Documented
 public @interface ImageUrl {
-    String message() default "Must be an absolute URL or match /api/files/{id}";
+    String message() default "must be an absolute URL or URL to uploaded file";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

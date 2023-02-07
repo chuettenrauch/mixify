@@ -23,13 +23,11 @@ public class Track {
     @NotBlank
     private String artist;
 
-    @NotBlank
     @ImageUrl
     private String imageUrl;
 
     private String description;
 
-    @NotBlank
     @ProviderUri
     private String providerUri;
 }

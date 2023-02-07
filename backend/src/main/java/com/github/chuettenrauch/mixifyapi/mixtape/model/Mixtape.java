@@ -28,7 +28,6 @@ public class Mixtape {
 
     private String description;
 
-    @NotBlank
     @ImageUrl
     private String imageUrl;
 
