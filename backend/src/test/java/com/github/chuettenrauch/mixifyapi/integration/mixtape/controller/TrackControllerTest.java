@@ -108,7 +108,7 @@ class TrackControllerTest {
     @DirtiesContext
     void create_whenMixtapeExistsAndBelongsToLoggedInUser_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user);
@@ -139,7 +139,7 @@ class TrackControllerTest {
     @DirtiesContext
     void create_whenNumOfTracksExceedsMaxLimit_thenReturnBadRequest() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         List<Track> tracks = new ArrayList<>();
@@ -233,7 +233,7 @@ class TrackControllerTest {
     @Test
     void update_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -265,7 +265,7 @@ class TrackControllerTest {
     @Test
     void update_whenTrackExists_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -328,7 +328,7 @@ class TrackControllerTest {
     @Test
     void delete_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -347,7 +347,7 @@ class TrackControllerTest {
     @Test
     void delete_whenTrackExists_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");

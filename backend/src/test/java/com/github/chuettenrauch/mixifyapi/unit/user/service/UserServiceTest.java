@@ -135,7 +135,7 @@ class UserServiceTest {
     @Test
     void createUserResourceFromAuthentication_returnsUserResource() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
@@ -164,7 +164,7 @@ class UserServiceTest {
     @Test
     void createUserResourceFromAuthentication_skipsRefreshTokenIfNotPresent() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = mock(OAuth2User.class);
 
         OAuth2AuthenticationToken authentication = mock(OAuth2AuthenticationToken.class);

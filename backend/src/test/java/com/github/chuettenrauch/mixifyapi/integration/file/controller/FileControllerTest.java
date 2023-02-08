@@ -61,7 +61,7 @@ class FileControllerTest {
     @DirtiesContext
     void uploadFile_whenLoggedInButFileIsEmpty_returnBadRequest() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         this.userRepository.save(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "".getBytes());
@@ -77,7 +77,7 @@ class FileControllerTest {
     @DirtiesContext
     void uploadFile_whenLoggedIn_returnFileMetadata() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         this.userRepository.save(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -120,7 +120,7 @@ class FileControllerTest {
     @DirtiesContext
     void downloadFile_whenLoggedInButFileDoesNotExist_returnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         this.userRepository.save(user);
 
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
@@ -138,8 +138,8 @@ class FileControllerTest {
     @DirtiesContext
     void downloadFile_whenLoggedInButFileDoesNotBelongsToLoggedInUser_returnNotFound() throws Exception {
         // given
-        User fileCreator = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
-        User loggedInUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.spotify, "user-234");
+        User fileCreator = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User loggedInUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.SPOTIFY, "user-234");
         this.userRepository.saveAll(List.of(fileCreator, loggedInUser));
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -160,7 +160,7 @@ class FileControllerTest {
     @DirtiesContext
     void downloadFile_whenLoggedIn_returnFile() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         this.userRepository.save(user);
 
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(

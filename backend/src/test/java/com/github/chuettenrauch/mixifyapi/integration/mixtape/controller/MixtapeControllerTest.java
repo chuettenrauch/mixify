@@ -55,7 +55,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -99,7 +99,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -162,7 +162,7 @@ class MixtapeControllerTest {
                         ]
                         """;
 
-        User loggedInUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User loggedInUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(loggedInUser);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -208,7 +208,7 @@ class MixtapeControllerTest {
     @Test
     @DirtiesContext
     void delete_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
@@ -224,7 +224,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         String givenJson = """
@@ -255,7 +255,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void update_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -291,7 +291,7 @@ class MixtapeControllerTest {
     @DirtiesContext
     void update_whenLoggedInAndMixtapeExists_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
@@ -371,7 +371,7 @@ class MixtapeControllerTest {
                 }
                 """;
 
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);

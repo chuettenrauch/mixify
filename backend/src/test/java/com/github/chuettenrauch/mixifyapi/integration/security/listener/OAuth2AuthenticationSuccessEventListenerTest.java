@@ -71,7 +71,7 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         assertEquals(attributes.get("email"), savedUser.getEmail());
         assertEquals(attributes.get("display_name"), savedUser.getName());
         assertEquals(expectedImageUrl, savedUser.getImageUrl());
-        assertEquals(Provider.spotify, savedUser.getProvider());
+        assertEquals(Provider.SPOTIFY, savedUser.getProvider());
         assertEquals(attributes.get("id"), savedUser.getProviderId());
     }
 
@@ -84,7 +84,7 @@ class OAuth2AuthenticationSuccessEventListenerTest {
                 "alvin@chipmunks.de",
                 "should be overwritten",
                 "should be overwritten",
-                Provider.spotify,
+                Provider.SPOTIFY,
                 "user-123"
         );
 
@@ -145,7 +145,7 @@ class OAuth2AuthenticationSuccessEventListenerTest {
     }
 
     private AuthenticationSuccessEvent createAuthenticationSuccessEvent(OAuth2User oAuth2User) {
-        return this.createAuthenticationSuccessEvent(oAuth2User, Provider.spotify.toString());
+        return this.createAuthenticationSuccessEvent(oAuth2User, Provider.SPOTIFY.toString());
     }
 
     private AuthenticationSuccessEvent createAuthenticationSuccessEvent(OAuth2User oAuth2User, String providerName) {
