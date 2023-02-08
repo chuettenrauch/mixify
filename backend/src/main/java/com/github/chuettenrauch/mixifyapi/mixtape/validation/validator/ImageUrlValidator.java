@@ -12,6 +12,10 @@ public class ImageUrlValidator implements ConstraintValidator<ImageUrl, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+        if (value == null || value.isEmpty()) {
+            return true;
+        }
+
         return this.isAbsoluteUrl(value) || isRelativeUrlToUploadedFile(value);
     }
 

@@ -25,7 +25,8 @@ class ImageUrlValidatorTest {
             "some/path/with/api/files/123/in/it, false",
             "/some/other/relative/url, false",
             "some-random-string, false",
-            ", false",
+            ", true",
+            "'', true",
     })
     void isValid(String value, boolean expected) {
         // given

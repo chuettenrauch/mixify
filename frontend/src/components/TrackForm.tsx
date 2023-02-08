@@ -1,4 +1,4 @@
-import {Box, Button, Container, Modal, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, Container, FormControl, FormHelperText, Modal, Stack, TextField, Typography} from "@mui/material";
 import ModalHeader from "./ModalHeader";
 import React, {ChangeEvent, FormEvent, useState} from "react";
 import Form from "../types/forms";
@@ -9,6 +9,15 @@ import {toast} from "react-toastify";
 import {Save as SaveIcon} from "@mui/icons-material";
 import {TrackApi} from "../api/mixify-api";
 import Mixtape from "../types/mixtape";
+import {isAxiosError} from "axios";
+
+const initialErrorState = {
+    name: null,
+    artist: null,
+    imageUrl: null,
+    providerUri: null,
+    description: null,
+}
 
 export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, open, onSave, onBack, onClose}: {
     title: string,
@@ -21,18 +30,25 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
     onClose: () => void,
 }) {
     const [trackForm, setTrackForm] = useState<Form.Track | Track>(getInitialState(selectedSpotifyTrack, track));
+    const [errors, setErrors] = useState<Form.Track>(initialErrorState);
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const savedTrack: Track = track
-            ? await TrackApi.updateTrack(mixtape, trackForm as Track)
-            : await TrackApi.createTrack(mixtape, trackForm);
+        try {
+            const savedTrack: Track = track
+                ? await TrackApi.updateTrack(mixtape, trackForm as Track)
+                : await TrackApi.createTrack(mixtape, trackForm);
 
-        onSave(savedTrack);
-        onClose();
+            onSave(savedTrack);
+            onClose();
 
-        toast.success("Successfully saved track.");
+            toast.success("Successfully saved track.");
+        } catch (e) {
+            if (isAxiosError(e) && e.response && e.response.status === 400) {
+                setErrors(e.response.data);
+            }
+        }
     };
 
     const onImageUpload = (fileMetadata: FileMetadata) => {
@@ -82,10 +98,12 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                     maxWidth={(theme) => theme.breakpoints.values.sm}
                     onSubmit={onSubmit}
                 >
-                    <ImageUpload imageUrl={trackForm.imageUrl} onUpload={onImageUpload}/>
+                    <FormControl error={!!errors.imageUrl}>
+                        <ImageUpload imageUrl={trackForm.imageUrl} onUpload={onImageUpload}/>
+                        <FormHelperText>{errors.imageUrl}</FormHelperText>
+                    </FormControl>
 
                     <TextField
-                        required
                         multiline
                         rows={6}
                         id="description"
@@ -94,6 +112,8 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                         label="Description"
                         placeholder="Why did you choose this song..."
                         margin="normal"
+                        error={!!errors.description}
+                        helperText={errors.description}
                         onChange={onInputChange}
                     />
 
@@ -103,34 +123,31 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                         hidden
                         id="name"
                         name="name"
-                        value={trackForm.name}
+                        value={trackForm.name ?? ""}
                     />
 
                     <input
-                        required
                         readOnly
                         hidden
                         id="artist"
                         name="artist"
-                        value={trackForm.artist}
+                        value={trackForm.artist ?? ""}
                     />
 
                     <input
-                        required
                         readOnly
                         hidden
                         id="imageUrl"
                         name="imageUrl"
-                        value={trackForm.imageUrl}
+                        value={trackForm.imageUrl ?? ""}
                     />
 
                     <input
-                        required
                         readOnly
                         hidden
                         id="providerUri"
                         name="providerUri"
-                        value={trackForm.providerUri}
+                        value={trackForm.providerUri ?? ""}
                     />
 
                     <Button type="submit" variant="contained" startIcon={<SaveIcon/>}>
@@ -149,7 +166,7 @@ function getInitialState(selectedSpotifyTrack: Spotify.Track | undefined, track:
             artist: selectedSpotifyTrack.artists.at(0)?.name ?? "",
             imageUrl: selectedSpotifyTrack.album.images.at(0)?.url ?? "",
             providerUri: selectedSpotifyTrack.uri,
-            description: "",
+            description: null,
         }
     }
 
@@ -158,10 +175,10 @@ function getInitialState(selectedSpotifyTrack: Spotify.Track | undefined, track:
     }
 
     return {
-        name: "",
-        artist: "",
-        imageUrl: "",
-        providerUri: "",
-        description: "",
+        name: null,
+        artist: null,
+        imageUrl: null,
+        providerUri: null,
+        description: null,
     }
 }

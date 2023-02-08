@@ -112,6 +112,32 @@ class MixtapeControllerTest {
                                 """),
                         """
                                 {
+                                    "imageUrl": "must not be blank"
+                                }
+                                """
+                ),
+                arguments(named("imageUrl | empty", """
+                                    {
+                                        "description": "some description",
+                                        "title": "some title",
+                                        "imageUrl": ""
+                                    }
+                                """),
+                        """
+                                {
+                                    "imageUrl": "must not be blank"
+                                }
+                                """
+                ),
+                arguments(named("imageUrl | not valid url", """
+                                    {
+                                        "description": "some description",
+                                        "title": "some title",
+                                        "imageUrl": "some invalid url"
+                                    }
+                                """),
+                        """
+                                {
                                     "imageUrl": "must be an absolute URL or URL to uploaded file"
                                 }
                                 """

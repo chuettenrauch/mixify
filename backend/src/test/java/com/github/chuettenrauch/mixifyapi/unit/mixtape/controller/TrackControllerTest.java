@@ -112,15 +112,57 @@ class TrackControllerTest {
                                 """),
                         """
                                 {
+                                    "imageUrl": "must not be blank"
+                                }
+                                """
+                ),
+                arguments(named("imageUrl | empty", """
+                                    {
+                                        "name": "some name",
+                                        "artist": "some artist",
+                                        "providerUri": "spotify:track:234",
+                                        "imageUrl": ""
+                                    }
+                                """),
+                        """
+                                {
+                                    "imageUrl": "must not be blank"
+                                }
+                                """
+                ),
+                arguments(named("imageUrl | not valid url", """
+                                    {
+                                        "name": "some name",
+                                        "artist": "some artist",
+                                        "providerUri": "spotify:track:234",
+                                        "imageUrl": "some invalid url"
+                                    }
+                                """),
+                        """
+                                {
                                     "imageUrl": "must be an absolute URL or URL to uploaded file"
                                 }
                                 """
                 ),
-                arguments(named("imageUrl | missing", """
+                arguments(named("providerUri | missing", """
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
                                         "imageUrl": "http://path/to/image"
+                                    }
+                                """),
+                        """
+                                {
+                                    "providerUri": "must not be blank"
+                                }
+                                """
+                ),
+                arguments(named("providerUri | not valid", """
+                                    {
+                                        "name": "some name",
+                                        "artist": "some artist",
+                                        "imageUrl": "http://path/to/image",
+                                        "providerUri": "not valid uri"
                                     }
                                 """),
                         """
