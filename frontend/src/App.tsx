@@ -41,7 +41,7 @@ function App() {
                     draggable={false}
                     pauseOnHover={false}
                     transition={Slide}
-                    theme="light"
+                    theme="colored"
                 />
             </BrowserRouter>
         </ThemeProvider>
