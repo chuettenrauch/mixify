@@ -12,9 +12,11 @@ import {
     Info as InfoIcon,
 } from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
+import {CopyToClipboard} from "react-copy-to-clipboard";
 import Mixtape from "../types/mixtape";
 import {InviteApi} from "../api/mixify-api";
 import InviteUtils from "../utils/invite-utils";
+import {toast} from "react-toastify";
 
 export default function ShareModal({open, mixtape, onClose}: {
     open: boolean,
@@ -31,6 +33,10 @@ export default function ShareModal({open, mixtape, onClose}: {
             setShareLink(shareLink);
         })();
     }, [mixtape.id]);
+
+    const onCopyLink = () => {
+        toast.success("Copied link.");
+    }
 
     if (!shareLink) {
         return null;
@@ -76,7 +82,10 @@ export default function ShareModal({open, mixtape, onClose}: {
                     <Typography sx={{display: "flex", alignItems: "center", marginInline: "auto"}}>
                         <InfoIcon color="primary"/>This link is active for 1h.
                     </Typography>
-                    <Button variant="contained" startIcon={<ContentCopyIcon/>}>Copy link</Button>
+
+                    <CopyToClipboard text={shareLink} onCopy={onCopyLink}>
+                        <Button variant="contained" startIcon={<ContentCopyIcon/>}>Copy link</Button>
+                    </CopyToClipboard>
                 </Stack>
             </Paper>
         </Modal>
