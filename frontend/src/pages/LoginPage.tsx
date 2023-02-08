@@ -10,7 +10,7 @@ export default function LoginPage() {
     const [query] = useSearchParams();
 
     if (query.has("error")) {
-        const errorCode = query.get("errorCode");
+        const errorCode = query.get("error_code");
         const errorMessage = errorCode && errorCode === "invalid_user_info_response"
             ? "Mixify is currently in development mode. Your spotify account must be explicitly permitted to use this app."
             : query.get("error");

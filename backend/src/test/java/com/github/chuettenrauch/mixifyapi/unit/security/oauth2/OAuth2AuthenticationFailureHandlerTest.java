@@ -26,7 +26,7 @@ class OAuth2AuthenticationFailureHandlerTest {
         OAuth2AuthenticationException exception = mock(OAuth2AuthenticationException.class);
         when(exception.getError()).thenReturn(new OAuth2Error("some-code", "Some Message", ""));
 
-        String expectedRedirectUrl = "http://path/to/failure/url?errorCode=some-code&error=Some%20Message";
+        String expectedRedirectUrl = "http://path/to/failure/url?error_code=some-code&error=Some%20Message";
 
         // when
         OAuth2AuthenticationFailureHandler sut = new OAuth2AuthenticationFailureHandler(givenFailureUrl, redirectStrategy);

@@ -23,7 +23,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
 
         UriComponents redirectUri = UriComponentsBuilder
                 .fromUriString(this.defaultFailureUrl)
-                .queryParam("errorCode", authenticationException.getError().getErrorCode())
+                .queryParam("error_code", authenticationException.getError().getErrorCode())
                 .queryParam("error", authenticationException.getError().getDescription())
                 .build();
 
