@@ -80,7 +80,7 @@ export default function ShareModal({open, mixtape, onClose}: {
                         sx={{width: "100%"}}
                     />
                     <Typography sx={{display: "flex", alignItems: "center", marginInline: "auto"}}>
-                        <InfoIcon color="primary"/>This link is active for 1h.
+                        <InfoIcon color="primary"/>This link is only active for 1h.
                     </Typography>
 
                     <CopyToClipboard text={shareLink} onCopy={onCopyLink}>
