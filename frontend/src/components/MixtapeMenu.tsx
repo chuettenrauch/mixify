@@ -1,5 +1,5 @@
 import {IconButton, ListItemIcon, Menu, MenuItem} from "@mui/material";
-import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon} from "@mui/icons-material";
+import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon} from "@mui/icons-material";
 import React, {useEffect} from "react";
 import useMenu from "../hooks/useMenu";
 import useForm from "../hooks/useForm";
@@ -10,6 +10,8 @@ import Mixtape from "../types/mixtape";
 import MixtapeForm from "./MixtapeForm";
 import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
+import useOpenClose from "../hooks/useOpenClose";
+import ShareModal from "./ShareModal";
 
 export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
     mixtape: Mixtape,
@@ -18,6 +20,7 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
 }) {
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
+    const {isOpen: isShareModalOpen, open: openShareModal, close: closeShareModal} = useOpenClose();
     const {enableBackdrop} = useBackdrop();
 
     const {
@@ -68,6 +71,12 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
                     </ListItemIcon>
                     Edit
                 </MenuItem>
+                <MenuItem onClick={openShareModal}>
+                    <ListItemIcon>
+                        <ShareIcon fontSize="small"/>
+                    </ListItemIcon>
+                    Share
+                </MenuItem>
                 <MenuItem onClick={openDeleteConfirmDialog}>
                     <ListItemIcon>
                         <CloseIcon fontSize="small"/>
@@ -93,6 +102,10 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
                 onSave={onEdit}
                 onClose={closeMixtapeForm}
               />
+            }
+
+            {isShareModalOpen &&
+              <ShareModal open={isShareModalOpen} mixtape={mixtape} onClose={closeShareModal}/>
             }
         </>
     )

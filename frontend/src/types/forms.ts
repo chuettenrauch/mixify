@@ -12,6 +12,10 @@ namespace Form {
         description: string | null,
         providerUri: string | null,
     }
+
+    export type Invite = {
+        mixtape: string | null,
+    }
 }
 
 export default Form;
