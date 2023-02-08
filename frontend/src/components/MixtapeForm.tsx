@@ -101,7 +101,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         variant="standard"
                         id="title"
                         name="title"
-                        value={mixtapeForm.title}
+                        value={mixtapeForm.title ?? ""}
                         label="Title"
                         placeholder="Mixtape title"
                         margin="none"
@@ -114,7 +114,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                         rows={6}
                         id="description"
                         name="description"
-                        value={mixtapeForm.description}
+                        value={mixtapeForm.description ?? ""}
                         label="Description"
                         placeholder="What is your mixtape about..."
                         margin="normal"
