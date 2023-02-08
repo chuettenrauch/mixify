@@ -2,11 +2,10 @@ package com.github.chuettenrauch.mixifyapi.invite.controller;
 
 import com.github.chuettenrauch.mixifyapi.invite.model.Invite;
 import com.github.chuettenrauch.mixifyapi.invite.service.InviteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/invites")
@@ -16,7 +15,8 @@ public class InviteController {
     private final InviteService inviteService;
 
     @PostMapping
-    public Invite create(@RequestBody Invite invite) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Invite create(@RequestBody @Valid Invite invite) {
         return this.inviteService.save(invite);
     }
 }

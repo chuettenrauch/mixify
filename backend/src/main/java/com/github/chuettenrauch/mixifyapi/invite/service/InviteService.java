@@ -16,14 +16,14 @@ public class InviteService {
 
     private final InviteRepository inviteRepository;
 
-    private final AppProperties.Invite inviteProperties;
+    private final AppProperties appProperties;
 
     public Invite save(Invite invite) {
         if (invite.getId() != null) {
             throw new UnprocessableEntityException();
         }
 
-        Duration expirationTime = Duration.parse(inviteProperties.getExpirationTime());
+        Duration expirationTime = Duration.parse(appProperties.getInvite().getExpirationTime());
         invite.setExpiredAt(LocalDateTime.now().plus(expirationTime));
 
         return this.inviteRepository.save(invite);

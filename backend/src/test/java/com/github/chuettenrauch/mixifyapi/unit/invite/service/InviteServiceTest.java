@@ -5,7 +5,6 @@ import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException
 import com.github.chuettenrauch.mixifyapi.invite.model.Invite;
 import com.github.chuettenrauch.mixifyapi.invite.repository.InviteRepository;
 import com.github.chuettenrauch.mixifyapi.invite.service.InviteService;
-import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ class InviteServiceTest {
     void save_whenCalled_thenDelegateToInviteRepository() {
         // given
         Invite given = new Invite();
-        given.setMixtape(new Mixtape());
+        given.setMixtape("abc123");
 
         InviteRepository inviteRepository = mock(InviteRepository.class);
         when(inviteRepository.save(given)).thenReturn(given);
@@ -29,8 +28,11 @@ class InviteServiceTest {
         AppProperties.Invite inviteProperties = mock(AppProperties.Invite.class);
         when(inviteProperties.getExpirationTime()).thenReturn("PT5H");
 
+        AppProperties appProperties = mock(AppProperties.class);
+        when(appProperties.getInvite()).thenReturn(inviteProperties);
+
         // when
-        InviteService sut = new InviteService(inviteRepository, inviteProperties);
+        InviteService sut = new InviteService(inviteRepository, appProperties);
 
         LocalDateTime beforeCreate = LocalDateTime.now();
         Invite actual = sut.save(given);
@@ -50,13 +52,13 @@ class InviteServiceTest {
         // given
         Invite invite = new Invite();
         invite.setId("123");
-        invite.setMixtape(new Mixtape());
+        invite.setMixtape("abc123");
 
         InviteRepository inviteRepository = mock(InviteRepository.class);
-        AppProperties.Invite inviteProperties = mock(AppProperties.Invite.class);
+        AppProperties appProperties = mock(AppProperties.class);
 
         // when
-        InviteService sut = new InviteService(inviteRepository, inviteProperties);
+        InviteService sut = new InviteService(inviteRepository, appProperties);
         assertThrows(UnprocessableEntityException.class, () -> sut.save(invite));
 
         // then
