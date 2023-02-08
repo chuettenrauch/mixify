@@ -2,6 +2,7 @@ import {Navigate, Outlet, useLocation} from "react-router-dom";
 import {createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState} from "react";
 import {UserApi} from "../api/mixify-api";
 import {AuthenticatedUser} from "../types/user";
+import Utils from "../utils/utils";
 
 type UserContextType = {
     user: AuthenticatedUser | null,
@@ -44,7 +45,7 @@ export default function ProtectedRoutes() {
             ? <UserContext.Provider value={userContext}>
                 <Outlet/>
             </UserContext.Provider>
-            : <Navigate to="/login"/>
+            : <Navigate to={Utils.createLoginLink()}/>
     )
 }
 
