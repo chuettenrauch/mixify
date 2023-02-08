@@ -40,7 +40,7 @@ public class MixtapeService {
         return this.mixtapeRepository.findAllByCreatedBy(user);
     }
 
-    public Mixtape updateById(String id, Mixtape mixtape) {
+    public Mixtape updateByIdForAuthenticatedUser(String id, Mixtape mixtape) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
@@ -55,7 +55,7 @@ public class MixtapeService {
         return this.mixtapeRepository.save(mixtape);
     }
 
-    public void deleteById(String id) {
+    public void deleteByIdForAuthenticatedUser(String id) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
@@ -66,12 +66,16 @@ public class MixtapeService {
         this.mixtapeRepository.deleteById(id);
     }
 
-    public Mixtape findById(String id) {
+    public Mixtape findByIdForAuthenticatedUser(String id) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
         return this.mixtapeRepository.findByIdAndCreatedBy(id, user)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public boolean existsById(String id) {
+        return this.mixtapeRepository.existsById(id);
     }
 
     private void validateTracks(Mixtape mixtape) {

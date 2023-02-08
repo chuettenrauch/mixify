@@ -29,17 +29,17 @@ public class MixtapeController {
 
     @GetMapping("/{id}")
     public Mixtape get(@PathVariable String id) {
-        return this.mixtapeService.findById(id);
+        return this.mixtapeService.findByIdForAuthenticatedUser(id);
     }
 
     @PutMapping("/{id}")
     public Mixtape update(@PathVariable String id, @Valid @RequestBody Mixtape mixtape) {
-        return this.mixtapeService.updateById(id, mixtape);
+        return this.mixtapeService.updateByIdForAuthenticatedUser(id, mixtape);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
-        this.mixtapeService.deleteById(id);
+        this.mixtapeService.deleteByIdForAuthenticatedUser(id);
     }
 
 }

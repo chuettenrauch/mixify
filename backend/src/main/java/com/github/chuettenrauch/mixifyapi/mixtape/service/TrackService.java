@@ -15,19 +15,19 @@ public class TrackService {
     private final MixtapeService mixtapeService;
 
     public Track saveForMixtape(String mixtapeId, Track track) {
-        Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
+        Mixtape mixtape = this.mixtapeService.findByIdForAuthenticatedUser(mixtapeId);
 
         Track savedTrack = this.trackRepository.save(track);
 
         mixtape.getTracks().add(track);
-        this.mixtapeService.updateById(mixtape.getId(), mixtape);
+        this.mixtapeService.updateByIdForAuthenticatedUser(mixtape.getId(), mixtape);
 
         return savedTrack;
     }
 
     public Track updateByIdForMixtape(String mixtapeId, String id, Track track) {
         track.setId(id);
-        Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
+        Mixtape mixtape = this.mixtapeService.findByIdForAuthenticatedUser(mixtapeId);
 
         if (!mixtape.hasTrackWithId(track.getId()) || !this.trackRepository.existsById(id)) {
             throw new NotFoundException();
@@ -37,7 +37,7 @@ public class TrackService {
     }
 
     public void deleteByIdForMixtape(String mixtapeId, String id) {
-        Mixtape mixtape = this.mixtapeService.findById(mixtapeId);
+        Mixtape mixtape = this.mixtapeService.findByIdForAuthenticatedUser(mixtapeId);
 
         if (!mixtape.hasTrackWithId(id) || !this.trackRepository.existsById(id)) {
             throw new NotFoundException();
@@ -46,6 +46,6 @@ public class TrackService {
         this.trackRepository.deleteById(id);
 
         mixtape.removeTrackWithId(id);
-        this.mixtapeService.updateById(mixtape.getId(), mixtape);
+        this.mixtapeService.updateByIdForAuthenticatedUser(mixtape.getId(), mixtape);
     }
 }
