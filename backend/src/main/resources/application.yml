@@ -39,3 +39,5 @@ app:
   oauth2:
     success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:http://localhost:3000}"
     failure-redirect-uri: "${OAUTH2_FAILURE_REDIRECT_URI:http://localhost:3000/login}"
+  invite:
+    expiration-time: "PT1H"

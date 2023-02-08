@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.invite.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Invite {
     @DocumentReference
     private Mixtape mixtape;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime expiredAt;
 
 }
