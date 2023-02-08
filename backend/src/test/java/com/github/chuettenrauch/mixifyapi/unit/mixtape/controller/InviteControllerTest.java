@@ -2,6 +2,7 @@ package com.github.chuettenrauch.mixifyapi.unit.mixtape.controller;
 
 import com.github.chuettenrauch.mixifyapi.invite.controller.InviteController;
 import com.github.chuettenrauch.mixifyapi.invite.service.InviteService;
+import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
 import com.github.chuettenrauch.mixifyapi.security.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,6 +33,9 @@ class InviteControllerTest {
 
     @MockBean
     private InviteService inviteService;
+
+    @MockBean
+    private MixtapeService mixtapeService;
 
     @Test
     void create_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {

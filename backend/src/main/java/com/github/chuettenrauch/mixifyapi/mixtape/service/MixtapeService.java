@@ -74,6 +74,10 @@ public class MixtapeService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public boolean existsById(String id) {
+        return this.mixtapeRepository.existsById(id);
+    }
+
     private void validateTracks(Mixtape mixtape) {
         Set<ConstraintViolation<Mixtape>> errors = validator.validateProperty(mixtape, "tracks");
         if (!errors.isEmpty()) {

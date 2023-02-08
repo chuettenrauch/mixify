@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.invite.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.chuettenrauch.mixifyapi.mixtape.validation.MixtapeExists;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Invite {
     private String id;
 
     @NotBlank
+    @MixtapeExists
     private String mixtape;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
