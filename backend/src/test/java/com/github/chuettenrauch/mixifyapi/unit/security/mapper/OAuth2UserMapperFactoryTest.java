@@ -18,7 +18,7 @@ class OAuth2UserMapperFactoryTest {
     @Test
     void getOAuth2UserMapperByProviderName_returnsMapperWithGivenProviderName() {
         // given
-        Provider provider = Provider.spotify;
+        Provider provider = Provider.SPOTIFY;
 
         OAuth2UserMapper expectedMapper = mock(OAuth2UserMapper.class);
         when(expectedMapper.getProvider()).thenReturn(provider);
@@ -29,6 +29,25 @@ class OAuth2UserMapperFactoryTest {
         ));
 
         OAuth2UserMapper actual = sut.getOAuth2UserMapperByProviderName(provider.toString());
+
+        // then
+        assertEquals(expectedMapper, actual);
+    }
+
+    @Test
+    void getOAuth2UserMapperByProviderName_whenProviderNameGivenInLowerCase_thenReturnMapper() {
+        // given
+        Provider provider = Provider.SPOTIFY;
+
+        OAuth2UserMapper expectedMapper = mock(OAuth2UserMapper.class);
+        when(expectedMapper.getProvider()).thenReturn(provider);
+
+        // when
+        OAuth2UserMapperFactory sut = new OAuth2UserMapperFactory(List.of(
+                expectedMapper
+        ));
+
+        OAuth2UserMapper actual = sut.getOAuth2UserMapperByProviderName(provider.toString().toLowerCase());
 
         // then
         assertEquals(expectedMapper, actual);

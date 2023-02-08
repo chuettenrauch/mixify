@@ -25,7 +25,7 @@ class SpotifyOAuth2UserMapperTest {
     void isApplicableForProvider_returnsCorrectProvider() {
         SpotifyOAuth2UserMapper sut = new SpotifyOAuth2UserMapper();
 
-        assertEquals(Provider.spotify, sut.getProvider());
+        assertEquals(Provider.SPOTIFY, sut.getProvider());
     }
 
     @Test
@@ -34,7 +34,7 @@ class SpotifyOAuth2UserMapperTest {
         String expectedEmail = "alvin@chipmunks.de";
         String expectedName = "Alvin Chipmunk";
         String expectedImageUrl = "http://url/to/image-1.jpg";
-        Provider expectedProvider = Provider.spotify;
+        Provider expectedProvider = Provider.SPOTIFY;
         String expectedProviderId = "user-123";
 
         List<Map<String, String>> images = new ArrayList<>(List.of(

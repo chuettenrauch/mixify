@@ -16,15 +16,23 @@ public class OAuth2UserMapperFactory {
         this.oAuth2UserMapperByProvider = oAuth2UserMappers
                 .stream()
                 .collect(
-                        Collectors.toMap(oAuth2UserMapper -> oAuth2UserMapper.getProvider().toString(), Function.identity())
+                        Collectors.toMap(
+                                oAuth2UserMapper -> oAuth2UserMapper
+                                        .getProvider()
+                                        .toString()
+                                        .toLowerCase(),
+                                Function.identity()
+                        )
                 );
     }
 
     public OAuth2UserMapper getOAuth2UserMapperByProviderName(String providerName) {
-        if (!this.oAuth2UserMapperByProvider.containsKey(providerName)) {
+        String providerKey = providerName.toLowerCase();
+
+        if (!this.oAuth2UserMapperByProvider.containsKey(providerKey)) {
             throw new NoSuchOAuth2MapperException();
         }
 
-        return this.oAuth2UserMapperByProvider.get(providerName);
+        return this.oAuth2UserMapperByProvider.get(providerKey);
     }
 }

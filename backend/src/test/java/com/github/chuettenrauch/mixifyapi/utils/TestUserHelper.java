@@ -15,7 +15,7 @@ public class TestUserHelper {
     private final UserRepository userRepository;
 
     public OAuth2User createLoginUser() {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.spotify, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
 
         return this.createLoginUser(user);
     }
@@ -29,7 +29,7 @@ public class TestUserHelper {
     }
 
     public User createUser(String id) {
-        User user = new User(id, null, null, null, Provider.spotify, null);
+        User user = new User(id, null, null, null, Provider.SPOTIFY, null);
 
         return this.userRepository.save(user);
     }

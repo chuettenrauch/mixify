@@ -25,7 +25,7 @@ public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
 
     @Override
     public Provider getProvider() {
-        return Provider.spotify;
+        return Provider.SPOTIFY;
     }
 
     @Override

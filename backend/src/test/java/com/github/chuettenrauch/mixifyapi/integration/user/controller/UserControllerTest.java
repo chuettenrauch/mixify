@@ -80,7 +80,7 @@ class UserControllerTest {
 
     private ClientRegistration createOAuth2ClientRegistration() {
         return ClientRegistration
-                .withRegistrationId(Provider.spotify.toString())
+                .withRegistrationId(Provider.SPOTIFY.toString())
                 .clientId("doesntmatter")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationUri("doesntmatter")
