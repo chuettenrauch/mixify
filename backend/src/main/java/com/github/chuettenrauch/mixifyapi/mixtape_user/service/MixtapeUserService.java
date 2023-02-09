@@ -21,11 +21,13 @@ public class MixtapeUserService {
 
     private final UserService userService;
 
-    public MixtapeUser createFromInviteForAuthenticatedUser(Invite invite) {
+    public MixtapeUser createFromInviteForAuthenticatedUserIfNotExists(Invite invite) {
         User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
         Mixtape mixtape = this.mixtapeService.findById(invite.getMixtape());
 
-        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtape);
+        MixtapeUser mixtapeUser = this.mixtapeUserRepository
+                .findOneByUserAndMixtape(user, mixtape)
+                .orElse(new MixtapeUser(null, user, mixtape));
 
         return this.mixtapeUserRepository.save(mixtapeUser);
     }

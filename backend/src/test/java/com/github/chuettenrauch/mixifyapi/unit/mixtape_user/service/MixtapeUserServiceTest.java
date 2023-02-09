@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 class MixtapeUserServiceTest {
 
     @Test
-    void createFromInviteForAuthenticatedUser_whenNotLoggedIn_thenThrowUnauthorizedException() {
+    void createFromInviteForAuthenticatedUserIfNotExists_whenNotLoggedIn_thenThrowUnauthorizedException() {
         // given
         Invite invite = new Invite();
 
@@ -34,14 +34,14 @@ class MixtapeUserServiceTest {
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
 
-        assertThrows(UnauthorizedException.class, () -> sut.createFromInviteForAuthenticatedUser(invite));
+        assertThrows(UnauthorizedException.class, () -> sut.createFromInviteForAuthenticatedUserIfNotExists(invite));
 
         // then
         verify(mixtapeUserRepository, never()).save(any());
     }
 
     @Test
-    void createFromInviteForAuthenticatedUser_whenMixtapeDoesNotExist_thenThrowNotFoundException() {
+    void createFromInviteForAuthenticatedUserIfNotExists_whenMixtapeDoesNotExist_thenThrowNotFoundException() {
         // given
         Invite invite = new Invite();
         invite.setMixtape("123");
@@ -59,14 +59,14 @@ class MixtapeUserServiceTest {
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
 
-        assertThrows(NotFoundException.class, () -> sut.createFromInviteForAuthenticatedUser(invite));
+        assertThrows(NotFoundException.class, () -> sut.createFromInviteForAuthenticatedUserIfNotExists(invite));
 
         // then
         verify(mixtapeUserRepository, never()).save(any());
     }
 
     @Test
-    void createFromInviteForAuthenticatedUser_whenLoggedInAndMixtapeNotExists_thenCreateMixtapeUser() {
+    void createFromInviteForAuthenticatedUserIfNotExists_whenLoggedInAndMixtapeNotExists_thenCreateMixtapeUser() {
         // given
         Mixtape mixtape = new Mixtape();
         mixtape.setId("123");
@@ -79,6 +79,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
         when(mixtapeUserRepository.save(expected)).thenReturn(expected);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
@@ -89,7 +90,39 @@ class MixtapeUserServiceTest {
 
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
-        MixtapeUser actual = sut.createFromInviteForAuthenticatedUser(invite);
+        MixtapeUser actual = sut.createFromInviteForAuthenticatedUserIfNotExists(invite);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeUserRepository).save(expected);
+    }
+
+    @Test
+    void createFromInviteForAuthenticatedUserIfNotExists_whenMixtapeUserAlreadyExists_thenReturnMixtapeUser() {
+        // given
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId("123");
+
+        Invite invite = new Invite();
+        invite.setMixtape(mixtape.getId());
+
+        User user = new User();
+
+        MixtapeUser expected = new MixtapeUser(null, user, mixtape);
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
+        when(mixtapeUserRepository.save(expected)).thenReturn(expected);
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        when(mixtapeService.findById(invite.getMixtape())).thenReturn(mixtape);
+
+        UserService userService = mock(UserService.class);
+        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
+        MixtapeUser actual = sut.createFromInviteForAuthenticatedUserIfNotExists(invite);
 
         // then
         assertEquals(expected, actual);

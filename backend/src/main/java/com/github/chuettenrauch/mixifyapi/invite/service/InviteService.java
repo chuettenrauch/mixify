@@ -43,7 +43,7 @@ public class InviteService {
         }
 
         try {
-            return this.mixtapeUserService.createFromInviteForAuthenticatedUser(invite);
+            return this.mixtapeUserService.createFromInviteForAuthenticatedUserIfNotExists(invite);
         } catch (NotFoundException e) {
             throw new GoneException();
         }
