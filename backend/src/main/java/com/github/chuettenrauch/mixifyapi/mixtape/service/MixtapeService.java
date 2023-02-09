@@ -5,6 +5,8 @@ import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserService;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import jakarta.validation.ConstraintViolation;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -23,6 +26,8 @@ public class MixtapeService {
     private final MixtapeRepository mixtapeRepository;
 
     private final UserService userService;
+
+    private final MixtapeUserService mixtapeUserService;
 
     private final Validator validator;
 
@@ -37,7 +42,12 @@ public class MixtapeService {
     public List<Mixtape> findAllForAuthenticatedUser() {
         User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 
-        return this.mixtapeRepository.findAllByCreatedBy(user);
+        return this.mixtapeUserService
+                .findAllByUser(user)
+                .stream()
+                .map(MixtapeUser::getMixtape)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public Mixtape updateByIdForAuthenticatedUser(String id, Mixtape mixtape) {
