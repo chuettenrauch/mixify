@@ -7,12 +7,35 @@ import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserServic
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MixtapeUserServiceTest {
+
+    @Test
+    void findAllForUser_whenCalled_thenDelegateToMixtapeUserRepository() {
+        // given
+        User user = new User();
+
+        List<MixtapeUser> expected = List.of(
+                new MixtapeUser(),
+                new MixtapeUser()
+        );
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.findAllByUser(user)).thenReturn(expected);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
+        List<MixtapeUser> actual = sut.findAllByUser(user);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeUserRepository).findAllByUser(user);
+    }
 
     @Test
     void createIfNotExists_whenMixtapeUserNotExists_thenCreateAndReturn() {
