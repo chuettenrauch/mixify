@@ -66,7 +66,7 @@ class MixtapeUserServiceTest {
     }
 
     @Test
-    void createFromInviteForAuthenticatedUserIfNotExists_whenLoggedInAndMixtapeNotExists_thenCreateMixtapeUser() {
+    void createFromInviteForAuthenticatedUserIfNotExists_whenLoggedInAndMixtapeExists_thenCreateMixtapeUser() {
         // given
         Mixtape mixtape = new Mixtape();
         mixtape.setId("123");
