@@ -6,6 +6,7 @@ import FileMetadata from "../types/file-metadata";
 import Track from "../types/track";
 import Invite from "../types/invite";
 import Utils from "../utils/utils";
+import MixtapeUser from "../types/mixtape-user";
 
 const client = axios.create({
     baseURL: "/api"
@@ -105,6 +106,12 @@ export namespace FileApi {
 export namespace InviteApi {
     export async function createInvite(inviteForm: Form.Invite): Promise<Invite> {
         const response = await client.post("/invites", inviteForm);
+
+        return response.data;
+    }
+
+    export async function acceptInvite(id: string): Promise<MixtapeUser> {
+        const response = await client.put(`/invites/${id}`);
 
         return response.data;
     }
