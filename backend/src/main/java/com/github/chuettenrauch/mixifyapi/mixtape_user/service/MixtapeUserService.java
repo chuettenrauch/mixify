@@ -1,11 +1,11 @@
-package com.github.chuettenrauch.mixifyapi.mixtapeUser.service;
+package com.github.chuettenrauch.mixifyapi.mixtape_user.service;
 
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.invite.model.Invite;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
-import com.github.chuettenrauch.mixifyapi.mixtapeUser.model.MixtapeUser;
-import com.github.chuettenrauch.mixifyapi.mixtapeUser.repository.MixtapeUserRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.repository.MixtapeUserRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import lombok.RequiredArgsConstructor;

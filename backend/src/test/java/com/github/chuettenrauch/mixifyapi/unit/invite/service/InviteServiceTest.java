@@ -7,8 +7,8 @@ import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException
 import com.github.chuettenrauch.mixifyapi.invite.model.Invite;
 import com.github.chuettenrauch.mixifyapi.invite.repository.InviteRepository;
 import com.github.chuettenrauch.mixifyapi.invite.service.InviteService;
-import com.github.chuettenrauch.mixifyapi.mixtapeUser.model.MixtapeUser;
-import com.github.chuettenrauch.mixifyapi.mixtapeUser.service.MixtapeUserService;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
-package com.github.chuettenrauch.mixifyapi.mixtapeUser.repository;
+package com.github.chuettenrauch.mixifyapi.mixtape_user.repository;
 
-import com.github.chuettenrauch.mixifyapi.mixtapeUser.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

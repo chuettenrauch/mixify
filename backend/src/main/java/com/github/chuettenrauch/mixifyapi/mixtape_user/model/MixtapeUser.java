@@ -1,4 +1,4 @@
-package com.github.chuettenrauch.mixifyapi.mixtapeUser.model;
+package com.github.chuettenrauch.mixifyapi.mixtape_user.model;
 
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
