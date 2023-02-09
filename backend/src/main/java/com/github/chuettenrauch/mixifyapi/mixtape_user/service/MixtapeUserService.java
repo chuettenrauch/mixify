@@ -30,7 +30,7 @@ public class MixtapeUserService {
 
     public MixtapeUser createIfNotExists(User user, Mixtape mixtape) {
         MixtapeUser mixtapeUser = this.mixtapeUserRepository
-                .findOneByUserAndMixtape(user, mixtape)
+                .findByUserAndMixtape(user, mixtape)
                 .orElse(new MixtapeUser(null, user, mixtape));
 
         return this.mixtapeUserRepository.save(mixtapeUser);
