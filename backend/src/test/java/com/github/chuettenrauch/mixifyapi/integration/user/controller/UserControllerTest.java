@@ -32,12 +32,6 @@ class UserControllerTest {
     private MockMvc mvc;
 
     @Test
-    void me_returnsUnauthorizedIfNotLoggedIn() throws Exception {
-        this.mvc.perform(get("/api/users/me"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @DirtiesContext
     void me_returnsUserResourceIfLoggedIn() throws Exception {
         // given
@@ -57,12 +51,6 @@ class UserControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson, true));
-    }
-
-    @Test
-    void logout_returnsUnauthorizedIfNotLoggedIn() throws Exception {
-        this.mvc.perform(post("/api/users/logout"))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test

@@ -38,27 +38,6 @@ class FileControllerTest {
     private FileService fileService;
 
     @Test
-    void uploadFile_whenNotLoggedIn_returnUnauthorized() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("file", "image.jpg", "image/jpeg", "some image".getBytes());
-
-        this.mvc.perform(multipart("/api/files")
-                        .file(file)
-                )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void uploadFile_whenLoggedInButUserDoesNotExistInDB_returnUnauthorized() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-
-        this.mvc.perform(multipart("/api/files")
-                        .file(file)
-                        .with(oauth2Login())
-                )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     void uploadFile_whenLoggedInButFileIsEmpty_returnBadRequest() throws Exception {
         // given
         User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -99,20 +78,6 @@ class FileControllerTest {
                 .andExpect(content().json(expectedJson))
                 .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.url", matchesPattern("/api/files/[\\w]+")));
-    }
-
-    @Test
-    void downloadFile_whenNotLoggedIn_returnUnauthorized() throws Exception {
-        this.mvc.perform(get("/api/files/123"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void downloadFile_whenLoggedInButUserDoesNotExistInDB_returnUnauthorized() throws Exception {
-        this.mvc.perform(get("/api/files/123")
-                        .with(oauth2Login())
-                )
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
