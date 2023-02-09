@@ -90,7 +90,7 @@ class InviteServiceTest {
         assertThrows(NotFoundException.class, () -> sut.acceptInviteByIdForAuthenticatedUser(id));
 
         // then
-        verify(mixtapeUserService, never()).createFromInviteForAuthenticatedUser(any());
+        verify(mixtapeUserService, never()).createFromInviteForAuthenticatedUserIfNotExists(any());
     }
 
     @Test
@@ -113,7 +113,7 @@ class InviteServiceTest {
         assertThrows(GoneException.class, () -> sut.acceptInviteByIdForAuthenticatedUser(id));
 
         // then
-        verify(mixtapeUserService, never()).createFromInviteForAuthenticatedUser(any());
+        verify(mixtapeUserService, never()).createFromInviteForAuthenticatedUserIfNotExists(any());
     }
 
     @Test
@@ -128,7 +128,7 @@ class InviteServiceTest {
         when(inviteRepository.findById(id)).thenReturn(Optional.of(invite));
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
-        when(mixtapeUserService.createFromInviteForAuthenticatedUser(invite)).thenThrow(NotFoundException.class);
+        when(mixtapeUserService.createFromInviteForAuthenticatedUserIfNotExists(invite)).thenThrow(NotFoundException.class);
 
         AppProperties appProperties = mock(AppProperties.class);
 
@@ -152,7 +152,7 @@ class InviteServiceTest {
         when(inviteRepository.findById(id)).thenReturn(Optional.of(invite));
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
-        when(mixtapeUserService.createFromInviteForAuthenticatedUser(invite)).thenReturn(expected);
+        when(mixtapeUserService.createFromInviteForAuthenticatedUserIfNotExists(invite)).thenReturn(expected);
 
         AppProperties appProperties = mock(AppProperties.class);
 
@@ -162,7 +162,7 @@ class InviteServiceTest {
 
         // then
         assertEquals(expected, actual);
-        verify(mixtapeUserService).createFromInviteForAuthenticatedUser(invite);
+        verify(mixtapeUserService).createFromInviteForAuthenticatedUserIfNotExists(invite);
     }
 
 }
