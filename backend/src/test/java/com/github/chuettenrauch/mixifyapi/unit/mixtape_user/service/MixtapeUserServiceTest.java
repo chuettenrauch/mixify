@@ -66,7 +66,7 @@ class MixtapeUserServiceTest {
     }
 
     @Test
-    void createFromInviteForAuthenticatedUserIfNotExists_whenLoggedInAndMixtapeNotExists_thenCreateMixtapeUser() {
+    void createFromInviteForAuthenticatedUserIfNotExists_whenLoggedInAndMixtapeExists_thenCreateMixtapeUser() {
         // given
         Mixtape mixtape = new Mixtape();
         mixtape.setId("123");
@@ -79,7 +79,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
+        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
         when(mixtapeUserRepository.save(expected)).thenReturn(expected);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
@@ -111,7 +111,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
+        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
         when(mixtapeUserRepository.save(expected)).thenReturn(expected);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
@@ -123,6 +123,52 @@ class MixtapeUserServiceTest {
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
         MixtapeUser actual = sut.createFromInviteForAuthenticatedUserIfNotExists(invite);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeUserRepository).save(expected);
+    }
+
+    @Test
+    void createIfNotExists_whenMixtapeUserNotExists_thenCreateAndReturn() {
+        Mixtape mixtape = new Mixtape();
+        User user = new User();
+
+        MixtapeUser expected = new MixtapeUser(null, user, mixtape);
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
+        when(mixtapeUserRepository.save(expected)).thenReturn(expected);
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        UserService userService = mock(UserService.class);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
+        MixtapeUser actual = sut.createIfNotExists(user, mixtape);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeUserRepository).save(expected);
+    }
+
+    @Test
+    void createIfNotExists_whenMixtapeUserAlreadyExists_thenReturn() {
+        Mixtape mixtape = new Mixtape();
+        User user = new User();
+
+        MixtapeUser expected = new MixtapeUser(null, user, mixtape);
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
+        when(mixtapeUserRepository.save(expected)).thenReturn(expected);
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        UserService userService = mock(UserService.class);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository, mixtapeService, userService);
+        MixtapeUser actual = sut.createIfNotExists(user, mixtape);
 
         // then
         assertEquals(expected, actual);

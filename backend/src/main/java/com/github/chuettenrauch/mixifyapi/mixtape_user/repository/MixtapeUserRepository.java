@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface MixtapeUserRepository extends MongoRepository<MixtapeUser, String> {
 
-    Optional<MixtapeUser> findOneByUserAndMixtape(User user, Mixtape mixtape);
+    Optional<MixtapeUser> findByUserAndMixtape(User user, Mixtape mixtape);
 }
