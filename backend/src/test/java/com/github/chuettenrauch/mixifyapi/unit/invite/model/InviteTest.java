@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class InviteTest {
 
@@ -18,8 +20,9 @@ class InviteTest {
     @MethodSource("provideExpiredAtDates")
     void isExpired(LocalDateTime expiredAt, boolean expected) {
         // given
-        Invite sut = new Invite();
-        sut.setExpiredAt(expiredAt);
+        Invite sut = mock(Invite.class);
+        when(sut.getExpiredAt()).thenReturn(expiredAt);
+        when(sut.isExpired()).thenCallRealMethod();
 
         // when
         boolean actual = sut.isExpired();
