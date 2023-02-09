@@ -3,11 +3,16 @@ package com.github.chuettenrauch.mixifyapi.invite.service;
 import com.github.chuettenrauch.mixifyapi.config.AppProperties;
 import com.github.chuettenrauch.mixifyapi.exception.GoneException;
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
+import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException;
 import com.github.chuettenrauch.mixifyapi.invite.model.Invite;
 import com.github.chuettenrauch.mixifyapi.invite.repository.InviteRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
+import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserService;
+import com.github.chuettenrauch.mixifyapi.user.model.User;
+import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +24,10 @@ import java.time.LocalDateTime;
 public class InviteService {
 
     private final InviteRepository inviteRepository;
+
+    private final UserService userService;
+
+    private final MixtapeService mixtapeService;
 
     private final MixtapeUserService mixtapeUserService;
 
@@ -36,6 +45,7 @@ public class InviteService {
     }
 
     public MixtapeUser acceptInviteByIdForAuthenticatedUser(String id) {
+        User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
         Invite invite = this.inviteRepository.findById(id).orElseThrow(NotFoundException::new);
 
         if (invite.isExpired()) {
@@ -43,7 +53,9 @@ public class InviteService {
         }
 
         try {
-            return this.mixtapeUserService.createFromInviteForAuthenticatedUserIfNotExists(invite);
+            Mixtape mixtape = this.mixtapeService.findById(invite.getMixtape());
+
+            return this.mixtapeUserService.createIfNotExists(user, mixtape);
         } catch (NotFoundException e) {
             throw new GoneException();
         }
