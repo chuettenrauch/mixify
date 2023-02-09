@@ -5,6 +5,7 @@ import Form from "../types/forms";
 import FileMetadata from "../types/file-metadata";
 import Track from "../types/track";
 import Invite from "../types/invite";
+import Utils from "../utils/utils";
 
 const client = axios.create({
     baseURL: "/api"
@@ -17,7 +18,7 @@ client.interceptors.response.use(
     async (error) => {
         if (error.response) {
             if (error.response.status === 401) {
-                window.location.href = "/login";
+                window.location.href = Utils.createLoginLink();
             }
         }
 
