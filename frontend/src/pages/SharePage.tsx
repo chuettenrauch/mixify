@@ -16,7 +16,7 @@ export default function SharePage() {
         (async () => {
             try {
                 const mixtapeUser = await InviteApi.acceptInvite(id);
-                navigate(`/mixtapes/${mixtapeUser.mixtape.id}`, {replace: true});
+                navigate(`/play/${mixtapeUser.mixtape.id}`, {replace: true});
 
                 toast.success(`Added the mixtape "${mixtapeUser.mixtape.title}" to your collection.`);
             } catch (e) {
