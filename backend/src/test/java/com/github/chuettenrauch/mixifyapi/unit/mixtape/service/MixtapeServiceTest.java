@@ -431,6 +431,31 @@ class MixtapeServiceTest {
         verify(mixtapeRepository).existsById(id);
     }
 
+    @Test
+    void existsByIdAndCreatedBy_whenCalled_thenDelegatesToMixtapeRepository() {
+        // given
+        String id = "123";
+        User user = new User();
+
+        boolean expected = true;
+
+        UserService userService = mock(UserService.class);
+
+        MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
+        when(mixtapeRepository.existsByIdAndCreatedBy(id, user)).thenReturn(expected);
+
+        MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        Validator validator = mock(Validator.class);
+
+        // when
+        MixtapeService sut = new MixtapeService(mixtapeRepository, userService, mixtapeUserService, validator);
+        boolean actual = sut.existsByIdAndCreatedBy(id, user);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeRepository).existsByIdAndCreatedBy(id, user);
+    }
+
     /**
      * This is only to overcome the issue, that it is not possible to mock classes with generic parameters
      */

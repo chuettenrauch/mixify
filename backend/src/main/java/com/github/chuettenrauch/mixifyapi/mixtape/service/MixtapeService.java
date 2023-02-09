@@ -93,6 +93,10 @@ public class MixtapeService {
         return this.mixtapeRepository.existsById(id);
     }
 
+    public boolean existsByIdAndCreatedBy(String id, User createdBy) {
+        return this.mixtapeRepository.existsByIdAndCreatedBy(id, createdBy);
+    }
+
     private void validateTracks(Mixtape mixtape) {
         Set<ConstraintViolation<Mixtape>> errors = validator.validateProperty(mixtape, "tracks");
         if (!errors.isEmpty()) {

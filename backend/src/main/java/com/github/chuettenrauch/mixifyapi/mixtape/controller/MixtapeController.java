@@ -5,6 +5,7 @@ import com.github.chuettenrauch.mixifyapi.mixtape.service.MixtapeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +29,19 @@ public class MixtapeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@mixtapePermissionService.canView(#id)")
     public Mixtape get(@PathVariable String id) {
         return this.mixtapeService.findByIdForAuthenticatedUser(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@mixtapePermissionService.canEdit(#id)")
     public Mixtape update(@PathVariable String id, @Valid @RequestBody Mixtape mixtape) {
         return this.mixtapeService.updateByIdForAuthenticatedUser(id, mixtape);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@mixtapePermissionService.canEdit(#id)")
     public void delete(@PathVariable String id) {
         this.mixtapeService.deleteByIdForAuthenticatedUser(id);
     }

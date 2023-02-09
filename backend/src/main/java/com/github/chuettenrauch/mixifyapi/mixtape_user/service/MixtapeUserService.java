@@ -26,4 +26,8 @@ public class MixtapeUserService {
 
         return this.mixtapeUserRepository.save(mixtapeUser);
     }
+
+    public boolean existsByUserAndMixtape(User user, Mixtape mixtape) {
+        return this.mixtapeUserRepository.existsByUserAndMixtape(user, mixtape);
+    }
 }

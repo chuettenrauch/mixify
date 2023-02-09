@@ -15,4 +15,6 @@ public interface MixtapeUserRepository extends MongoRepository<MixtapeUser, Stri
     Optional<MixtapeUser> findByUserAndMixtape(User user, Mixtape mixtape);
 
     List<MixtapeUser> findAllByUser(User user);
+
+    boolean existsByUserAndMixtape(User user, Mixtape mixtape);
 }
