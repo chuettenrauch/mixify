@@ -29,9 +29,8 @@ public class Invite {
 
     public boolean isExpired() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiredAt = this.getExpiredAt();
 
-        return now.isAfter(expiredAt) || now.isEqual(expiredAt);
+        return now.isEqual(this.expiredAt) || now.isAfter(this.expiredAt);
     }
 
 }
