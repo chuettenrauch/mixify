@@ -55,6 +55,12 @@ class InviteControllerTest {
                 .andExpect(content().json(expectedJson, true));
     }
 
+    @Test
+    void acceptInvite_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
+        this.mvc.perform(put("/api/invites/123"))
+                .andExpect(status().isUnauthorized());
+    }
+
     private static Stream<Arguments> provideInvalidInviteJson() {
         return Stream.of(
                 arguments(named("mixtape | missing", """

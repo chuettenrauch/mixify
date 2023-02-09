@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class TrackControllerTest {
 
     @Autowired
@@ -51,7 +52,6 @@ class TrackControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -76,7 +76,6 @@ class TrackControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -105,7 +104,6 @@ class TrackControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenMixtapeExistsAndBelongsToLoggedInUser_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -136,7 +134,6 @@ class TrackControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenNumOfTracksExceedsMaxLimit_thenReturnBadRequest() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");

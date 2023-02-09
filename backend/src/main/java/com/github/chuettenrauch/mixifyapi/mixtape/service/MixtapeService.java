@@ -74,6 +74,11 @@ public class MixtapeService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Mixtape findById(String id) {
+        return this.mixtapeRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+    }
+
     public boolean existsById(String id) {
         return this.mixtapeRepository.existsById(id);
     }

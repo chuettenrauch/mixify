@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MixtapeControllerTest {
 
     @Autowired
@@ -52,7 +53,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -96,7 +96,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -124,7 +123,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void getAll_whenLoggedIn_thenReturnEmptyListIfNoMixtapesForTheLoggedInUserExist() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -142,7 +140,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void getAll_whenLoggedIn_thenReturnMixtapesForTheLoggedUser() throws Exception {
         // given
         String expectedJson = """
@@ -191,7 +188,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void delete_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
@@ -206,7 +202,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void delete_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -221,7 +216,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -252,7 +246,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void update_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -288,7 +281,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void update_whenLoggedInAndMixtapeExists_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -323,7 +315,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void get_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -336,7 +327,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void get_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
@@ -353,7 +343,6 @@ class MixtapeControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void get_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
         // given
         String expectedJson = """

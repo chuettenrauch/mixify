@@ -27,4 +27,10 @@ public class Invite {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime expiredAt;
 
+    public boolean isExpired() {
+        LocalDateTime now = LocalDateTime.now();
+
+        return now.isEqual(this.expiredAt) || now.isAfter(this.expiredAt);
+    }
+
 }
