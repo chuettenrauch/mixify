@@ -271,7 +271,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void getByIdForAuthenticatedUser_whenNotLoggedIn_thenThrowUnauthorizedException() {
+    void findByIdForAuthenticatedUser_whenNotLoggedIn_thenThrowUnauthorizedException() {
         // given
         UserService userService = mock(UserService.class);
         when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
@@ -289,7 +289,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void getByIdForAuthenticatedUser_whenMixtapeNotFoundOrDoesNotBelongToUser_thenThrowNotFoundException() {
+    void findByIdForAuthenticatedUser_whenMixtapeNotFoundOrDoesNotBelongToUser_thenThrowNotFoundException() {
         // given
         String id = "123";
         User user = new User();
@@ -311,7 +311,7 @@ class MixtapeServiceTest {
     }
 
     @Test
-    void getByIdForAuthenticatedUser_whenLoggedInAndMixtapeBelongsToUser_thenReturnMixtape() {
+    void findByIdForAuthenticatedUser_whenLoggedInAndMixtapeBelongsToUser_thenReturnMixtape() {
         // given
         String id = "123";
         User user = new User();
@@ -332,6 +332,46 @@ class MixtapeServiceTest {
         // then
         assertEquals(expected, actual);
         verify(mixtapeRepository).findByIdAndCreatedBy(id, user);
+    }
+
+    @Test
+    void findById_whenMixtapeNotFound_thenThrowNotFoundException() {
+        // given
+        String id = "123";
+
+        MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
+        when(mixtapeRepository.findById(id)).thenReturn(Optional.empty());
+
+        UserService userService = mock(UserService.class);
+        Validator validator = mock(Validator.class);
+
+        // when
+        MixtapeService sut = new MixtapeService(mixtapeRepository, userService, validator);
+        assertThrows(NotFoundException.class, () -> sut.findById(id));
+
+        // then
+        verify(mixtapeRepository).findById(id);
+    }
+
+    @Test
+    void findById_whenMixtapeFound_thenReturnIt() {
+        // given
+        String id = "123";
+        Mixtape expected = new Mixtape();
+
+        MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
+        when(mixtapeRepository.findById(id)).thenReturn(Optional.of(expected));
+
+        UserService userService = mock(UserService.class);
+        Validator validator = mock(Validator.class);
+
+        // when
+        MixtapeService sut = new MixtapeService(mixtapeRepository, userService, validator);
+        Mixtape actual = sut.findById(id);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeRepository).findById(id);
     }
 
     @Test

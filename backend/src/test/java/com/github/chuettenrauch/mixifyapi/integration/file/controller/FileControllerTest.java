@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class FileControllerTest {
 
     @Autowired
@@ -58,7 +59,6 @@ class FileControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void uploadFile_whenLoggedInButFileIsEmpty_returnBadRequest() throws Exception {
         // given
         User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -74,7 +74,6 @@ class FileControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void uploadFile_whenLoggedIn_returnFileMetadata() throws Exception {
         // given
         User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -117,7 +116,6 @@ class FileControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void downloadFile_whenLoggedInButFileDoesNotExist_returnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -135,7 +133,6 @@ class FileControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void downloadFile_whenLoggedInButFileDoesNotBelongsToLoggedInUser_returnNotFound() throws Exception {
         // given
         User fileCreator = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -157,7 +154,6 @@ class FileControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void downloadFile_whenLoggedIn_returnFile() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
