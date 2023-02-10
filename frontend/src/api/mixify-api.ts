@@ -4,6 +4,9 @@ import Mixtape from "../types/mixtape";
 import Form from "../types/forms";
 import FileMetadata from "../types/file-metadata";
 import Track from "../types/track";
+import Invite from "../types/invite";
+import Utils from "../utils/utils";
+import MixtapeUser from "../types/mixtape-user";
 
 const client = axios.create({
     baseURL: "/api"
@@ -16,7 +19,7 @@ client.interceptors.response.use(
     async (error) => {
         if (error.response) {
             if (error.response.status === 401) {
-                window.location.href = "/login";
+                window.location.href = Utils.createLoginLink();
             }
         }
 
@@ -95,6 +98,20 @@ export namespace FileApi {
         formData.set("file", file);
 
         const response = await client.post("/files", formData);
+
+        return response.data;
+    }
+}
+
+export namespace InviteApi {
+    export async function createInvite(inviteForm: Form.Invite): Promise<Invite> {
+        const response = await client.post("/invites", inviteForm);
+
+        return response.data;
+    }
+
+    export async function acceptInvite(id: string): Promise<MixtapeUser> {
+        const response = await client.put(`/invites/${id}`);
 
         return response.data;
     }

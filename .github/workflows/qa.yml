@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+      - v1.1
+      - v1.0
   workflow_call:
     secrets:
       SONAR_TOKEN_FRONTEND:

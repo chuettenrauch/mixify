@@ -25,7 +25,7 @@ class TrackServiceTest {
         TrackRepository trackRepository = mock(TrackRepository.class);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(UnauthorizedException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(UnauthorizedException.class);
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
@@ -44,7 +44,7 @@ class TrackServiceTest {
         TrackRepository trackRepository = mock(TrackRepository.class);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(NotFoundException.class);
 
         // when
         TrackService sut = new TrackService(trackRepository, mixtapeService);
@@ -67,7 +67,7 @@ class TrackServiceTest {
         mixtapeWithTrackAdded.setTracks(List.of(track));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtape.getId())).thenReturn(mixtape);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtape.getId())).thenReturn(mixtape);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
         when(trackRepository.save(track)).thenReturn(track);
@@ -80,7 +80,7 @@ class TrackServiceTest {
         assertEquals(track, actual);
 
         verify(trackRepository).save(track);
-        verify(mixtapeService).updateById(mixtapeWithTrackAdded.getId(), mixtapeWithTrackAdded);
+        verify(mixtapeService).updateByIdForAuthenticatedUser(mixtapeWithTrackAdded.getId(), mixtapeWithTrackAdded);
     }
 
     @Test
@@ -93,7 +93,7 @@ class TrackServiceTest {
         track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(UnauthorizedException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(UnauthorizedException.class);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -115,7 +115,7 @@ class TrackServiceTest {
         track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(NotFoundException.class);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -140,7 +140,7 @@ class TrackServiceTest {
         mixtapeWithTrack.setTracks(List.of(track));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenReturn(mixtapeWithTrack);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenReturn(mixtapeWithTrack);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
         when(trackRepository.existsById(track.getId())).thenReturn(false);
@@ -163,7 +163,7 @@ class TrackServiceTest {
         track.setId(trackId);
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenReturn(new Mixtape());
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenReturn(new Mixtape());
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -191,7 +191,7 @@ class TrackServiceTest {
         mixtapeWithTrack.setTracks(List.of(expectedTrack));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
         when(trackRepository.existsById(trackIdFromUrl)).thenReturn(true);
@@ -213,7 +213,7 @@ class TrackServiceTest {
         String mixtapeId = "123";
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(UnauthorizedException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(UnauthorizedException.class);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -232,7 +232,7 @@ class TrackServiceTest {
         String mixtapeId = "123";
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenThrow(NotFoundException.class);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenThrow(NotFoundException.class);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -258,7 +258,7 @@ class TrackServiceTest {
         mixtapeWithTrack.setTracks(List.of(track));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
         when(trackRepository.existsById(track.getId())).thenReturn(false);
@@ -278,7 +278,7 @@ class TrackServiceTest {
         String mixtapeId = "123";
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeId)).thenReturn(new Mixtape());
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeId)).thenReturn(new Mixtape());
 
         TrackRepository trackRepository = mock(TrackRepository.class);
 
@@ -301,7 +301,7 @@ class TrackServiceTest {
         mixtapeWithTrack.setTracks(List.of(track));
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.findById(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
+        when(mixtapeService.findByIdForAuthenticatedUser(mixtapeWithTrack.getId())).thenReturn(mixtapeWithTrack);
 
         TrackRepository trackRepository = mock(TrackRepository.class);
         when(trackRepository.existsById(track.getId())).thenReturn(true);
@@ -312,6 +312,6 @@ class TrackServiceTest {
 
         // then
         verify(trackRepository).deleteById(track.getId());
-        verify(mixtapeService).updateById(mixtapeWithTrack.getId(), mixtapeWithTrack);
+        verify(mixtapeService).updateByIdForAuthenticatedUser(mixtapeWithTrack.getId(), mixtapeWithTrack);
     }
 }

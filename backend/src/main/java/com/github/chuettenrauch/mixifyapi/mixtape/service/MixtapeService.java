@@ -5,6 +5,8 @@ import com.github.chuettenrauch.mixifyapi.exception.UnprocessableEntityException
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserService;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import jakarta.validation.ConstraintViolation;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -23,6 +26,8 @@ public class MixtapeService {
     private final MixtapeRepository mixtapeRepository;
 
     private final UserService userService;
+
+    private final MixtapeUserService mixtapeUserService;
 
     private final Validator validator;
 
@@ -37,10 +42,15 @@ public class MixtapeService {
     public List<Mixtape> findAllForAuthenticatedUser() {
         User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 
-        return this.mixtapeRepository.findAllByCreatedBy(user);
+        return this.mixtapeUserService
+                .findAllByUser(user)
+                .stream()
+                .map(MixtapeUser::getMixtape)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
-    public Mixtape updateById(String id, Mixtape mixtape) {
+    public Mixtape updateByIdForAuthenticatedUser(String id, Mixtape mixtape) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
@@ -55,7 +65,7 @@ public class MixtapeService {
         return this.mixtapeRepository.save(mixtape);
     }
 
-    public void deleteById(String id) {
+    public void deleteByIdForAuthenticatedUser(String id) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
@@ -66,12 +76,29 @@ public class MixtapeService {
         this.mixtapeRepository.deleteById(id);
     }
 
-    public Mixtape findById(String id) {
+    public Mixtape findByIdForAuthenticatedUser(String id) {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
-        return this.mixtapeRepository.findByIdAndCreatedBy(id, user)
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId(id);
+
+        return this.mixtapeUserService
+                .findByUserAndMixtape(user, mixtape)
+                .getMixtape();
+    }
+
+    public Mixtape findById(String id) {
+        return this.mixtapeRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public boolean existsById(String id) {
+        return this.mixtapeRepository.existsById(id);
+    }
+
+    public boolean existsByIdAndCreatedBy(String id, User createdBy) {
+        return this.mixtapeRepository.existsByIdAndCreatedBy(id, createdBy);
     }
 
     private void validateTracks(Mixtape mixtape) {

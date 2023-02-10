@@ -2,11 +2,17 @@ package com.github.chuettenrauch.mixifyapi.security.config;
 
 import com.github.chuettenrauch.mixifyapi.config.AppProperties;
 import com.github.chuettenrauch.mixifyapi.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.github.chuettenrauch.mixifyapi.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.github.chuettenrauch.mixifyapi.security.oauth2.AuthorizationRequestRepositoryDecorator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,6 +20,7 @@ import org.springframework.security.web.authentication.*;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final AppProperties appProperties;
@@ -31,6 +38,9 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(config -> config
+                                .authorizationRequestRepository(authorizationRequestRepository())
+                        )
                         .redirectionEndpoint(config -> config
                                 .baseUri("/oauth2/code/*")
                         )
@@ -52,7 +62,11 @@ public class SecurityConfig {
     }
 
     private AuthenticationSuccessHandler authenticationSuccessHandler(String redirectUri) {
-        return new SimpleUrlAuthenticationSuccessHandler(redirectUri);
+        return new OAuth2AuthenticationSuccessHandler(redirectUri);
+    }
+
+    private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+        return new AuthorizationRequestRepositoryDecorator(new HttpSessionOAuth2AuthorizationRequestRepository());
     }
 
     private AuthenticationFailureHandler authenticationFailureHandler(String redirectUri) {

@@ -3,14 +3,15 @@ import logo from "../logo.png";
 import React from "react";
 import {useSearchParams} from "react-router-dom";
 import {toast} from "react-toastify";
-
-const authorizeUrl = `${process.env.REACT_APP_API_BASE_URL ?? ""}/oauth2/authorization/spotify`;
+import Utils from "../utils/utils";
 
 export default function LoginPage() {
     const [query] = useSearchParams();
 
+    const authorizationUrl = Utils.createOAuth2AuthorizationLink(query);
+
     if (query.has("error")) {
-        const errorCode = query.get("errorCode");
+        const errorCode = query.get("error_code");
         const errorMessage = errorCode && errorCode === "invalid_user_info_response"
             ? "Mixify is currently in development mode. Your spotify account must be explicitly permitted to use this app."
             : query.get("error");
@@ -40,7 +41,7 @@ export default function LoginPage() {
                 <Typography>
                     Bring back the nostalgia of creating and sharing mixtapes like in the good old days of cassette tapes
                 </Typography>
-                <Button variant="contained" href={authorizeUrl}>
+                <Button variant="contained" href={authorizationUrl}>
                     Continue with spotify
                 </Button>
         </Container>

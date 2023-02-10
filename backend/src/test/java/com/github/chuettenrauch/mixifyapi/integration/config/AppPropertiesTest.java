@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         properties = {
             "app.o-auth2.success-redirect-uri=/success",
             "app.o-auth2.failure-redirect-uri=/failure",
+            "app.invite.expiration-time=PT1H",
         }
 )
 @TestPropertySource(properties = "spring.autoconfigure.exclude=de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration")
@@ -25,9 +26,11 @@ class AppPropertiesTest {
     @Test
     void correctlyBindsPropertiesToAppConfig() {
         AppProperties.OAuth2 oauth2 = appProperties.getOAuth2();
+        AppProperties.Invite invite = appProperties.getInvite();
 
         assertEquals("/success", oauth2.getSuccessRedirectUri());
         assertEquals("/failure", oauth2.getFailureRedirectUri());
+        assertEquals("PT1H", invite.getExpirationTime());
     }
 
     @EnableConfigurationProperties(AppProperties.class)

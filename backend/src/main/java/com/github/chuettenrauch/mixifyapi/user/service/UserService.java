@@ -1,17 +1,14 @@
 package com.github.chuettenrauch.mixifyapi.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
-import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapper;
-import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapperFactory;
+import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,8 +18,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    private final OAuth2UserMapperFactory oAuth2UserMapperFactory;
 
     private final AuthService authService;
 
@@ -44,13 +39,11 @@ public class UserService {
         return this.findByEmail(authentication.getName());
     }
 
-    public UserResource createUserResource(OAuth2AuthenticationToken authentication, OAuth2AuthorizedClient authorizedClient) {
-        OAuth2User oAuth2User = authentication.getPrincipal();
-
-        OAuth2UserMapper oAuth2UserMapper = this.oAuth2UserMapperFactory.getOAuth2UserMapperByProviderName(authentication.getAuthorizedClientRegistrationId());
-        User user = oAuth2UserMapper.mapOAuth2UserToUser(oAuth2User, new User());
+    public UserResource createUserResource(OAuth2AuthorizedClient authorizedClient) {
+        User user = this.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 
         UserResource userResource = new UserResource(
+                user.getId(),
                 user.getName(),
                 user.getImageUrl(),
                 authorizedClient.getAccessToken().getTokenValue()

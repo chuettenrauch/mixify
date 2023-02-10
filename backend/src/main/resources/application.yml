@@ -3,6 +3,7 @@ spring:
     mongodb:
       uri: "${MONGO_URI:mongodb://localhost:27017}"
       database: "${MONGO_DATABASE:mixify}"
+      auto-index-creation: true
 
   security:
     oauth2:
@@ -39,3 +40,5 @@ app:
   oauth2:
     success-redirect-uri: "${OAUTH2_SUCCESS_REDIRECT_URI:http://localhost:3000}"
     failure-redirect-uri: "${OAUTH2_FAILURE_REDIRECT_URI:http://localhost:3000/login}"
+  invite:
+    expiration-time: "PT1H"

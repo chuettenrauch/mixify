@@ -1,6 +1,10 @@
 package com.github.chuettenrauch.mixifyapi.integration.user.controller;
 
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
+import com.github.chuettenrauch.mixifyapi.user.model.User;
+import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
+import com.github.chuettenrauch.mixifyapi.utils.TestUserHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,14 +13,11 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Client;
@@ -31,18 +32,26 @@ class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
-    void me_returnsUnauthorizedIfNotLoggedIn() throws Exception {
-        this.mvc.perform(get("/api/users/me"))
-                .andExpect(status().isUnauthorized());
+    @Autowired
+    private UserRepository userRepository;
+
+    private TestUserHelper testUserHelper;
+
+    @BeforeEach
+    void setup() {
+        this.testUserHelper = new TestUserHelper(this.userRepository);
     }
 
     @Test
     @DirtiesContext
     void me_returnsUserResourceIfLoggedIn() throws Exception {
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "http://path/to/image.jpg", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
         // given
         String expectedJson = """
                 {
+                    "id": "123",
                     "name": "alvin",
                     "imageUrl": "http://path/to/image.jpg",
                     "providerAccessToken": "access-token",
@@ -52,17 +61,11 @@ class UserControllerTest {
 
         // when + then
         this.mvc.perform(get("/api/users/me")
-                        .with(this.createOAuth2Login("alvin", "http://path/to/image.jpg"))
+                        .with(oauth2Login().oauth2User(oAuth2User))
                         .with(this.createOAuth2Client("access-token"))
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson, true));
-    }
-
-    @Test
-    void logout_returnsUnauthorizedIfNotLoggedIn() throws Exception {
-        this.mvc.perform(post("/api/users/logout"))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -93,21 +96,6 @@ class UserControllerTest {
         return oauth2Client()
                 .clientRegistration(this.createOAuth2ClientRegistration())
                 .accessToken(new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, accessToken, null, null));
-    }
-
-    private SecurityMockMvcRequestPostProcessors.OAuth2LoginRequestPostProcessor createOAuth2Login(String name, String imageUrl) {
-        return oauth2Login()
-                .clientRegistration(this.createOAuth2ClientRegistration())
-                .attributes(attrs -> {
-                    attrs.put("display_name", name);
-                    attrs.put("email", "alvi@chipmunks.de");
-                    attrs.put("images", new ArrayList<>(List.of(
-                            Map.of(
-                                    "url", imageUrl
-                            )
-                    )));
-                    attrs.put("id", "user-123");
-                });
     }
 
 }

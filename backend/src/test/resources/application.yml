@@ -28,3 +28,5 @@ app:
   oauth2:
     success-redirect-uri: "/"
     failure-redirect-uri: "/login"
+  invite:
+    expiration-time: "PT1H"

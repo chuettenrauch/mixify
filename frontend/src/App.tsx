@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Slide, ToastContainer} from "react-toastify";
 import theme from "./theme/theme";
 import NotFoundPage from "./pages/NotFoundPage";
+import SharePage from "./pages/SharePage";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                             <Route path="/mixtapes" element={<MixtapesOverviewPage/>}/>
                             <Route path="/mixtapes/:id" element={<MixtapeDetailPage/>}/>
                             <Route path="/play/:id" element={<PlayMixtapePage/>}/>
+                            <Route path="/share/:id" element={<SharePage/>}/>
                             <Route path="*" element={<NotFoundPage/>}/>
                         </Route>
                     </Route>
@@ -32,7 +34,7 @@ function App() {
                 </Routes>
                 <ToastContainer
                     position="bottom-center"
-                    autoClose={1500}
+                    autoClose={3000}
                     hideProgressBar
                     newestOnTop={false}
                     closeOnClick
@@ -41,7 +43,7 @@ function App() {
                     draggable={false}
                     pauseOnHover={false}
                     transition={Slide}
-                    theme="light"
+                    theme="colored"
                 />
             </BrowserRouter>
         </ThemeProvider>
