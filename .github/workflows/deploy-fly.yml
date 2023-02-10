@@ -1,9 +1,9 @@
-name: Deploy v1.1 to fly.io
+name: Deploy to fly.io
 
 on:
   push:
     branches:
-      - v1.1
+      - main
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
