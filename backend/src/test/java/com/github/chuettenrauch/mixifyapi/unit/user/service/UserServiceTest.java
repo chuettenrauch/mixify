@@ -1,8 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.unit.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
-import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapper;
-import com.github.chuettenrauch.mixifyapi.security.mapper.OAuth2UserMapperFactory;
+import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
@@ -11,10 +10,8 @@ import com.github.chuettenrauch.mixifyapi.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Optional;
 
@@ -32,11 +29,10 @@ class UserServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.findByEmail(email)).thenReturn(expected);
 
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
         AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        UserService sut = new UserService(userRepository, authService);
         Optional<User> actual = sut.findByEmail(email);
 
         // then
@@ -52,11 +48,10 @@ class UserServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.save(expected)).thenReturn(expected);
 
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
         AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        UserService sut = new UserService(userRepository, authService);
         User actual = sut.save(expected);
 
         // then
@@ -79,10 +74,8 @@ class UserServiceTest {
         AuthService authService = mock(AuthService.class);
         when(authService.getAuthentication()).thenReturn(authentication);
 
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
-
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        UserService sut = new UserService(userRepository, authService);
         Optional<User> actual = sut.getAuthenticatedUser();
 
         // then
@@ -100,10 +93,9 @@ class UserServiceTest {
         when(authService.getAuthentication()).thenReturn(null);
 
         UserRepository userRepository = mock(UserRepository.class);
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        UserService sut = new UserService(userRepository, authService);
         Optional<User> actual = sut.getAuthenticatedUser();
 
         // then
@@ -122,10 +114,8 @@ class UserServiceTest {
         AuthService authService = mock(AuthService.class);
         when(authService.getAuthentication()).thenReturn(authentication);
 
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
-
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
+        UserService sut = new UserService(userRepository, authService);
         Optional<User> actual = sut.getAuthenticatedUser();
 
         // then
@@ -133,28 +123,23 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserResourceFromAuthentication_returnsUserResource() {
+    void createUserResource_whenCalled_thenReturnUserResource() {
         // given
         User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
-        OAuth2User oAuth2User = mock(OAuth2User.class);
-
-        OAuth2AuthenticationToken authentication = mock(OAuth2AuthenticationToken.class);
-        when(authentication.getPrincipal()).thenReturn(oAuth2User);
-
         OAuth2AuthorizedClient authorizedClient = this.mockOAuth2AuthorizedClient(accessToken, refreshToken);
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = this.mockOAuth2UserMapperFactory(user);
-
-        UserRepository userRepository = mock(UserRepository.class);
-        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
-        UserResource actual = sut.createUserResource(authentication, authorizedClient);
+        UserService sut = mock(UserService.class);
+        when(sut.getAuthenticatedUser()).thenReturn(Optional.of(user));
+        when(sut.createUserResource(any())).thenCallRealMethod();
+
+        UserResource actual = sut.createUserResource(authorizedClient);
 
         // then
+        assertEquals(user.getId(), actual.getId());
         assertEquals(user.getName(), actual.getName());
         assertEquals(user.getImageUrl(), actual.getImageUrl());
         assertEquals(accessToken, actual.getProviderAccessToken());
@@ -162,26 +147,38 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserResourceFromAuthentication_skipsRefreshTokenIfNotPresent() {
+    void createUserResource_whenNotPresent_thenSkipRefreshToken() {
         // given
         User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
-        OAuth2User oAuth2User = mock(OAuth2User.class);
-
-        OAuth2AuthenticationToken authentication = mock(OAuth2AuthenticationToken.class);
-        when(authentication.getPrincipal()).thenReturn(oAuth2User);
 
         OAuth2AuthorizedClient authorizedClient = this.mockOAuth2AuthorizedClient("does-not-matter", null);
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = this.mockOAuth2UserMapperFactory(user);
-
-        UserRepository userRepository = mock(UserRepository.class);
-        AuthService authService = mock(AuthService.class);
 
         // when
-        UserService sut = new UserService(userRepository, oAuth2UserMapperFactory, authService);
-        UserResource actual = sut.createUserResource(authentication, authorizedClient);
+        UserService sut = mock(UserService.class);
+        when(sut.getAuthenticatedUser()).thenReturn(Optional.of(user));
+        when(sut.createUserResource(any())).thenCallRealMethod();
+
+        UserResource actual = sut.createUserResource(authorizedClient);
 
         // then
         assertNull(actual.getProviderRefreshToken());
+    }
+
+    @Test
+    void createUserResource_whenNotLoggedIn_thenThrowUnauthorizedException() {
+        // given
+        OAuth2AuthorizedClient authorizedClient = this.mockOAuth2AuthorizedClient(
+                "does-not-matter",
+                "does-not-matter"
+        );
+
+        // when
+        UserService sut = mock(UserService.class);
+        when(sut.getAuthenticatedUser()).thenReturn(Optional.empty());
+        when(sut.createUserResource(any())).thenCallRealMethod();
+
+        // then
+        assertThrows(UnauthorizedException.class, () -> sut.createUserResource(authorizedClient));
     }
 
     private OAuth2AuthorizedClient mockOAuth2AuthorizedClient(String accessToken, String refreshToken) {
@@ -196,16 +193,6 @@ class UserServiceTest {
         when(authorizedClient.getRefreshToken()).thenReturn(oAuth2RefreshToken);
 
         return authorizedClient;
-    }
-
-    private OAuth2UserMapperFactory mockOAuth2UserMapperFactory(User returnedUser) {
-        OAuth2UserMapper oAuth2UserMapper = mock(OAuth2UserMapper.class);
-        when(oAuth2UserMapper.mapOAuth2UserToUser(any(), any())).thenReturn(returnedUser);
-
-        OAuth2UserMapperFactory oAuth2UserMapperFactory = mock(OAuth2UserMapperFactory.class);
-        when(oAuth2UserMapperFactory.getOAuth2UserMapperByProviderName(any())).thenReturn(oAuth2UserMapper);
-
-        return oAuth2UserMapperFactory;
     }
 
 }

@@ -12,12 +12,16 @@ import useForm from "../hooks/useForm";
 import MessageContainer from "../components/MessageContainer";
 import Track from "../types/track";
 import FlippableTrackCard from "../components/FlippableTrackCard";
+import {useAuthenticatedUser} from "../components/ProtectedRoutes";
+import PermissionUtils from "../utils/permission-utils";
+import NotFoundPage from "./NotFoundPage";
 
 const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
 
 export default function MixtapeDetailPage() {
     const navigate = useNavigate();
     const {id} = useParams<{id: string}>();
+    const {user} = useAuthenticatedUser();
 
     const {mixtape, setMixtape, loading, error} = useMixtape(id);
 
@@ -40,6 +44,10 @@ export default function MixtapeDetailPage() {
 
     if (!mixtape) {
         return null;
+    }
+
+    if (!PermissionUtils.canEdit(user, mixtape)) {
+        return <NotFoundPage/>
     }
 
     const addTrack = (savedTrack: Track) => {

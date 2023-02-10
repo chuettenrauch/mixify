@@ -108,7 +108,7 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                         rows={6}
                         id="description"
                         name="description"
-                        value={trackForm.description}
+                        value={trackForm.description ?? ""}
                         label="Description"
                         placeholder="Why did you choose this song..."
                         margin="normal"
