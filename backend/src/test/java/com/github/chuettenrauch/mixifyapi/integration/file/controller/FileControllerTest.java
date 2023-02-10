@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
@@ -64,8 +63,7 @@ class FileControllerTest {
                 {
                     "fileName": "file.txt",
                     "contentType": "text/plain",
-                    "size": 10,
-                    "createdBy" : "123"
+                    "size": 10
                 }
                 """;
 
@@ -98,27 +96,6 @@ class FileControllerTest {
     }
 
     @Test
-    void downloadFile_whenLoggedInButFileDoesNotBelongsToLoggedInUser_returnNotFound() throws Exception {
-        // given
-        User fileCreator = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
-        User loggedInUser = new User("234", "simon@chipmunks.de", "simon", "/path/to/image", Provider.SPOTIFY, "user-234");
-        this.userRepository.saveAll(List.of(fileCreator, loggedInUser));
-
-        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.fileService.saveFileForUser(file, fileCreator);
-
-        OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
-            "email", loggedInUser.getEmail()
-        ), "email");
-
-        // when + then
-        this.mvc.perform(get("/api/files/" +  uploadedFile.getId())
-                        .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void downloadFile_whenLoggedIn_returnFile() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -129,7 +106,7 @@ class FileControllerTest {
         ), "email");
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.fileService.saveFileForUser(file, user);
+        File uploadedFile = this.fileService.saveFile(file);
 
         this.mvc.perform(get("/api/files/" + uploadedFile.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))

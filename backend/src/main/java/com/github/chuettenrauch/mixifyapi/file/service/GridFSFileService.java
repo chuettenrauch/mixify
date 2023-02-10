@@ -3,9 +3,6 @@ package com.github.chuettenrauch.mixifyapi.file.service;
 import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.exception.BadRequestException;
 import com.github.chuettenrauch.mixifyapi.file.model.File;
-import com.github.chuettenrauch.mixifyapi.user.model.User;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -25,40 +22,33 @@ public class GridFSFileService implements FileService {
 
     private final GridFsOperations gridFsOperations;
 
-    public File saveFileForUser(MultipartFile file, User user) throws IOException {
+    public File saveFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new BadRequestException();
         }
 
-        DBObject metadata = BasicDBObjectBuilder
-                .start()
-                .add("createdBy", user.getId())
-                .get();
-
         ObjectId fileId = this.gridFsOperations.store(
                 file.getInputStream(),
                 file.getOriginalFilename(),
-                file.getContentType(),
-                metadata
+                file.getContentType()
         );
 
-        GridFSFile gridFSFile = this.findGridFSFileByIdAndCreatedBy(fileId.toString(), user.getId());
+        GridFSFile gridFSFile = this.findGridFSFileById(fileId.toString());
 
         return File.create(gridFSFile);
     }
 
-    public File findFileByIdForUser(String id, User user) throws IOException {
+    public File findFileById(String id) throws IOException {
         GridFsResource gridFsResource = this.gridFsOperations.getResource(
-                this.findGridFSFileByIdAndCreatedBy(id, user.getId())
+                this.findGridFSFileById(id)
         );
 
         return File.create(gridFsResource);
     }
 
-    private GridFSFile findGridFSFileByIdAndCreatedBy(String id, String createdBy) {
+    private GridFSFile findGridFSFileById(String id) {
         Query query = new Query().addCriteria(Criteria
                         .where("_id").is(id)
-                        .and("metadata.createdBy").is(createdBy)
                 );
 
         GridFSFile gridFSFile = this.gridFsOperations.findOne(query);

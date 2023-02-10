@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,27 +40,8 @@ class FileControllerTest {
     }
 
     @Test
-    void uploadFile_whenLoggedInButUserDoesNotExistInDB_returnUnauthorized() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-
-        this.mvc.perform(multipart("/api/files")
-                        .file(file)
-                        .with(oauth2Login())
-                )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     void downloadFile_whenNotLoggedIn_returnUnauthorized() throws Exception {
         this.mvc.perform(get("/api/files/123"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    void downloadFile_whenLoggedInButUserDoesNotExistInDB_returnUnauthorized() throws Exception {
-        this.mvc.perform(get("/api/files/123")
-                        .with(oauth2Login())
-                )
                 .andExpect(status().isUnauthorized());
     }
 
