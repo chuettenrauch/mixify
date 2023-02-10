@@ -1,5 +1,6 @@
 import Mixtape from "../types/mixtape";
 import {
+    Box,
     Card, CardActionArea, CardActions, CardContent,
     Container,
     Typography
@@ -8,12 +9,15 @@ import MixtapeUtils from "../utils/mixtape-utils";
 import {Link, useNavigate} from "react-router-dom";
 import CardImageWithPlayButton from "./CardImageWithPlayButton";
 import MixtapeMenu from "./MixtapeMenu";
+import UserAvatar from "./UserAvatar";
+import {useAuthenticatedUser} from "./ProtectedRoutes";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
 }) {
+    const {user} = useAuthenticatedUser();
     const navigate = useNavigate();
 
     return (
@@ -37,7 +41,16 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                         sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 0}}>
                         <Container sx={{p: 0}}>
                             <Typography variant="h3">{mixtape.title}</Typography>
-                            <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
+
+                            {user?.id !== mixtape.createdBy.id
+                                ? <Box sx={{display: "flex", alignItems: "center"}}>
+                                    <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)} by</Typography>
+                                    <UserAvatar user={mixtape.createdBy}
+                                                sx={{mr: 0.5, ml: 0.5, width: 20, height: 20}}/>
+                                </Box>
+                                : <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
+                            }
+
                         </Container>
                         <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                     </Container>
