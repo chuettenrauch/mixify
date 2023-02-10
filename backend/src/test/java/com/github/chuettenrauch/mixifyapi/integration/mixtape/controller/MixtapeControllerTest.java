@@ -197,6 +197,27 @@ class MixtapeControllerTest {
     }
 
     @Test
+    void delete_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/" +  mixtapeOfOtherUser.getId())
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void delete_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -220,6 +241,44 @@ class MixtapeControllerTest {
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "description",
+                    "imageUrl": "http://path/to/image",
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void update_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
 
         String givenJson = """
                 {

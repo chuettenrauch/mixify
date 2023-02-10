@@ -4,6 +4,8 @@ import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.TrackRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.repository.MixtapeUserRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -42,6 +44,9 @@ class TrackControllerTest {
     private MixtapeRepository mixtapeRepository;
 
     @Autowired
+    private MixtapeUserRepository mixtapeUserRepository;
+
+    @Autowired
     private TrackRepository trackRepository;
 
     private TestUserHelper testUserHelper;
@@ -59,6 +64,39 @@ class TrackControllerTest {
 
         Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        String givenJson = """
+                {
+                    "name": "The Chipmunks Song",
+                    "artist": "Alvin & The Chipmunks",
+                    "imageUrl": "http://path/to/image",
+                    "description": null,
+                    "providerUri": "spotify:track:12345"
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void create_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
 
         String givenJson = """
                 {
@@ -179,6 +217,43 @@ class TrackControllerTest {
     }
 
     @Test
+    void update_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "name": "The Chipmunks Song",
+                    "artist": "Alvin & The Chipmunks",
+                    "imageUrl": "http://path/to/image",
+                    "description": null,
+                    "providerUri": "spotify:track:12345"
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/123/tracks/234")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void update_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -254,6 +329,30 @@ class TrackControllerTest {
 
         Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void delete_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = this.testUserHelper.createUser("234");
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
 
         // when + then
         this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
