@@ -64,7 +64,7 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.fileService.saveFileForUser(file, user);
+        File uploadedFile = this.fileService.saveFile(file);
 
         String givenJson = String.format("""
                 {
@@ -107,7 +107,7 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
-        File uploadedFile = this.fileService.saveFileForUser(file, user);
+        File uploadedFile = this.fileService.saveFile(file);
 
         String givenJson = String.format("""
                 {

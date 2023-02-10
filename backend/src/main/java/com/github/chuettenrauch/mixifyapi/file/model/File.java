@@ -21,19 +21,17 @@ public class File {
     private String fileName;
     private String contentType;
     private long size;
-    private String createdBy;
 
     private String url;
 
     @JsonIgnore
     private InputStream content;
 
-    public File(String id, String fileName, String contentType, long size, String createdBy) {
+    public File(String id, String fileName, String contentType, long size) {
         this.id = id;
         this.fileName = fileName;
         this.contentType = contentType;
         this.size = size;
-        this.createdBy = createdBy;
         this.url = String.format("/api/files/%s", this.id);
     }
 
@@ -50,16 +48,14 @@ public class File {
         Document metadata = Optional
                 .ofNullable(gridFSFile.getMetadata())
                 .orElse(new Document(Map.of(
-                        "_contentType", "",
-                        "createdBy", ""
+                        "_contentType", ""
                 )));
 
         return new File(
                 gridFSFile.getId().asObjectId().getValue().toString(),
                 gridFSFile.getFilename(),
                 metadata.get("_contentType").toString(),
-                gridFSFile.getLength(),
-                metadata.get("createdBy").toString()
+                gridFSFile.getLength()
         );
     }
 }

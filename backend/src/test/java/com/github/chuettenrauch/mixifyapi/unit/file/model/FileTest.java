@@ -28,6 +28,5 @@ class FileTest {
         assertNull(actual.getFileName());
         assertNull(actual.getContentType());
         assertEquals(0, actual.getSize());
-        assertNull(actual.getCreatedBy());
     }
 }
