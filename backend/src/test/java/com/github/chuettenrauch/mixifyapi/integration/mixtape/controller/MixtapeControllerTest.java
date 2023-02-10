@@ -4,6 +4,8 @@ import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.file.service.FileService;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
+import com.github.chuettenrauch.mixifyapi.mixtape_user.repository.MixtapeUserRepository;
 import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -44,6 +46,9 @@ class MixtapeControllerTest {
 
     @Autowired
     private MixtapeRepository mixtapeRepository;
+
+    @Autowired
+    private MixtapeUserRepository mixtapeUserRepository;
 
     private TestUserHelper testUserHelper;
 
@@ -178,17 +183,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void delete_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
-        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
-
-        this.mvc.perform(delete("/api/mixtapes/123")
-                    .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void delete_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+    void delete_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
@@ -198,11 +193,11 @@ class MixtapeControllerTest {
         this.mvc.perform(delete("/api/mixtapes/" +  mixtapeOfOtherUser.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void delete_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
+    void delete_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
@@ -216,37 +211,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void update_whenMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
-        // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
-        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
-
-        String givenJson = """
-                {
-                    "id": "123",
-                    "title": "existing mixtape",
-                    "description": "description",
-                    "imageUrl": "http://path/to/image",
-                    "createdBy": {
-                        "id": "123",
-                        "name": "alvin",
-                        "imageUrl": "/path/to/image"
-                    },
-                    "tracks": []
-                }
-                """;
-
-        // when + then
-        this.mvc.perform(put("/api/mixtapes/123")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(givenJson)
-                        .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void update_whenMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+    void update_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -277,11 +242,11 @@ class MixtapeControllerTest {
                         .content(givenJson)
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void update_whenLoggedInAndMixtapeExists_thenReturnOk() throws Exception {
+    void update_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -315,19 +280,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void get_whenLoggedInButMixtapeDoesNotExist_thenReturnNotFound() throws Exception {
-        // given
-        OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
-
-        // when + then
-        this.mvc.perform(get("/api/mixtapes/123")
-                        .with(oauth2Login().oauth2User(oAuth2User))
-                )
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void get_whenLoggedInButMixtapeDoesNotBelongToLoggedInUser_thenReturnNotFound() throws Exception {
+    void get_whenLoggedInButCanNotView_thenReturnForbidden() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
@@ -339,11 +292,11 @@ class MixtapeControllerTest {
         this.mvc.perform(get("/api/mixtapes/" + mixtape.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void get_whenLoggedInAndMixtapeBelongsToLoggedInUser_thenReturnOk() throws Exception {
+    void get_whenLoggedInAndCanViewBecauseIsCreator_thenReturnOk() throws Exception {
         // given
         String expectedJson = """
                 {
@@ -368,6 +321,44 @@ class MixtapeControllerTest {
 
         // when + then
         this.mvc.perform(get("/api/mixtapes/" + mixtape.getId())
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedJson));
+    }
+
+    @Test
+    void get_whenLoggedInAndCanViewBecauseIsListener_thenReturnOk() throws Exception {
+        // given
+        String expectedJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "existing description",
+                    "imageUrl": "/path/to/mixtape/image",
+                    "createdBy": {
+                        "id": "234",
+                        "name": "simon",
+                        "imageUrl": null
+                    },
+                    "tracks": []
+                }
+                """;
+
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        User otherUser = new User("234", null, "simon", null, Provider.SPOTIFY, null);
+        this.userRepository.save(otherUser);
+
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), otherUser);
+        this.mixtapeRepository.save(mixtapeOfOtherUser);
+
+        MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
+        this.mixtapeUserRepository.save(mixtapeUser);
+
+        // when + then
+        this.mvc.perform(get("/api/mixtapes/" + mixtapeOfOtherUser.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
                 .andExpect(status().isOk())
