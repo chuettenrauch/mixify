@@ -5,14 +5,14 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class UserResource {
-    @NonNull private String name;
+    private String id;
+    private String name;
     private String imageUrl;
-    @NonNull private String providerAccessToken;
+    private String providerAccessToken;
     private String providerRefreshToken;
 
-    public UserResource(String name, String imageUrl, String providerAccessToken) {
-        this(name, imageUrl, providerAccessToken, null);
+    public UserResource(String id, String name, String imageUrl, String providerAccessToken) {
+        this(id, name, imageUrl, providerAccessToken, null);
     }
 }
