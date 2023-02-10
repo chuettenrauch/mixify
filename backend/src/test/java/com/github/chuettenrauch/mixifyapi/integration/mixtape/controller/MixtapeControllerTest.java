@@ -183,7 +183,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void delete_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
+    void delete_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
@@ -232,7 +232,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void update_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
+    void update_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -339,7 +339,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void get_whenLoggedInButCanNotView_thenReturnForbidden() throws Exception {
+    void get_whenLoggedInButCanNotViewBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");

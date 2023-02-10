@@ -57,7 +57,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void create_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
+    void create_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
@@ -185,7 +185,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void update_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
+    void update_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
@@ -319,7 +319,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void delete_whenLoggedInButCanNotEdit_thenReturnForbidden() throws Exception {
+    void delete_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
