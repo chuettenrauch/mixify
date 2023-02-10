@@ -11,6 +11,7 @@ import CardImageWithPlayButton from "./CardImageWithPlayButton";
 import MixtapeMenu from "./MixtapeMenu";
 import UserAvatar from "./UserAvatar";
 import {useAuthenticatedUser} from "./ProtectedRoutes";
+import PermissionUtils from "../utils/permission-utils";
 
 export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     mixtape: Mixtape,
@@ -19,6 +20,8 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
 }) {
     const {user} = useAuthenticatedUser();
     const navigate = useNavigate();
+
+    const canEdit = PermissionUtils.canEdit(user, mixtape);
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
@@ -29,7 +32,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 />
             </CardActions>
 
-            <CardActionArea component={Link} to={`/mixtapes/${mixtape.id}`} sx={{
+            <CardActionArea component={Link} to={canEdit ? `/mixtapes/${mixtape.id}` : `/play/${mixtape.id}`} sx={{
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "stretch",
@@ -58,7 +61,9 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             </CardActionArea>
 
             <CardActions>
-                <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete} />
+                {canEdit &&
+                  <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
+                }
             </CardActions>
         </Card>
     );

@@ -4,7 +4,7 @@ import {MixtapeApi} from "../api/mixify-api";
 import axios from "axios";
 
 export default function useMixtape(id: string|undefined) {
-    const [mixtape, setMixtape] = useState<Mixtape|null>()
+    const [mixtape, setMixtape] = useState<Mixtape|null>(null)
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string|null>();
 
