@@ -80,8 +80,12 @@ public class MixtapeService {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
-        return this.mixtapeRepository.findByIdAndCreatedBy(id, user)
-                .orElseThrow(NotFoundException::new);
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId(id);
+
+        return this.mixtapeUserService
+                .findByUserAndMixtape(user, mixtape)
+                .getMixtape();
     }
 
     public Mixtape findById(String id) {
@@ -91,6 +95,10 @@ public class MixtapeService {
 
     public boolean existsById(String id) {
         return this.mixtapeRepository.existsById(id);
+    }
+
+    public boolean existsByIdAndCreatedBy(String id, User createdBy) {
+        return this.mixtapeRepository.existsByIdAndCreatedBy(id, createdBy);
     }
 
     private void validateTracks(Mixtape mixtape) {

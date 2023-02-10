@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.mixtape_user.service;
 
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.repository.MixtapeUserRepository;
@@ -19,11 +20,21 @@ public class MixtapeUserService {
         return this.mixtapeUserRepository.findAllByUser(user);
     }
 
+    public MixtapeUser findByUserAndMixtape(User user, Mixtape mixtape) {
+        return this.mixtapeUserRepository
+                .findByUserAndMixtape(user, mixtape)
+                .orElseThrow(NotFoundException::new);
+    }
+
     public MixtapeUser createIfNotExists(User user, Mixtape mixtape) {
         MixtapeUser mixtapeUser = this.mixtapeUserRepository
                 .findByUserAndMixtape(user, mixtape)
                 .orElse(new MixtapeUser(null, user, mixtape));
 
         return this.mixtapeUserRepository.save(mixtapeUser);
+    }
+
+    public boolean existsByUserAndMixtape(User user, Mixtape mixtape) {
+        return this.mixtapeUserRepository.existsByUserAndMixtape(user, mixtape);
     }
 }

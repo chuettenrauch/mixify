@@ -8,7 +8,11 @@ import lombok.*;
 @RequiredArgsConstructor
 public class UserResource {
     @NonNull private String name;
-    @NonNull private String imageUrl;
+    private String imageUrl;
     @NonNull private String providerAccessToken;
     private String providerRefreshToken;
+
+    public UserResource(String name, String imageUrl, String providerAccessToken) {
+        this(name, imageUrl, providerAccessToken, null);
+    }
 }
