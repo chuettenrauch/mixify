@@ -11,4 +11,8 @@ public class UserResource {
     private String imageUrl;
     @NonNull private String providerAccessToken;
     private String providerRefreshToken;
+
+    public UserResource(String name, String imageUrl, String providerAccessToken) {
+        this(name, imageUrl, providerAccessToken, null);
+    }
 }
