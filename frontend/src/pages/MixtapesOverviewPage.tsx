@@ -1,4 +1,4 @@
-import {Container, Fab, Stack, Typography} from "@mui/material";
+import {Box, Fab, Stack, Typography} from "@mui/material";
 import MixtapeCard from "../components/MixtapeCard";
 import {Add as AddIcon} from "@mui/icons-material";
 import MixtapeForm from "../components/MixtapeForm";
@@ -24,12 +24,11 @@ export default function MixtapesOverviewPage() {
     }
 
     return (
-        <Container sx={{
+        <Box sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 3,
-            p: 0,
         }}>
             <PageHeader title="Your Mixtapes"/>
 
@@ -53,6 +52,6 @@ export default function MixtapesOverviewPage() {
             </Fab>
 
             {isMixtapeFormOpen && <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={navigateToMixtapeDetailPage} onClose={closeMixtapeForm}/>}
-        </Container>
+        </Box>
     );
 }

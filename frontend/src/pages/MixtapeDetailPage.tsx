@@ -3,7 +3,7 @@ import React from "react";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import MixtapeDetails from "../components/MixtapeDetails";
-import {Container, Divider, Fab, Stack, Typography} from "@mui/material";
+import {Box, Divider, Fab, Stack, Typography} from "@mui/material";
 import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
@@ -63,11 +63,10 @@ export default function MixtapeDetailPage() {
     }
 
     return (
-        <Container sx={{
+        <Box sx={{
             display: "flex",
             flexDirection: "column",
             gap: 3,
-            p: 0,
         }}>
             <PageHeader title={mixtape.title}/>
 
@@ -109,6 +108,6 @@ export default function MixtapeDetailPage() {
             }
 
             {isSearchTrackFormOpen && <SearchTrackForm mixtape={mixtape} open={isSearchTrackFormOpen} onSave={addTrack} onClose={closeSearchTrackForm}/>}
-        </Container>
+        </Box>
     );
 }

@@ -1,9 +1,10 @@
 import {
+    Box,
     Card,
     CardActionArea,
     CardActions,
     CardContent,
-    CardMedia, Container,
+    CardMedia,
     Typography
 } from "@mui/material";
 import React, {useState} from "react";
@@ -25,7 +26,7 @@ export default function FlippableTrackCard({track, mixtape, onImageClick, onEdit
     return (
         <ReactCardFlip isFlipped={isFlipped} flipSpeedBackToFront={1} flipSpeedFrontToBack={1} containerStyle={{width: "100%"}}>
             <Card elevation={5} sx={{display: "flex", position: "relative", p: 0}}>
-                <Container sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", p: 2}}>
+                <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "stretch", flex: 1, p: 2}}>
                     <CardActions sx={{p: 0}}>
                         <CardImageWithPlayButton
                             image={{src: track.imageUrl, alt: track.name, size: 100}}
@@ -39,7 +40,7 @@ export default function FlippableTrackCard({track, mixtape, onImageClick, onEdit
                             <Typography>{track.artist}</Typography>
                         </CardContent>
                     </CardActionArea>
-                </Container>
+                </Box>
 
                 {onEdit && onDelete &&
                   <CardActions>

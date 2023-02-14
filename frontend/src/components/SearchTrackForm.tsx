@@ -44,7 +44,7 @@ export default function SearchTrackForm({mixtape, open, onSave, onClose}: {
             aria-describedby="Form to search a track"
             sx={{zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
-            <Container sx={{
+            <Container maxWidth="sm" sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

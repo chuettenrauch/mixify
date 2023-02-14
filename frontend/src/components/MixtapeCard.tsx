@@ -42,7 +42,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 <CardContent sx={{display: "flex", alignItems: "stretch"}}>
                     <Container
                         sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", p: 0}}>
-                        <Container sx={{p: 0}}>
+                        <Box>
                             <Typography variant="h3">{mixtape.title}</Typography>
 
                             {user?.id !== mixtape.createdBy.id
@@ -54,7 +54,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                                 : <Typography>{MixtapeUtils.formatCreatedAt(mixtape.createdAt)}</Typography>
                             }
 
-                        </Container>
+                        </Box>
                         <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                     </Container>
                 </CardContent>

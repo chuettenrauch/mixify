@@ -20,6 +20,15 @@ const theme = createTheme({
             fontWeight: 900
         },
     },
+    components: {
+        MuiInputBase: {
+            styleOverrides: {
+                root: {
+                    fontSize: 16,
+                }
+            }
+        }
+    }
 });
 
 export default theme;

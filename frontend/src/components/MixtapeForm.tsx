@@ -70,7 +70,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
             aria-describedby="Form to create a new mixtape"
             sx={{zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
-            <Container sx={{
+            <Container maxWidth="sm" sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

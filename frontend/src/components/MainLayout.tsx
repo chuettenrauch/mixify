@@ -21,7 +21,7 @@ export default function MainLayout() {
 
     return (
         <BackdropProvider>
-            <Box sx={{maxHeight: window.innerHeight, overflow: "scroll"}}>
+            <Box sx={{display: "flex", flexDirection: "column", overflow: "hidden", height: "100dvh"}}>
                 {user &&
                     /* @ts-ignore */
                   <WebPlaybackSDK
@@ -33,7 +33,7 @@ export default function MainLayout() {
                     <GlobalConfigProvider>
                       <HeaderNav/>
 
-                      <Container maxWidth="md" sx={{p: 2, pb: 20, minHeight: window.innerHeight}}>
+                      <Container maxWidth="sm" sx={{p: 2, pb: 20, minHeight: "100dvh", overflow: "auto"}}>
                         <Outlet/>
                       </Container>
 
