@@ -1,4 +1,4 @@
-import {IconButton, ListItemIcon, Menu, MenuItem} from "@mui/material";
+import {IconButton, ListItemIcon, Menu, MenuItem, SxProps, Theme} from "@mui/material";
 import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon} from "@mui/icons-material";
 import React, {useEffect} from "react";
 import useMenu from "../hooks/useMenu";
@@ -13,10 +13,11 @@ import {toast} from "react-toastify";
 import useOpenClose from "../hooks/useOpenClose";
 import ShareModal from "./ShareModal";
 
-export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
+export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
     mixtape: Mixtape,
     onEdit: (savedMixtape: Mixtape) => void,
     onDelete: (deletedMixtape: Mixtape) => void,
+    sx?: SxProps<Theme>
 }) {
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
@@ -55,6 +56,7 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit}: {
                             position: "absolute",
                             top: (theme) => theme.spacing(1),
                             right: 0,
+                            ...sx,
                         }}>
                 <MoreVertIcon/>
             </IconButton>

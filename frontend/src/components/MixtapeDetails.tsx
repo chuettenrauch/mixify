@@ -17,8 +17,8 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
     const navigate = useNavigate();
 
     return (
-        <Container sx={{display: "flex", flexDirection: "column", gap: 2, p: 0}}>
-            <Container sx={{display: "flex", width: "100%", p: 0, position: "relative"}}>
+        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+            <Box sx={{display: "flex", width: "100%", position: "relative"}}>
                 <Box sx={{flex: 1}}>
                     <CardImageWithPlayButton
                         image={{src: mixtape.imageUrl, alt: mixtape.title, size: 130}}
@@ -31,12 +31,12 @@ export default function MixtapeDetails({mixtape, onEdit, onDelete}: {
                     <Typography>{MixtapeUtils.formatNumberOfTracks(mixtape.tracks)}</Typography>
                 </Container>
 
-                <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
-            </Container>
+                <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete} sx={{top: (theme) => theme.spacing(-1), right: (theme) => theme.spacing(-2)}}/>
+            </Box>
 
             <Box>
                 <Typography textAlign="justify">{mixtape.description}</Typography>
             </Box>
-        </Container>
+        </Box>
     );
 }
