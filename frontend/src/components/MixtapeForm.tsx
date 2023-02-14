@@ -78,7 +78,7 @@ export default function MixtapeForm({title, mixtape, open, onSave, onClose}: {
                 paddingBlock: {xs: 9, sm: 10},
                 gap: 2,
                 width: "100%",
-                height: window.innerHeight,
+                height: "100%",
                 bgcolor: 'background.paper',
                 position: "relative",
                 overflow: "scroll"
