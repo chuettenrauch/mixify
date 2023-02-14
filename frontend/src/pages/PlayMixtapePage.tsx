@@ -10,7 +10,6 @@ import {
 } from "../utils/local-storage-utils";
 import {
     Box,
-    Container,
     Typography
 } from "@mui/material";
 import PageHeader from "../components/PageHeader";
@@ -107,12 +106,11 @@ export default function PlayMixtapePage() {
     }
 
     return (
-        <Container sx={{
+        <Box sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 3,
-            p: 0,
             mb: 10,
         }}>
             <PageHeader title={mixtape.title}/>
@@ -148,6 +146,6 @@ export default function PlayMixtapePage() {
               />
             }
 
-        </Container>
+        </Box>
     );
 }
