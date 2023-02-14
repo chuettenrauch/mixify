@@ -22,7 +22,7 @@ export default function BottomNav() {
     }, [location])
 
     return (
-        <Paper sx={{position: 'fixed', bottom: 0, left: 0, width: "100%", zIndex: (theme) => theme.zIndex.appBar - 1}} elevation={10}>
+        <Paper sx={{position: 'fixed', bottom: "0px", left: "0px", overflow: "hidden", width: "100%", zIndex: (theme) => theme.zIndex.appBar - 1}} elevation={10}>
             <BottomNavigation
                 value={value}
             >

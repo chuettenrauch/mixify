@@ -35,7 +35,7 @@ export default function LoginPage() {
             gap: 2,
             p: 3,
             textAlign: "center",
-            height: window.innerHeight,
+            height: "100dvh",
         }}>
                 <img src={logo} alt="mixify logo"/>
                 <Typography>
