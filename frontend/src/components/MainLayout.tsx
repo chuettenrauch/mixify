@@ -33,7 +33,7 @@ export default function MainLayout() {
                     <GlobalConfigProvider>
                       <HeaderNav/>
 
-                      <Container maxWidth="md" sx={{p: 2, pb: 20, minHeight: window.innerHeight}}>
+                      <Container maxWidth="sm" sx={{p: 2, pb: 20, minHeight: window.innerHeight}}>
                         <Outlet/>
                       </Container>
 

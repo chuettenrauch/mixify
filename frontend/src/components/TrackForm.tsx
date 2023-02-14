@@ -71,7 +71,7 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
             aria-describedby="Form to add information for track"
             sx={{zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
-            <Container sx={{
+            <Container maxWidth="sm" sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

@@ -27,7 +27,7 @@ export default function LoginPage() {
     }
 
     return (
-        <Container maxWidth="md" sx={{
+        <Container maxWidth="sm" sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",

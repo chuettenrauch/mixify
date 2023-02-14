@@ -41,7 +41,7 @@ export default function HeaderNav() {
 
     return (
         <AppBar position="sticky">
-            <Container maxWidth="md">
+            <Container maxWidth="sm">
                 <Toolbar disableGutters>
                     <Link to="/">
                         <Box sx={{filter: "invert(1)", display: "flex", alignItems: "center"}}>
