@@ -79,7 +79,7 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                 paddingBlock: {xs: 9, sm: 10},
                 gap: 2,
                 width: "100%",
-                height: window.innerHeight,
+                height: "100%",
                 bgcolor: 'background.paper',
                 position: "relative",
                 overflow: "scroll"
