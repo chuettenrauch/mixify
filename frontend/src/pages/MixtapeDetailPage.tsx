@@ -3,7 +3,7 @@ import React from "react";
 import PageHeader from "../components/PageHeader";
 import Mixtape from "../types/mixtape";
 import MixtapeDetails from "../components/MixtapeDetails";
-import {Box, Divider, Fab, Stack, Typography} from "@mui/material";
+import {Box, Divider, Fab, Typography} from "@mui/material";
 import {Add as AddIcon, Info as InfoIcon} from "@mui/icons-material";
 import useMixtape from "../hooks/useMixtape";
 import {toast} from "react-toastify";
@@ -11,10 +11,12 @@ import SearchTrackForm from "../components/SearchTrackForm";
 import useForm from "../hooks/useForm";
 import MessageContainer from "../components/MessageContainer";
 import Track from "../types/track";
-import FlippableTrackCard from "../components/FlippableTrackCard";
 import {useAuthenticatedUser} from "../components/ProtectedRoutes";
 import PermissionUtils from "../utils/permission-utils";
 import NotFoundPage from "./NotFoundPage";
+import SortableTrackList from "../components/SortableTrackList";
+import {MixtapeApi} from "../api/mixify-api";
+import { move } from "move-position";
 
 const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
 
@@ -62,6 +64,16 @@ export default function MixtapeDetailPage() {
         setMixtape({...mixtape, tracks: mixtape.tracks.filter(track => track.id !== deletedTrack.id)});
     }
 
+    const moveTrack = (from: number, to: number) => {
+        (async () => {
+            const sortedTracks = move(mixtape.tracks, {from: from, to: to});
+            const updatedMixtape = {...mixtape, tracks: sortedTracks};
+
+            setMixtape(updatedMixtape);
+            await MixtapeApi.updateMixtape(updatedMixtape);
+        })();
+    }
+
     return (
         <Box sx={{
             display: "flex",
@@ -82,20 +94,21 @@ export default function MixtapeDetailPage() {
                 </Typography>
             }
 
-            <Stack spacing={2} sx={{width: "100%"}}>
-                {mixtape.tracks.length === 0
-                    ? <MessageContainer minHeight={200}>
-                        <Typography>Your mixtape has no tracks yet.</Typography>
-                        <Typography sx={{display: "flex", alignItems: "center"}}>
-                            <InfoIcon color="primary"/>
-                            {`You can add up to ${trackLimitPerMixtape} tracks.`}
-                        </Typography>
-                    </MessageContainer>
-                    : mixtape.tracks.map(track => (
-                        <FlippableTrackCard key={track.id} mixtape={mixtape} track={track} onEdit={updateTrack} onDelete={deleteTrack}/>
-                    ))
-                }
-            </Stack>
+            {mixtape.tracks.length === 0
+                ? <MessageContainer minHeight={200}>
+                    <Typography>Your mixtape has no tracks yet.</Typography>
+                    <Typography sx={{display: "flex", alignItems: "center"}}>
+                        <InfoIcon color="primary"/>
+                        {`You can add up to ${trackLimitPerMixtape} tracks.`}
+                    </Typography>
+                </MessageContainer>
+                : <SortableTrackList
+                    mixtape={mixtape}
+                    onUpdateTrack={updateTrack}
+                    onDeleteTrack={deleteTrack}
+                    onMoveTrack={moveTrack}
+                />
+            }
 
             {!trackLimitReached &&
               <Fab color="primary" size="medium" onClick={openSearchTrackForm} aria-label="add track" sx={{
