@@ -13,7 +13,6 @@ import MessageContainer from "../components/MessageContainer";
 import Track from "../types/track";
 import {useAuthenticatedUser} from "../components/ProtectedRoutes";
 import PermissionUtils from "../utils/permission-utils";
-import NotFoundPage from "./NotFoundPage";
 import SortableTrackList from "../components/SortableTrackList";
 import {MixtapeApi} from "../api/mixify-api";
 import { move } from "move-position";
@@ -49,7 +48,7 @@ export default function MixtapeDetailPage() {
     }
 
     if (!PermissionUtils.isEditable(user, mixtape)) {
-        return <NotFoundPage/>
+        navigateToMixtapesOverviewPage();
     }
 
     const addTrack = (savedTrack: Track) => {

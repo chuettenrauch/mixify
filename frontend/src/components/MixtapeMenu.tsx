@@ -27,8 +27,6 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
     sx?: SxProps<Theme>
 }) {
     const {user} = useAuthenticatedUser();
-    const isEditable = PermissionUtils.isEditable(user, mixtape);
-    const isCreator = PermissionUtils.isCreator(user, mixtape);
 
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
@@ -42,9 +40,9 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
     } = useConfirmDialog();
 
     const {
-        isConfirmDialogOpen: isPublishConfirmDialogOpen,
-        openConfirmDialog: openPublishConfirmDialog,
-        closeConfirmDialog: closePublishConfirmDialog
+        isConfirmDialogOpen: isFinalizeConfirmDialogOpen,
+        openConfirmDialog: openFinalizeConfirmDialog,
+        closeConfirmDialog: closeFinalizeConfirmDialog
     } = useConfirmDialog();
 
     useEffect(() => {
@@ -60,16 +58,19 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
         closeDeleteConfirmDialog();
     };
 
-    const handlePublishConfirmed = async() => {
+    const handleFinalizeConfirmed = async() => {
         const savedMixtape = await MixtapeApi.updateMixtape({...mixtape, draft: false});
         onEdit(savedMixtape);
 
-        toast.success("Successfully published mixtape.");
+        toast.success("Successfully finalizeed mixtape.");
 
-        closePublishConfirmDialog();
+        closeFinalizeConfirmDialog();
     }
 
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
+
+    const isEditable = PermissionUtils.isEditable(user, mixtape);
+    const isShareable = PermissionUtils.isShareable(user, mixtape);
 
     return (
         <>
@@ -101,7 +102,7 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
                     Edit
                   </MenuItem>
                 }
-                {isCreator && !isEditable &&
+                {isShareable &&
                   <MenuItem onClick={openShareModal}>
                     <ListItemIcon>
                       <ShareIcon fontSize="small"/>
@@ -110,7 +111,7 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
                   </MenuItem>
                 }
                 {isEditable &&
-                  <MenuItem onClick={openPublishConfirmDialog}>
+                  <MenuItem onClick={openFinalizeConfirmDialog}>
                     <ListItemIcon>
                       <SportsScore fontSize="small"/>
                     </ListItemIcon>
@@ -134,13 +135,13 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
               />
             }
 
-            {isPublishConfirmDialogOpen &&
+            {isFinalizeConfirmDialogOpen &&
               <ConfirmDialog
-                open={isPublishConfirmDialogOpen}
+                open={isFinalizeConfirmDialogOpen}
                 title={`Do you really want to finalize your mixtape "${mixtape.title}"?`}
                 text="You can't edit it afterwards anymore."
-                onCancel={closePublishConfirmDialog}
-                onConfirm={handlePublishConfirmed}
+                onCancel={closeFinalizeConfirmDialog}
+                onConfirm={handleFinalizeConfirmed}
               />
             }
 
