@@ -145,10 +145,11 @@ class MixtapeServiceTest {
     @Test
     void deleteByIdForAuthenticatedUser_whenMixtapeDoesNotExistOrDoesNotBelongToUser_thenThrowNotFoundException() {
         // given
+        String id = "123";
         User user = new User();
 
         Mixtape mixtape = new Mixtape();
-        mixtape.setId("123");
+        mixtape.setId(id);
 
         UserService userService = mock(UserService.class);
         when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
@@ -162,7 +163,7 @@ class MixtapeServiceTest {
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService, mixtapeUserService, validator);
-        assertThrows(NotFoundException.class, () -> sut.deleteByIdForAuthenticatedUser(mixtape.getId()));
+        assertThrows(NotFoundException.class, () -> sut.deleteByIdForAuthenticatedUser(id));
 
         // then
         verify(mixtapeRepository, never()).deleteById(any());
