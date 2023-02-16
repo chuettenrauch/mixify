@@ -16,7 +16,7 @@ import PermissionUtils from "../utils/permission-utils";
 import NotFoundPage from "./NotFoundPage";
 import SortableTrackList from "../components/SortableTrackList";
 import {MixtapeApi} from "../api/mixify-api";
-import jsonpatch, {MovePatch} from "json-patch";
+import { move } from "move-position";
 
 const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
 
@@ -64,18 +64,13 @@ export default function MixtapeDetailPage() {
         setMixtape({...mixtape, tracks: mixtape.tracks.filter(track => track.id !== deletedTrack.id)});
     }
 
-    const moveTrack = (sourceIndex: number, destinationIndex: number) => {
+    const moveTrack = (from: number, to: number) => {
         (async () => {
-            const movePatch: MovePatch = {
-                op: "move",
-                from: `/tracks/${sourceIndex}`,
-                path: `/tracks/${destinationIndex}`
-            };
+            const sortedTracks = move(mixtape.tracks, {from: from, to: to});
+            const updatedMixtape = {...mixtape, tracks: sortedTracks};
 
-            const patchedMixtape = jsonpatch.apply(mixtape, [movePatch]);
-            setMixtape(patchedMixtape);
-
-            await MixtapeApi.updateMixtape(patchedMixtape);
+            setMixtape(updatedMixtape);
+            await MixtapeApi.updateMixtape(updatedMixtape);
         })();
     }
 

@@ -10,7 +10,7 @@ export default function SortableTrackList({mixtape, onUpdateTrack, onDeleteTrack
     mixtape: Mixtape,
     onUpdateTrack: (updatedTrack: Track) => void,
     onDeleteTrack: (deleted: Track) => void
-    onMoveTrack: (sourceIndex: number, destinationIndex: number) => void
+    onMoveTrack: (from: number, to: number) => void
 }) {
 
 
