@@ -62,7 +62,7 @@ class TrackControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         String givenJson = """
@@ -92,7 +92,7 @@ class TrackControllerTest {
 
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
@@ -123,7 +123,7 @@ class TrackControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
@@ -162,7 +162,7 @@ class TrackControllerTest {
             tracks.add(track);
         }
 
-        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, tracks, LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, tracks, LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
@@ -193,7 +193,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         String givenJson = """
@@ -227,7 +227,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
@@ -262,7 +262,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
@@ -294,7 +294,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
@@ -327,7 +327,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         // when + then
@@ -348,7 +348,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
@@ -370,7 +370,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         // when + then
@@ -389,7 +389,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
 
         // when + then
