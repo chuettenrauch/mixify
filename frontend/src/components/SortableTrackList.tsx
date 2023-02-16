@@ -12,8 +12,6 @@ export default function SortableTrackList({mixtape, onUpdateTrack, onDeleteTrack
     onDeleteTrack: (deleted: Track) => void
     onMoveTrack: (from: number, to: number) => void
 }) {
-
-
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) {
             return;
