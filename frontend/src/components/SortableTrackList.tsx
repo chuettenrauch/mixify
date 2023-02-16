@@ -6,10 +6,11 @@ import React from "react";
 import Mixtape from "../types/mixtape";
 import Track from "../types/track";
 
-export default function SortableTrackList({mixtape, onUpdateTrack, onDeleteTrack}: {
+export default function SortableTrackList({mixtape, onUpdateTrack, onDeleteTrack, onMoveTrack}: {
     mixtape: Mixtape,
     onUpdateTrack: (updatedTrack: Track) => void,
     onDeleteTrack: (deleted: Track) => void
+    onMoveTrack: (sourceIndex: number, destinationIndex: number) => void
 }) {
 
 
@@ -18,17 +19,7 @@ export default function SortableTrackList({mixtape, onUpdateTrack, onDeleteTrack
             return;
         }
 
-        /**
-         * PATCH /api/mixtapes/{id}
-         * Content-Type application/json-patch+json
-         *
-         * create json with
-         *      [{
-         *         "op": "move",
-         *         "from": "/tracks/0", // result.source.index
-         *         "path": "/tracks/-" //result.destination.index
-         *      }]
-         */
+        onMoveTrack(result.source.index, result.destination.index);
     }
 
     return (

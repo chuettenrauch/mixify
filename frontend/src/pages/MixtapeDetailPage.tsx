@@ -15,6 +15,8 @@ import {useAuthenticatedUser} from "../components/ProtectedRoutes";
 import PermissionUtils from "../utils/permission-utils";
 import NotFoundPage from "./NotFoundPage";
 import SortableTrackList from "../components/SortableTrackList";
+import {MixtapeApi} from "../api/mixify-api";
+import jsonpatch, {MovePatch} from "json-patch";
 
 const trackLimitPerMixtape: number = Number(process.env.REACT_APP_TRACK_LIMIT_PER_MIXTAPE);
 
@@ -62,6 +64,21 @@ export default function MixtapeDetailPage() {
         setMixtape({...mixtape, tracks: mixtape.tracks.filter(track => track.id !== deletedTrack.id)});
     }
 
+    const moveTrack = (sourceIndex: number, destinationIndex: number) => {
+        (async () => {
+            const movePatch: MovePatch = {
+                op: "move",
+                from: `/tracks/${sourceIndex}`,
+                path: `/tracks/${destinationIndex}`
+            };
+
+            const patchedMixtape = jsonpatch.apply(mixtape, [movePatch]);
+            setMixtape(patchedMixtape);
+
+            await MixtapeApi.updateMixtape(patchedMixtape);
+        })();
+    }
+
     return (
         <Box sx={{
             display: "flex",
@@ -90,7 +107,12 @@ export default function MixtapeDetailPage() {
                         {`You can add up to ${trackLimitPerMixtape} tracks.`}
                     </Typography>
                 </MessageContainer>
-                : <SortableTrackList mixtape={mixtape} onUpdateTrack={updateTrack} onDeleteTrack={deleteTrack}/>
+                : <SortableTrackList
+                    mixtape={mixtape}
+                    onUpdateTrack={updateTrack}
+                    onDeleteTrack={deleteTrack}
+                    onMoveTrack={moveTrack}
+                />
             }
 
             {!trackLimitReached &&
