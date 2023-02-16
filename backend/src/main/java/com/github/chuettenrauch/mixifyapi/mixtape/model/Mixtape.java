@@ -43,7 +43,7 @@ public class Mixtape {
     @DocumentReference(lazy = true)
     private User createdBy;
 
-    private boolean draft;
+    private boolean draft = true;
 
     public boolean hasTrackWithId(String id) {
         return this.getTracks()
