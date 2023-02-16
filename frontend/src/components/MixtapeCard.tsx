@@ -21,7 +21,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     const {user} = useAuthenticatedUser();
     const navigate = useNavigate();
 
-    const canEdit = PermissionUtils.canEdit(user, mixtape);
+    const isEditable = PermissionUtils.isEditable(user, mixtape);
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
@@ -32,7 +32,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
                 />
             </CardActions>
 
-            <CardActionArea component={Link} to={canEdit ? `/mixtapes/${mixtape.id}` : `/play/${mixtape.id}`} sx={{
+            <CardActionArea component={Link} to={isEditable ? `/mixtapes/${mixtape.id}` : `/play/${mixtape.id}`} sx={{
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "stretch",
@@ -61,7 +61,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             </CardActionArea>
 
             <CardActions>
-                {canEdit &&
+                {isEditable &&
                   <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
                 }
             </CardActions>

@@ -48,7 +48,7 @@ export default function MixtapeDetailPage() {
         return null;
     }
 
-    if (!PermissionUtils.canEdit(user, mixtape)) {
+    if (!PermissionUtils.isEditable(user, mixtape)) {
         return <NotFoundPage/>
     }
 
