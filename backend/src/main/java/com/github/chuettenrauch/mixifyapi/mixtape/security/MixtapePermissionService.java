@@ -33,4 +33,8 @@ public class MixtapePermissionService {
 
         return this.mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user);
     }
+
+    public boolean canDelete(String mixtapeId) {
+        return this.canView(mixtapeId);
+    }
 }

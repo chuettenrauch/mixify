@@ -41,7 +41,7 @@ public class MixtapeController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@mixtapePermissionService.canEdit(#id)")
+    @PreAuthorize("@mixtapePermissionService.canDelete(#id)")
     public void delete(@PathVariable String id) {
         this.mixtapeService.deleteByIdForAuthenticatedUser(id);
     }

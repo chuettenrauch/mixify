@@ -197,7 +197,7 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void delete_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+    void delete_whenLoggedInAndCanEditBecauseIsListener_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
@@ -214,15 +214,15 @@ class MixtapeControllerTest {
         this.mvc.perform(delete("/api/mixtapes/" +  mixtapeOfOtherUser.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
-    void delete_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
+    void delete_whenLoggedInAndCanEditBecauseIsCreator_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
+        Mixtape mixtape = new Mixtape("234", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         this.mvc.perform(delete("/api/mixtapes/" +  mixtape.getId())
