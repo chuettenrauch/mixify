@@ -54,7 +54,7 @@ public class MixtapeService {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
-        if (!this.mixtapeRepository.existsByIdAndCreatedBy(id, user)) {
+        if (!this.existsByIdAndCreatedByAndDraftTrue(id, user)) {
             throw new NotFoundException();
         }
 
@@ -104,8 +104,8 @@ public class MixtapeService {
         return this.mixtapeRepository.existsById(id);
     }
 
-    public boolean existsByIdAndCreatedBy(String id, User createdBy) {
-        return this.mixtapeRepository.existsByIdAndCreatedBy(id, createdBy);
+    public boolean existsByIdAndCreatedByAndDraftTrue(String id, User createdBy) {
+        return this.mixtapeRepository.existsByIdAndCreatedByAndDraftTrue(id, createdBy);
     }
 
     private void validateTracks(Mixtape mixtape) {

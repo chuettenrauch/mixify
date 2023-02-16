@@ -104,7 +104,7 @@ class MixtapePermissionServiceTest {
         User user = new User();
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.existsByIdAndCreatedBy(mixtapeId, user)).thenReturn(true);
+        when(mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user)).thenReturn(true);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
 
@@ -126,7 +126,7 @@ class MixtapePermissionServiceTest {
         User user = new User();
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.existsByIdAndCreatedBy(mixtapeId, user)).thenReturn(false);
+        when(mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user)).thenReturn(false);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
 

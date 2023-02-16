@@ -305,6 +305,40 @@ class MixtapeControllerTest {
     }
 
     @Test
+    void update_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, false);
+        this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "updated description",
+                    "imageUrl": "http://path/to/mixtape/image",
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/" + mixtape.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void update_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
