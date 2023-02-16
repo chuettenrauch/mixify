@@ -2,7 +2,7 @@ import {AuthenticatedUser} from "../types/user";
 import Mixtape from "../types/mixtape";
 
 namespace PermissionUtils {
-    export function hasEditPermission(user: AuthenticatedUser | null, mixtape: Mixtape | null) {
+    export function isCreator(user: AuthenticatedUser | null, mixtape: Mixtape | null) {
         if (!user || !mixtape) {
             return false;
         }
@@ -11,7 +11,7 @@ namespace PermissionUtils {
     }
 
     export function isEditable(user: AuthenticatedUser | null, mixtape: Mixtape | null) {
-        return mixtape?.draft && hasEditPermission(user, mixtape);
+        return mixtape?.draft && isCreator(user, mixtape);
     }
 }
 
