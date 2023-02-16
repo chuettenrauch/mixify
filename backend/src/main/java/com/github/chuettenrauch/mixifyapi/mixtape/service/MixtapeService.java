@@ -69,11 +69,18 @@ public class MixtapeService {
         User user = this.userService.getAuthenticatedUser()
                 .orElseThrow(UnauthorizedException::new);
 
-        if (!this.mixtapeRepository.existsByIdAndCreatedBy(id, user)) {
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId(id);
+
+        if (!this.mixtapeUserService.existsByUserAndMixtape(user, mixtape)) {
             throw new NotFoundException();
         }
 
-        this.mixtapeRepository.deleteById(id);
+        this.mixtapeUserService.deleteByUserAndMixtape(user, mixtape);
+
+        if (!this.mixtapeUserService.existsByMixtape(mixtape)) {
+            this.mixtapeRepository.deleteById(id);
+        }
     }
 
     public Mixtape findByIdForAuthenticatedUser(String id) {

@@ -132,4 +132,38 @@ class MixtapeUserServiceTest {
         verify(mixtapeUserRepository).existsByUserAndMixtape(user, mixtape);
     }
 
+    @Test
+    void existsByMixtape_whenCalled_thenDelegateToMixtapeUserRepository() {
+        // given
+        Mixtape mixtape = new Mixtape();
+        boolean expected = true;
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+        when(mixtapeUserRepository.existsByMixtape(mixtape)).thenReturn(expected);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
+        boolean actual = sut.existsByMixtape(mixtape);
+
+        // then
+        assertEquals(expected, actual);
+        verify(mixtapeUserRepository).existsByMixtape(mixtape);
+    }
+
+    @Test
+    void deleteByUserAndMixtape_whenCalled_thenDelegateToMixtapeUserRepository() {
+        // given
+        User user = new User();
+        Mixtape mixtape = new Mixtape();
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
+        sut.deleteByUserAndMixtape(user, mixtape);
+
+        // then
+        verify(mixtapeUserRepository).deleteByUserAndMixtape(user, mixtape);
+    }
+
 }

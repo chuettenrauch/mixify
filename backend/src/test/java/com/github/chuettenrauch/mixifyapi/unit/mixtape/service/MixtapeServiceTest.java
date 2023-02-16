@@ -145,28 +145,31 @@ class MixtapeServiceTest {
     @Test
     void deleteByIdForAuthenticatedUser_whenMixtapeDoesNotExistOrDoesNotBelongToUser_thenThrowNotFoundException() {
         // given
-        String id = "123";
         User user = new User();
+
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId("123");
 
         UserService userService = mock(UserService.class);
         when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
 
         MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
-        when(mixtapeRepository.existsByIdAndCreatedBy(id, user)).thenReturn(false);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        when(mixtapeUserService.existsByUserAndMixtape(user, mixtape)).thenReturn(false);
+
         Validator validator = mock(Validator.class);
 
         // when
         MixtapeService sut = new MixtapeService(mixtapeRepository, userService, mixtapeUserService, validator);
-        assertThrows(NotFoundException.class, () -> sut.deleteByIdForAuthenticatedUser("123"));
+        assertThrows(NotFoundException.class, () -> sut.deleteByIdForAuthenticatedUser(mixtape.getId()));
 
         // then
         verify(mixtapeRepository, never()).deleteById(any());
     }
 
     @Test
-    void deleteByIdForAuthenticatedUser_whenMixtapeExistsAndBelongsToUser_thenDeleteMixtape() {
+    void deleteByIdForAuthenticatedUser_whenMixtapeExistsAndBelongsToUser_thenDeleteMixtapeUserRelation() {
         // given
         User user = new User();
 
@@ -177,9 +180,38 @@ class MixtapeServiceTest {
         when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
 
         MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
-        when(mixtapeRepository.existsByIdAndCreatedBy(mixtape.getId(), user)).thenReturn(true);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        when(mixtapeUserService.existsByUserAndMixtape(user, mixtape)).thenReturn(true);
+        when(mixtapeUserService.existsByMixtape(mixtape)).thenReturn(true);
+
+        Validator validator = mock(Validator.class);
+
+        // when
+        MixtapeService sut = new MixtapeService(mixtapeRepository, userService, mixtapeUserService, validator);
+        sut.deleteByIdForAuthenticatedUser(mixtape.getId());
+
+        // then
+        verify(mixtapeUserService).deleteByUserAndMixtape(user, mixtape);
+    }
+
+    @Test
+    void deleteByIdForAuthenticatedUser_whenMixtapeDoesNotBelongToAnyUserAnymore_thenDeleteMixtape() {
+        // given
+        User user = new User();
+
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId("123");
+
+        UserService userService = mock(UserService.class);
+        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
+
+        MixtapeRepository mixtapeRepository = mock(MixtapeRepository.class);
+
+        MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        when(mixtapeUserService.existsByUserAndMixtape(user, mixtape)).thenReturn(true);
+        when(mixtapeUserService.existsByMixtape(mixtape)).thenReturn(false);
+
         Validator validator = mock(Validator.class);
 
         // when
