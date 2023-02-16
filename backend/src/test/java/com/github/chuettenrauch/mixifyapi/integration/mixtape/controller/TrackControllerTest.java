@@ -118,6 +118,34 @@ class TrackControllerTest {
     }
 
     @Test
+    void create_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, false);
+        this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "name": "The Chipmunks Song",
+                    "artist": "Alvin & The Chipmunks",
+                    "imageUrl": "http://path/to/image",
+                    "description": null,
+                    "providerUri": "spotify:track:12345"
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(post("/api/mixtapes/123/tracks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void create_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -254,6 +282,38 @@ class TrackControllerTest {
     }
 
     @Test
+    void update_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, false);
+        this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "name": "The Chipmunks Song",
+                    "artist": "Alvin & The Chipmunks",
+                    "imageUrl": "http://path/to/image",
+                    "description": "Updated description",
+                    "providerUri": "spotify:track:12345"
+                }
+                """;
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/123/tracks/234")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void update_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -362,6 +422,25 @@ class TrackControllerTest {
     }
 
     @Test
+    void delete_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
+        this.trackRepository.save(track);
+
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, false);
+        this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
+
+        // when + then
+        this.mvc.perform(delete("/api/mixtapes/123/tracks/234")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void delete_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
@@ -389,7 +468,7 @@ class TrackControllerTest {
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
         this.trackRepository.save(track);
 
-        Mixtape mixtape = new Mixtape("123", "mixtape of other user", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, true);
+        Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(List.of(track)), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);this.mixtapeRepository.save(mixtape);
 
         // when + then
