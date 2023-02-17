@@ -4,7 +4,7 @@ type Track = {
     artist: string,
     imageUrl: string,
     description: string | null,
-    providerUri: string,
+    spotifyUri: string,
 }
 
 export default Track;

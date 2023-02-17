@@ -1,7 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.security.mapper;
 
 import com.github.chuettenrauch.mixifyapi.security.exception.OAuth2MappingException;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
@@ -12,21 +11,14 @@ import java.util.Map;
 @Component
 public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
 
-    private static final String ATTRIBUTE_EMAIL = "email";
     private static final String ATTRIBUTE_NAME = "display_name";
-    private static final String ATTRIBUTE_PROVIDER_ID = "id";
+    private static final String ATTRIBUTE_SPOTIFY_ID = "id";
     private static final String ATTRIBUTE_IMAGES = "images";
 
     private static final List<String> requiredAttributes = List.of(
-            ATTRIBUTE_EMAIL,
             ATTRIBUTE_NAME,
-            ATTRIBUTE_PROVIDER_ID
+            ATTRIBUTE_SPOTIFY_ID
     );
-
-    @Override
-    public Provider getProvider() {
-        return Provider.SPOTIFY;
-    }
 
     @Override
     public User mapOAuth2UserToUser(OAuth2User oAuth2User, User user) {
@@ -36,7 +28,6 @@ public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
             throw new OAuth2MappingException();
         }
 
-        user.setEmail((String) attributes.get(ATTRIBUTE_EMAIL));
         user.setName((String) attributes.get(ATTRIBUTE_NAME));
 
         List<Map<String, String>> images = (List<Map<String, String>>) attributes.get(ATTRIBUTE_IMAGES);
@@ -46,8 +37,7 @@ public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
             user.setImageUrl(image.getOrDefault("url", null));
         }
 
-        user.setProvider(this.getProvider());
-        user.setProviderId((String) attributes.get(ATTRIBUTE_PROVIDER_ID));
+        user.setSpotifyId((String) attributes.get(ATTRIBUTE_SPOTIFY_ID));
 
         return user;
     }

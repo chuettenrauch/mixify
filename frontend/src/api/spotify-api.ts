@@ -57,7 +57,7 @@ class SpotifyApi {
 
     async refreshToken() {
         const authenticatedUser = await UserApi.getAuthenticatedUser();
-        this.accessToken = authenticatedUser.providerAccessToken;
+        this.accessToken = authenticatedUser.accessToken;
     }
 
     private registerAccessTokenRequestInterceptor() {

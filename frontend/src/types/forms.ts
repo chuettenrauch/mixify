@@ -10,7 +10,7 @@ namespace Form {
         artist: string | null,
         imageUrl: string | null,
         description: string | null,
-        providerUri: string | null,
+        spotifyUri: string | null,
     }
 
     export type Invite = {

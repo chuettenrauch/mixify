@@ -14,12 +14,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
     @Id
     private String id;
-
-    @Indexed(unique = true)
-    private String email;
     private String name;
     private String imageUrl;
 
-    private Provider provider;
-    private String providerId;
+    @Indexed(unique = true)
+    private String spotifyId;
 }

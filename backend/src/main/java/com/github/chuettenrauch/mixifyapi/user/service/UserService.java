@@ -21,8 +21,8 @@ public class UserService {
 
     private final AuthService authService;
 
-    public Optional<User> findByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+    public Optional<User> findBySpotifyId(String spotifyId) {
+        return this.userRepository.findBySpotifyId(spotifyId);
     }
 
     public User save(User user) {
@@ -36,7 +36,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        return this.findByEmail(authentication.getName());
+        return this.findBySpotifyId(authentication.getName());
     }
 
     public UserResource createUserResource(OAuth2AuthorizedClient authorizedClient) {
@@ -51,7 +51,7 @@ public class UserService {
 
         OAuth2RefreshToken refreshToken = authorizedClient.getRefreshToken();
         if (refreshToken != null) {
-            userResource.setProviderRefreshToken(refreshToken.getTokenValue());
+            userResource.setRefreshToken(refreshToken.getTokenValue());
         }
 
         return userResource;

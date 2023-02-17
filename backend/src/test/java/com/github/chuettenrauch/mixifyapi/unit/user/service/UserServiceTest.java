@@ -2,7 +2,6 @@ package com.github.chuettenrauch.mixifyapi.unit.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -21,23 +20,23 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Test
-    void findByEmail_delegatesToUserRepository() {
+    void findBySpotifyId_delegatesToUserRepository() {
         // given
-        String email = "someone@somewhere.de";
+        String spotifyId = "some-id";
         Optional<User> expected = Optional.of(new User());
 
         UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail(email)).thenReturn(expected);
+        when(userRepository.findBySpotifyId(spotifyId)).thenReturn(expected);
 
         AuthService authService = mock(AuthService.class);
 
         // when
         UserService sut = new UserService(userRepository, authService);
-        Optional<User> actual = sut.findByEmail(email);
+        Optional<User> actual = sut.findBySpotifyId(spotifyId);
 
         // then
         assertEquals(expected, actual);
-        verify(userRepository).findByEmail(email);
+        verify(userRepository).findBySpotifyId(spotifyId);
     }
 
     @Test
@@ -63,13 +62,13 @@ class UserServiceTest {
     void getAuthenticatedUser_whenLoggedIn_thenReturnAuthenticatedUser() {
         // given
         User user = new User();
-        user.setEmail("alvin@chipmunks.de");
+        user.setSpotifyId("some-id");
 
         UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.findBySpotifyId(user.getSpotifyId())).thenReturn(Optional.of(user));
 
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn(user.getEmail());
+        when(authentication.getName()).thenReturn(user.getSpotifyId());
 
         AuthService authService = mock(AuthService.class);
         when(authService.getAuthentication()).thenReturn(authentication);
@@ -87,7 +86,7 @@ class UserServiceTest {
     void getAuthenticatedUser_whenNotLoggedIn_thenReturnEmpty() {
         // given
         User user = new User();
-        user.setEmail("alvin@chipmunks.de");
+        user.setSpotifyId("some-id");
 
         AuthService authService = mock(AuthService.class);
         when(authService.getAuthentication()).thenReturn(null);
@@ -106,7 +105,7 @@ class UserServiceTest {
     void getAuthenticatedUser_whenUserNotExists_thenReturnEmpty() {
         // given
         UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(userRepository.findBySpotifyId(any())).thenReturn(Optional.empty());
 
         Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn("not-existing-user");
@@ -125,7 +124,7 @@ class UserServiceTest {
     @Test
     void createUserResource_whenCalled_thenReturnUserResource() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
@@ -142,14 +141,14 @@ class UserServiceTest {
         assertEquals(user.getId(), actual.getId());
         assertEquals(user.getName(), actual.getName());
         assertEquals(user.getImageUrl(), actual.getImageUrl());
-        assertEquals(accessToken, actual.getProviderAccessToken());
-        assertEquals(refreshToken, actual.getProviderRefreshToken());
+        assertEquals(accessToken, actual.getAccessToken());
+        assertEquals(refreshToken, actual.getRefreshToken());
     }
 
     @Test
     void createUserResource_whenNotPresent_thenSkipRefreshToken() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
 
         OAuth2AuthorizedClient authorizedClient = this.mockOAuth2AuthorizedClient("does-not-matter", null);
 
@@ -161,7 +160,7 @@ class UserServiceTest {
         UserResource actual = sut.createUserResource(authorizedClient);
 
         // then
-        assertNull(actual.getProviderRefreshToken());
+        assertNull(actual.getRefreshToken());
     }
 
     @Test

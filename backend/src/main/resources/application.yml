@@ -16,16 +16,13 @@ spring:
             redirect-uri: "{baseUrl}/oauth2/code/{registrationId}"
             scope:
               - user-read-private
-              - user-read-email
-              - user-read-playback-state
-              - user-modify-playback-state
               - streaming
         provider:
           spotify:
             authorization-uri: https://accounts.spotify.com/authorize
             token-uri: https://accounts.spotify.com/api/token
             user-info-uri: https://api.spotify.com/v1/me
-            user-name-attribute: email
+            user-name-attribute: id
   servlet:
     multipart:
       max-file-size: 6MB

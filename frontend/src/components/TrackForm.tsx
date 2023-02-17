@@ -15,7 +15,7 @@ const initialErrorState = {
     name: null,
     artist: null,
     imageUrl: null,
-    providerUri: null,
+    spotifyUri: null,
     description: null,
 }
 
@@ -145,9 +145,9 @@ export default function TrackForm({title, mixtape, selectedSpotifyTrack, track, 
                     <input
                         readOnly
                         hidden
-                        id="providerUri"
-                        name="providerUri"
-                        value={trackForm.providerUri ?? ""}
+                        id="spotifyUri"
+                        name="spotifyUri"
+                        value={trackForm.spotifyUri ?? ""}
                     />
 
                     <Button type="submit" variant="contained" startIcon={<SaveIcon/>}>
@@ -165,7 +165,7 @@ function getInitialState(selectedSpotifyTrack: Spotify.Track | undefined, track:
             name: selectedSpotifyTrack.name,
             artist: selectedSpotifyTrack.artists.at(0)?.name ?? "",
             imageUrl: selectedSpotifyTrack.album.images.at(0)?.url ?? "",
-            providerUri: selectedSpotifyTrack.uri,
+            spotifyUri: selectedSpotifyTrack.uri,
             description: null,
         }
     }
@@ -178,7 +178,7 @@ function getInitialState(selectedSpotifyTrack: Spotify.Track | undefined, track:
         name: null,
         artist: null,
         imageUrl: null,
-        providerUri: null,
+        spotifyUri: null,
         description: null,
     }
 }
