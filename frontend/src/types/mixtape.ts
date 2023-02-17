@@ -9,6 +9,7 @@ type Mixtape = {
     createdAt: string,
     createdBy: User,
     tracks: Track[],
+    draft: boolean,
 }
 
 export default Mixtape;

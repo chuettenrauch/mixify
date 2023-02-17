@@ -1,7 +1,7 @@
 import Mixtape from "../types/mixtape";
 import {
     Box,
-    Card, CardActionArea, CardActions, CardContent,
+    Card, CardActionArea, CardActions, CardContent, Chip,
     Container,
     Typography
 } from "@mui/material";
@@ -21,18 +21,26 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
     const {user} = useAuthenticatedUser();
     const navigate = useNavigate();
 
-    const canEdit = PermissionUtils.canEdit(user, mixtape);
+    const isEditable = PermissionUtils.isEditable(user, mixtape);
 
     return (
         <Card elevation={5} sx={{display: "flex", position: "relative"}}>
-            <CardActions sx={{p: 2, pr: 0}}>
+            <CardActions sx={{p: 2, pr: 0, position: "relative"}}>
                 <CardImageWithPlayButton
                     image={{src: mixtape.imageUrl, alt: mixtape.title, size: 100}}
                     onClick={() => navigate(`/play/${mixtape.id}`)}
                 />
+
+                {mixtape.draft &&
+                  <Chip size="small" color="primary" label="Draft" sx={{
+                      position: "absolute",
+                      top: (theme) => theme.spacing(1),
+                      left: 0
+                  }}/>
+                }
             </CardActions>
 
-            <CardActionArea component={Link} to={canEdit ? `/mixtapes/${mixtape.id}` : `/play/${mixtape.id}`} sx={{
+            <CardActionArea component={Link} to={isEditable ? `/mixtapes/${mixtape.id}` : `/play/${mixtape.id}`} sx={{
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "stretch",
@@ -61,9 +69,7 @@ export default function MixtapeCard({mixtape, onEdit, onDelete}: {
             </CardActionArea>
 
             <CardActions>
-                {canEdit &&
-                  <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
-                }
+                <MixtapeMenu mixtape={mixtape} onEdit={onEdit} onDelete={onDelete}/>
             </CardActions>
         </Card>
     );

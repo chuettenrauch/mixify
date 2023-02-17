@@ -1,8 +1,9 @@
-import {Button, Dialog, DialogActions, DialogTitle} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
-export default function ConfirmDialog({open, title, onCancel, onConfirm}: {
+export default function ConfirmDialog({open, title, text, onCancel, onConfirm}: {
     open: boolean,
     title: string,
+    text?: string,
     onCancel: () => void,
     onConfirm: () => void,
 }) {
@@ -14,6 +15,15 @@ export default function ConfirmDialog({open, title, onCancel, onConfirm}: {
             aria-describedby="confirm-dialog-description"
         >
             <DialogTitle id="confirm-dialog-title">{title}</DialogTitle>
+
+            {text &&
+              <DialogContent>
+                <DialogContentText id="confirm-dialog-description">
+                    {text}
+                </DialogContentText>
+              </DialogContent>
+            }
+
             <DialogActions>
                 <Button onClick={() => onCancel()}>Cancel</Button>
                 <Button onClick={() => onConfirm()} autoFocus>Confirm</Button>

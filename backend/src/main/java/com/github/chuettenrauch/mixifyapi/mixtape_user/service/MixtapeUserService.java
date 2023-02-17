@@ -37,4 +37,12 @@ public class MixtapeUserService {
     public boolean existsByUserAndMixtape(User user, Mixtape mixtape) {
         return this.mixtapeUserRepository.existsByUserAndMixtape(user, mixtape);
     }
+
+    public boolean existsByMixtape(Mixtape mixtape) {
+        return this.mixtapeUserRepository.existsByMixtape(mixtape);
+    }
+
+    public void deleteByUserAndMixtape(User user, Mixtape mixtape) {
+        this.mixtapeUserRepository.deleteByUserAndMixtape(user, mixtape);
+    }
 }

@@ -1,5 +1,10 @@
 import {IconButton, ListItemIcon, Menu, MenuItem, SxProps, Theme} from "@mui/material";
-import {Close as CloseIcon, Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon} from "@mui/icons-material";
+import {
+    Close as CloseIcon,
+    Edit as EditIcon,
+    MoreVert as MoreVertIcon,
+    Share as ShareIcon, SportsScore
+} from "@mui/icons-material";
 import React, {useEffect} from "react";
 import useMenu from "../hooks/useMenu";
 import useForm from "../hooks/useForm";
@@ -12,6 +17,8 @@ import {MixtapeApi} from "../api/mixify-api";
 import {toast} from "react-toastify";
 import useOpenClose from "../hooks/useOpenClose";
 import ShareModal from "./ShareModal";
+import {useAuthenticatedUser} from "./ProtectedRoutes";
+import PermissionUtils from "../utils/permission-utils";
 
 export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
     mixtape: Mixtape,
@@ -19,6 +26,8 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
     onDelete: (deletedMixtape: Mixtape) => void,
     sx?: SxProps<Theme>
 }) {
+    const {user} = useAuthenticatedUser();
+
     const {menuAnchorEl: mixtapeAnchorEl, isMenuOpen: isMixtapeMenuOpen, openMenu: openMixtapeMenu, closeMenu: closeMixtapeMenu} = useMenu();
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {isOpen: isShareModalOpen, open: openShareModal, close: closeShareModal} = useOpenClose();
@@ -28,6 +37,12 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
         isConfirmDialogOpen: isDeleteConfirmDialogOpen,
         openConfirmDialog: openDeleteConfirmDialog,
         closeConfirmDialog: closeDeleteConfirmDialog
+    } = useConfirmDialog();
+
+    const {
+        isConfirmDialogOpen: isFinalizeConfirmDialogOpen,
+        openConfirmDialog: openFinalizeConfirmDialog,
+        closeConfirmDialog: closeFinalizeConfirmDialog
     } = useConfirmDialog();
 
     useEffect(() => {
@@ -43,7 +58,19 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
         closeDeleteConfirmDialog();
     };
 
+    const handleFinalizeConfirmed = async() => {
+        const savedMixtape = await MixtapeApi.updateMixtape({...mixtape, draft: false});
+        onEdit(savedMixtape);
+
+        toast.success("Successfully finalizeed mixtape.");
+
+        closeFinalizeConfirmDialog();
+    }
+
     const mixtapeMenuId = `mixtape-${mixtape.id}-menu`;
+
+    const isEditable = PermissionUtils.isEditable(user, mixtape);
+    const isShareable = PermissionUtils.isShareable(user, mixtape);
 
     return (
         <>
@@ -67,32 +94,54 @@ export default function MixtapeMenu({mixtape, onDelete, onEdit, sx}: {
                 onClose={closeMixtapeMenu}
                 onClick={closeMixtapeMenu}
             >
-                <MenuItem onClick={openMixtapeForm}>
+                {isEditable &&
+                  <MenuItem onClick={openMixtapeForm}>
                     <ListItemIcon>
-                        <EditIcon fontSize="small"/>
+                      <EditIcon fontSize="small"/>
                     </ListItemIcon>
                     Edit
-                </MenuItem>
-                <MenuItem onClick={openShareModal}>
+                  </MenuItem>
+                }
+                {isShareable &&
+                  <MenuItem onClick={openShareModal}>
                     <ListItemIcon>
-                        <ShareIcon fontSize="small"/>
+                      <ShareIcon fontSize="small"/>
                     </ListItemIcon>
                     Share
-                </MenuItem>
-                <MenuItem onClick={openDeleteConfirmDialog}>
+                  </MenuItem>
+                }
+                {isEditable &&
+                  <MenuItem onClick={openFinalizeConfirmDialog}>
                     <ListItemIcon>
-                        <CloseIcon fontSize="small"/>
+                      <SportsScore fontSize="small"/>
+                    </ListItemIcon>
+                    Finalize
+                  </MenuItem>
+                }
+                  <MenuItem onClick={openDeleteConfirmDialog}>
+                    <ListItemIcon>
+                      <CloseIcon fontSize="small"/>
                     </ListItemIcon>
                     Delete
-                </MenuItem>
+                  </MenuItem>
             </Menu>
 
             {isDeleteConfirmDialogOpen &&
               <ConfirmDialog
                 open={isDeleteConfirmDialogOpen}
-                title={`Do you really want to delete your "${mixtape.title}" mixtape?`}
+                title={`Do you really want to delete your mixtape "${mixtape.title}"?`}
                 onCancel={closeDeleteConfirmDialog}
                 onConfirm={handleDeleteConfirmed}
+              />
+            }
+
+            {isFinalizeConfirmDialogOpen &&
+              <ConfirmDialog
+                open={isFinalizeConfirmDialogOpen}
+                title={`Do you really want to finalize your mixtape "${mixtape.title}"?`}
+                text="You can't edit it afterwards anymore."
+                onCancel={closeFinalizeConfirmDialog}
+                onConfirm={handleFinalizeConfirmed}
               />
             }
 

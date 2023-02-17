@@ -31,6 +31,10 @@ public class MixtapePermissionService {
     public boolean canEdit(String mixtapeId) {
         User user = this.userService.getAuthenticatedUser().orElseThrow(UnauthorizedException::new);
 
-        return this.mixtapeService.existsByIdAndCreatedBy(mixtapeId, user);
+        return this.mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user);
+    }
+
+    public boolean canDelete(String mixtapeId) {
+        return this.canView(mixtapeId);
     }
 }

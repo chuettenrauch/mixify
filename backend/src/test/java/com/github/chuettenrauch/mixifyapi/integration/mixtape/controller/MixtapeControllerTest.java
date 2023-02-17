@@ -133,7 +133,7 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", "", new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("123", "mixtape of other user", "", "", new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         // when + then
@@ -169,8 +169,8 @@ class MixtapeControllerTest {
 
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), loggedInUser);
-        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfLoggedInUser = new Mixtape("123", "mixtape of logged in user", "description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), loggedInUser, true);
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
 
         this.mixtapeRepository.saveAll(List.of(mixtapeOfLoggedInUser, mixtapeOfOtherUser));
 
@@ -187,7 +187,7 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         this.mvc.perform(delete("/api/mixtapes/" +  mixtapeOfOtherUser.getId())
@@ -197,14 +197,14 @@ class MixtapeControllerTest {
     }
 
     @Test
-    void delete_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
+    void delete_whenLoggedInAndCanEditBecauseIsListener_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
@@ -214,15 +214,15 @@ class MixtapeControllerTest {
         this.mvc.perform(delete("/api/mixtapes/" +  mixtapeOfOtherUser.getId())
                         .with(oauth2Login().oauth2User(oAuth2User))
                 )
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
-    void delete_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
+    void delete_whenLoggedInAndCanEditBecauseIsCreator_thenReturnOk() throws Exception {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "mixtape of other user", "", null, new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("234", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         this.mvc.perform(delete("/api/mixtapes/" +  mixtape.getId())
@@ -239,7 +239,7 @@ class MixtapeControllerTest {
 
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtape);
 
         String givenJson = """
@@ -274,7 +274,7 @@ class MixtapeControllerTest {
 
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);
@@ -305,12 +305,46 @@ class MixtapeControllerTest {
     }
 
     @Test
+    void update_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
+        // given
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, false);
+        this.mixtapeRepository.save(mixtape);
+
+        String givenJson = """
+                {
+                    "id": "234",
+                    "title": "existing mixtape",
+                    "description": "updated description",
+                    "imageUrl": "http://path/to/mixtape/image",
+                    "createdBy": {
+                        "id": "123",
+                        "name": "alvin",
+                        "imageUrl": "/path/to/image"
+                    },
+                    "tracks": []
+                }
+                """;
+
+
+        // when + then
+        this.mvc.perform(put("/api/mixtapes/" + mixtape.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJson)
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void update_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         String expectedJson = """
@@ -344,7 +378,7 @@ class MixtapeControllerTest {
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser();
         User otherUser = this.testUserHelper.createUser("234");
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", null, new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtape);
 
         // when + then
@@ -375,7 +409,7 @@ class MixtapeControllerTest {
         User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user);
+        Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, true);
         this.mixtapeRepository.save(mixtape);
 
         // when + then
@@ -410,7 +444,7 @@ class MixtapeControllerTest {
         User otherUser = new User("234", null, "simon", null, Provider.SPOTIFY, null);
         this.userRepository.save(otherUser);
 
-        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), otherUser);
+        Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), otherUser, true);
         this.mixtapeRepository.save(mixtapeOfOtherUser);
 
         MixtapeUser mixtapeUser = new MixtapeUser(null, user, mixtapeOfOtherUser);

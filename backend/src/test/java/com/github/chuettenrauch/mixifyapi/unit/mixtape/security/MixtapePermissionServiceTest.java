@@ -104,7 +104,7 @@ class MixtapePermissionServiceTest {
         User user = new User();
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.existsByIdAndCreatedBy(mixtapeId, user)).thenReturn(true);
+        when(mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user)).thenReturn(true);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
 
@@ -119,14 +119,15 @@ class MixtapePermissionServiceTest {
         assertTrue(actual);
     }
 
+
     @Test
-    void canView_whenUserIsNotCreatorOfMixtape_thenReturnFalse() {
+    void canEdit_whenUserIsNotCreatorOfMixtape_thenReturnFalse() {
         // given
         String mixtapeId = "123";
         User user = new User();
 
         MixtapeService mixtapeService = mock(MixtapeService.class);
-        when(mixtapeService.existsByIdAndCreatedBy(mixtapeId, user)).thenReturn(false);
+        when(mixtapeService.existsByIdAndCreatedByAndDraftTrue(mixtapeId, user)).thenReturn(false);
 
         MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
 
@@ -140,4 +141,68 @@ class MixtapePermissionServiceTest {
         // then
         assertFalse(actual);
     }
+
+    @Test
+    void canDelete_whenNotLoggedIn_thenThrowUnauthorizedException() {
+        // given
+        String mixtapeId = "123";
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+
+        UserService userService = mock(UserService.class);
+        when(userService.getAuthenticatedUser()).thenReturn(Optional.empty());
+
+        // when + then
+        MixtapePermissionService sut = new MixtapePermissionService(mixtapeService, mixtapeUserService, userService);
+
+        assertThrows(UnauthorizedException.class, () -> sut.canDelete(mixtapeId));
+    }
+
+    @Test
+    void canDelete_whenMixtapeUserEntryExistsForUserAndMixtape_thenReturnTrue() {
+        // given
+        User user = new User();
+
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId("123");
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        when(mixtapeUserService.existsByUserAndMixtape(user, mixtape)).thenReturn(true);
+
+        UserService userService = mock(UserService.class);
+        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
+
+        // when
+        MixtapePermissionService sut = new MixtapePermissionService(mixtapeService, mixtapeUserService, userService);
+        boolean actual = sut.canDelete(mixtape.getId());
+
+        // then
+        assertTrue(actual);
+    }
+
+    @Test
+    void canDelete_whenMixtapeUserEntryDoesNotExistForUserAndMixtape_thenReturnFalse() {
+        // given
+        User user = new User();
+
+        Mixtape mixtape = new Mixtape();
+        mixtape.setId("123");
+
+        MixtapeService mixtapeService = mock(MixtapeService.class);
+        MixtapeUserService mixtapeUserService = mock(MixtapeUserService.class);
+        when(mixtapeUserService.existsByUserAndMixtape(user, mixtape)).thenReturn(false);
+
+        UserService userService = mock(UserService.class);
+        when(userService.getAuthenticatedUser()).thenReturn(Optional.of(user));
+
+        // when
+        MixtapePermissionService sut = new MixtapePermissionService(mixtapeService, mixtapeUserService, userService);
+        boolean actual = sut.canDelete(mixtape.getId());
+
+        // then
+        assertFalse(actual);
+    }
+
 }
