@@ -20,7 +20,7 @@ export default function MixtapesOverviewPage() {
     const {user} = useAuthenticatedUser();
 
     const [mixtapes, setMixtapes] = useMixtapes();
-    const [filteredMixtapes, setFilteredMixtapes] = useState<Mixtape[]>([]);
+    const [filterResult, setFilterResult] = useState<Mixtape[]>([]);
 
     const {isFormOpen: isMixtapeFormOpen, openForm: openMixtapeForm, closeForm: closeMixtapeForm} = useForm();
     const {isOpen: isFilterModalOpen, open: openFilterModal, close: closeFilterModal} = useOpenClose();
@@ -36,18 +36,20 @@ export default function MixtapesOverviewPage() {
     }
 
     const onFilter = (filters: Filter[]) => {
-        let filteredMixtapes = mixtapes;
+        let filtered = mixtapes;
 
         for (const filter of filters) {
-            filteredMixtapes = filteredMixtapes.filter(mixtape => filter(mixtape, user));
+            filtered = filtered.filter(mixtape => filter(mixtape, user));
         }
 
-        setFilteredMixtapes(filteredMixtapes);
+        setFilterResult(filtered);
     }
 
     useEffect(() => {
-        setFilteredMixtapes([...mixtapes]);
-    }, [mixtapes, setFilteredMixtapes])
+        setFilterResult([...mixtapes]);
+    }, [mixtapes, setFilterResult])
+
+    const searchResult = filterResult.filter(mixtape => MixtapeUtils.containsSearchTerm(mixtape, searchTerm));
 
     return (
         <Box sx={{
@@ -86,20 +88,21 @@ export default function MixtapesOverviewPage() {
             </Box>
 
             <Stack spacing={2} sx={{width: "100%"}}>
-                {mixtapes.length === 0
+                {mixtapes.length === 0 || searchResult.length === 0
                     ? <MessageContainer>
-                        <Typography>You don't have any mixtapes, yet.</Typography>
+                        <Typography>No mixtapes found.</Typography>
                     </MessageContainer>
-                    : filteredMixtapes
-                        .filter(mixtape => MixtapeUtils.containsSearchTerm(mixtape, searchTerm))
-                        .map(mixtape => (
-                        <MixtapeCard
-                            key={mixtape.id}
-                            mixtape={mixtape}
-                            onEdit={navigateToMixtapeDetailPage}
-                            onDelete={removeMixtapeFromList}
-                        />
-                    ))}
+                    : <>
+                        {searchResult.map(mixtape => (
+                            <MixtapeCard
+                                key={mixtape.id}
+                                mixtape={mixtape}
+                                onEdit={navigateToMixtapeDetailPage}
+                                onDelete={removeMixtapeFromList}
+                            />
+                        ))}
+                    </>
+                }
             </Stack>
 
             <Fab color="primary" size="medium" onClick={openMixtapeForm} aria-label="add" sx={{
@@ -111,7 +114,7 @@ export default function MixtapesOverviewPage() {
             </Fab>
 
             {isMixtapeFormOpen && <MixtapeForm title="Create mixtape" open={isMixtapeFormOpen} onSave={navigateToMixtapeDetailPage} onClose={closeMixtapeForm}/>}
-            <FilterModal open={isFilterModalOpen} onFilter={onFilter} onClear={() => setFilteredMixtapes(mixtapes)} onClose={closeFilterModal}/>
+            <FilterModal open={isFilterModalOpen} onFilter={onFilter} onClear={() => setFilterResult(mixtapes)} onClose={closeFilterModal}/>
         </Box>
     );
 }
