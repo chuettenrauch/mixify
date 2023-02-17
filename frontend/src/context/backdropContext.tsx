@@ -20,7 +20,7 @@ export function BackdropProvider({children}: {
             {children}
 
             {backdrop &&
-              <Backdrop open={backdrop} sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}/>
+              <Backdrop open={backdrop} sx={{zIndex: (theme) => theme.zIndex.appBar + 1}}/>
             }
         </BackdropContext.Provider>
     )
