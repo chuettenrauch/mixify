@@ -9,10 +9,10 @@ public class UserResource {
     private String id;
     private String name;
     private String imageUrl;
-    private String providerAccessToken;
-    private String providerRefreshToken;
+    private String accessToken;
+    private String refreshToken;
 
-    public UserResource(String id, String name, String imageUrl, String providerAccessToken) {
-        this(id, name, imageUrl, providerAccessToken, null);
+    public UserResource(String id, String name, String imageUrl, String accessToken) {
+        this(id, name, imageUrl, accessToken, null);
     }
 }

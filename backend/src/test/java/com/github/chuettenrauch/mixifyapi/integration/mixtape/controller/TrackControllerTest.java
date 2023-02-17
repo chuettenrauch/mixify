@@ -6,7 +6,6 @@ import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.TrackRepository;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.model.MixtapeUser;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.repository.MixtapeUserRepository;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import com.github.chuettenrauch.mixifyapi.utils.TestUserHelper;
@@ -71,7 +70,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -87,7 +86,7 @@ class TrackControllerTest {
     @Test
     void create_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -104,7 +103,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -120,7 +119,7 @@ class TrackControllerTest {
     @Test
     void create_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, false);
@@ -132,7 +131,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -148,7 +147,7 @@ class TrackControllerTest {
     @Test
     void create_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("123", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -160,7 +159,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -178,7 +177,7 @@ class TrackControllerTest {
     @Test
     void create_whenNumOfTracksExceedsMaxLimit_thenReturnBadRequest() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         List<Track> tracks = new ArrayList<>();
@@ -199,7 +198,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -231,7 +230,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -247,7 +246,7 @@ class TrackControllerTest {
     @Test
     void update_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -268,7 +267,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -284,7 +283,7 @@ class TrackControllerTest {
     @Test
     void update_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -300,7 +299,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": "Updated description",
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -316,7 +315,7 @@ class TrackControllerTest {
     @Test
     void update_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -332,7 +331,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": null,
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -348,7 +347,7 @@ class TrackControllerTest {
     @Test
     void update_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -364,7 +363,7 @@ class TrackControllerTest {
                     "artist": "Alvin & The Chipmunks",
                     "imageUrl": "http://path/to/image",
                     "description": "Updated description",
-                    "providerUri": "spotify:track:12345"
+                    "spotifyUri": "spotify:track:12345"
                 }
                 """;
 
@@ -400,7 +399,7 @@ class TrackControllerTest {
     @Test
     void delete_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -424,7 +423,7 @@ class TrackControllerTest {
     @Test
     void delete_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -443,7 +442,7 @@ class TrackControllerTest {
     @Test
     void delete_whenTrackDoesNotExistOnMixtape_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");
@@ -462,7 +461,7 @@ class TrackControllerTest {
     @Test
     void delete_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Track track = new Track("234", "The Chipmunks Song", "Alvin & The Chipmunks", "/path/to/image", null, "spotify:track:12345");

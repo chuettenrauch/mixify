@@ -2,7 +2,6 @@ package com.github.chuettenrauch.mixifyapi.unit.security.mapper;
 
 import com.github.chuettenrauch.mixifyapi.security.exception.OAuth2MappingException;
 import com.github.chuettenrauch.mixifyapi.security.mapper.SpotifyOAuth2UserMapper;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,12 +20,6 @@ import static org.mockito.Mockito.when;
 
 class SpotifyOAuth2UserMapperTest {
 
-    @Test
-    void isApplicableForProvider_returnsCorrectProvider() {
-        SpotifyOAuth2UserMapper sut = new SpotifyOAuth2UserMapper();
-
-        assertEquals(Provider.SPOTIFY, sut.getProvider());
-    }
 
     @Test
     void mapToUser_mapsOAuth2UserToUser() {
@@ -34,8 +27,7 @@ class SpotifyOAuth2UserMapperTest {
         String expectedEmail = "alvin@chipmunks.de";
         String expectedName = "Alvin Chipmunk";
         String expectedImageUrl = "http://url/to/image-1.jpg";
-        Provider expectedProvider = Provider.SPOTIFY;
-        String expectedProviderId = "user-123";
+        String expectedSpotifyId = "user-123";
 
         List<Map<String, String>> images = new ArrayList<>(List.of(
                 Map.of(
@@ -51,7 +43,7 @@ class SpotifyOAuth2UserMapperTest {
         when(oAuth2User.getAttributes()).thenReturn(Map.of(
                 "email", expectedEmail,
                 "display_name", expectedName,
-                "id", expectedProviderId,
+                "id", expectedSpotifyId,
                 "images", images
         ));
 
@@ -63,8 +55,7 @@ class SpotifyOAuth2UserMapperTest {
         assertEquals(expectedEmail, actual.getEmail());
         assertEquals(expectedName, actual.getName());
         assertEquals(expectedImageUrl, actual.getImageUrl());
-        assertEquals(expectedProvider, actual.getProvider());
-        assertEquals(expectedProviderId, actual.getProviderId());
+        assertEquals(expectedSpotifyId, actual.getSpotifyId());
     }
 
     @Test

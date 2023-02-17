@@ -1,6 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.unit.mixtape.validation.validator;
 
-import com.github.chuettenrauch.mixifyapi.mixtape.validation.validator.ProviderUriValidator;
+import com.github.chuettenrauch.mixifyapi.mixtape.validation.validator.SpotifyUriValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
-class ProviderUriValidatorTest {
+class SpotifyUriValidatorTest {
 
     @ParameterizedTest
     @CsvSource({
@@ -26,7 +26,7 @@ class ProviderUriValidatorTest {
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 
         // when
-        ProviderUriValidator sut = new ProviderUriValidator();
+        SpotifyUriValidator sut = new SpotifyUriValidator();
         boolean actual = sut.isValid(value, context);
 
         // then

@@ -81,7 +81,7 @@ class TrackControllerTest {
                                     {
                                         "artist": "some artist",
                                         "imageUrl": "http://path/to/image",
-                                        "providerUri": "spotify:track:234"
+                                        "spotifyUri": "spotify:track:234"
                                     }
                                 """),
                         """
@@ -94,7 +94,7 @@ class TrackControllerTest {
                                     {
                                         "name": "some name",
                                         "imageUrl": "http://path/to/image",
-                                        "providerUri": "spotify:track:234"
+                                        "spotifyUri": "spotify:track:234"
                                     }
                                 """),
                         """
@@ -107,7 +107,7 @@ class TrackControllerTest {
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
-                                        "providerUri": "spotify:track:234"
+                                        "spotifyUri": "spotify:track:234"
                                     }
                                 """),
                         """
@@ -120,7 +120,7 @@ class TrackControllerTest {
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
-                                        "providerUri": "spotify:track:234",
+                                        "spotifyUri": "spotify:track:234",
                                         "imageUrl": ""
                                     }
                                 """),
@@ -134,7 +134,7 @@ class TrackControllerTest {
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
-                                        "providerUri": "spotify:track:234",
+                                        "spotifyUri": "spotify:track:234",
                                         "imageUrl": "some invalid url"
                                     }
                                 """),
@@ -144,7 +144,7 @@ class TrackControllerTest {
                                 }
                                 """
                 ),
-                arguments(named("providerUri | missing", """
+                arguments(named("spotifyUri | missing", """
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
@@ -153,21 +153,21 @@ class TrackControllerTest {
                                 """),
                         """
                                 {
-                                    "providerUri": "must not be blank"
+                                    "spotifyUri": "must not be blank"
                                 }
                                 """
                 ),
-                arguments(named("providerUri | not valid", """
+                arguments(named("spotifyUri | not valid", """
                                     {
                                         "name": "some name",
                                         "artist": "some artist",
                                         "imageUrl": "http://path/to/image",
-                                        "providerUri": "not valid uri"
+                                        "spotifyUri": "not valid uri"
                                     }
                                 """),
                         """
                                 {
-                                    "providerUri": "not a valid provider uri"
+                                    "spotifyUri": "not a valid spotify uri"
                                 }
                                 """
                 )

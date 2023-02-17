@@ -51,7 +51,7 @@ public class UserService {
 
         OAuth2RefreshToken refreshToken = authorizedClient.getRefreshToken();
         if (refreshToken != null) {
-            userResource.setProviderRefreshToken(refreshToken.getTokenValue());
+            userResource.setRefreshToken(refreshToken.getTokenValue());
         }
 
         return userResource;

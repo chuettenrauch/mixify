@@ -1,7 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.integration.security.listener;
 
 import com.github.chuettenrauch.mixifyapi.security.listener.OAuth2AuthenticationSuccessEventListener;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -71,8 +70,7 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         assertEquals(attributes.get("email"), savedUser.getEmail());
         assertEquals(attributes.get("display_name"), savedUser.getName());
         assertEquals(expectedImageUrl, savedUser.getImageUrl());
-        assertEquals(Provider.SPOTIFY, savedUser.getProvider());
-        assertEquals(attributes.get("id"), savedUser.getProviderId());
+        assertEquals(attributes.get("id"), savedUser.getSpotifyId());
     }
 
     @Test
@@ -84,7 +82,6 @@ class OAuth2AuthenticationSuccessEventListenerTest {
                 "alvin@chipmunks.de",
                 "should be overwritten",
                 "should be overwritten",
-                Provider.SPOTIFY,
                 "user-123"
         );
 
@@ -121,36 +118,9 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         assertEquals(expectedImageUrl, savedUser.getImageUrl());
     }
 
-    @Test
-    void saveUserOnAuthenticationSuccess_doesNotCreateUserIfNotSpotifyLogin() {
-        Map<String, Object> attributes = Map.of(
-                "email", "alvin@chipmunks.de",
-                "display_name", "Alvin Chipmunk",
-                "id", "user-123",
-                "images", new ArrayList<>()
-        );
-
-        OAuth2User oAuth2User = new DefaultOAuth2User(null, attributes, "display_name");
-
-        AuthenticationSuccessEvent successEvent = this.createAuthenticationSuccessEvent(oAuth2User, "other-provider");
-
-        // when
-        sut.saveUserOnAuthenticationSuccess(successEvent);
-
-        // then
-
-        Optional<User> user = this.userRepository.findByEmail((String) attributes.get("email"));
-
-        assertTrue(user.isEmpty());
-    }
-
     private AuthenticationSuccessEvent createAuthenticationSuccessEvent(OAuth2User oAuth2User) {
-        return this.createAuthenticationSuccessEvent(oAuth2User, Provider.SPOTIFY.toString());
-    }
-
-    private AuthenticationSuccessEvent createAuthenticationSuccessEvent(OAuth2User oAuth2User, String providerName) {
         ClientRegistration clientRegistration = ClientRegistration
-                .withRegistrationId(providerName)
+                .withRegistrationId("spotify")
                 .clientId("doesntmatter")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationUri("doesntmatter")

@@ -2,7 +2,6 @@ package com.github.chuettenrauch.mixifyapi.integration.file.controller;
 
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.file.service.FileService;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class FileControllerTest {
     @Test
     void uploadFile_whenLoggedInButFileIsEmpty_returnBadRequest() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "user", "alvin", "/path/to/image", "user-123");
         this.userRepository.save(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "".getBytes());
@@ -54,7 +53,7 @@ class FileControllerTest {
     @Test
     void uploadFile_whenLoggedIn_returnFileMetadata() throws Exception {
         // given
-        User user = new User("123", "user", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "user", "alvin", "/path/to/image", "user-123");
         this.userRepository.save(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -81,7 +80,7 @@ class FileControllerTest {
     @Test
     void downloadFile_whenLoggedInButFileDoesNotExist_returnNotFound() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         this.userRepository.save(user);
 
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(
@@ -98,7 +97,7 @@ class FileControllerTest {
     @Test
     void downloadFile_whenLoggedIn_returnFile() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
         this.userRepository.save(user);
 
         OAuth2User oAuth2User = new DefaultOAuth2User(null, Map.of(

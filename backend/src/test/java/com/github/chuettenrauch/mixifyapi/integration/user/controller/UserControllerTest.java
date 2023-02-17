@@ -1,6 +1,5 @@
 package com.github.chuettenrauch.mixifyapi.integration.user.controller;
 
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import com.github.chuettenrauch.mixifyapi.utils.TestUserHelper;
@@ -45,7 +44,7 @@ class UserControllerTest {
     @Test
     @DirtiesContext
     void me_returnsUserResourceIfLoggedIn() throws Exception {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "http://path/to/image.jpg", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin@chipmunks.de", "alvin", "http://path/to/image.jpg", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         // given
@@ -54,8 +53,8 @@ class UserControllerTest {
                     "id": "123",
                     "name": "alvin",
                     "imageUrl": "http://path/to/image.jpg",
-                    "providerAccessToken": "access-token",
-                    "providerRefreshToken": null
+                    "accessToken": "access-token",
+                    "refreshToken": null
                 }
                 """;
 
@@ -83,7 +82,7 @@ class UserControllerTest {
 
     private ClientRegistration createOAuth2ClientRegistration() {
         return ClientRegistration
-                .withRegistrationId(Provider.SPOTIFY.toString())
+                .withRegistrationId("spotify")
                 .clientId("doesntmatter")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationUri("doesntmatter")

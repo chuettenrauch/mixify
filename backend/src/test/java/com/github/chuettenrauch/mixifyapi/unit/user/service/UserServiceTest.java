@@ -2,7 +2,6 @@ package com.github.chuettenrauch.mixifyapi.unit.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
-import com.github.chuettenrauch.mixifyapi.user.model.Provider;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -125,7 +124,7 @@ class UserServiceTest {
     @Test
     void createUserResource_whenCalled_thenReturnUserResource() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", "user-123");
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
 
@@ -142,14 +141,14 @@ class UserServiceTest {
         assertEquals(user.getId(), actual.getId());
         assertEquals(user.getName(), actual.getName());
         assertEquals(user.getImageUrl(), actual.getImageUrl());
-        assertEquals(accessToken, actual.getProviderAccessToken());
-        assertEquals(refreshToken, actual.getProviderRefreshToken());
+        assertEquals(accessToken, actual.getAccessToken());
+        assertEquals(refreshToken, actual.getRefreshToken());
     }
 
     @Test
     void createUserResource_whenNotPresent_thenSkipRefreshToken() {
         // given
-        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", Provider.SPOTIFY, "user-123");
+        User user = new User("123", "alvin", "alvin@chipmunks.de", "/path/to/image", "user-123");
 
         OAuth2AuthorizedClient authorizedClient = this.mockOAuth2AuthorizedClient("does-not-matter", null);
 
@@ -161,7 +160,7 @@ class UserServiceTest {
         UserResource actual = sut.createUserResource(authorizedClient);
 
         // then
-        assertNull(actual.getProviderRefreshToken());
+        assertNull(actual.getRefreshToken());
     }
 
     @Test

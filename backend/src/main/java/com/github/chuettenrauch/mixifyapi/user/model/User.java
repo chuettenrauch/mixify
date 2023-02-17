@@ -19,7 +19,5 @@ public class User {
     private String email;
     private String name;
     private String imageUrl;
-
-    private Provider provider;
-    private String providerId;
+    private String spotifyId;
 }
