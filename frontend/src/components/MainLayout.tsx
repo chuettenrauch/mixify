@@ -16,7 +16,7 @@ export default function MainLayout() {
             return;
         }
 
-        callback(user.providerAccessToken);
+        callback(user.accessToken);
     }, [user]);
 
     return (

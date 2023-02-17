@@ -10,6 +10,6 @@ export default function useSpotifyApi(): SpotifyApi|null {
             return null;
         }
 
-        return new SpotifyApi(user.providerAccessToken)
+        return new SpotifyApi(user.accessToken)
     }, [user]);
 }

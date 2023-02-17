@@ -46,7 +46,7 @@ export default function PlayMixtapePage() {
     const spotifyApi = useSpotifyApi();
 
     const addTracks = useCallback((tracks: Track[], startIndex: number) => {
-        const uris = tracks.map(track => track.providerUri);
+        const uris = tracks.map(track => track.spotifyUri);
 
         return spotifyApi?.addTracks(uris, uris[startIndex], device?.device_id ?? "");
     }, [spotifyApi, device]);
@@ -83,7 +83,7 @@ export default function PlayMixtapePage() {
         }
 
         const playingUri = state.track_window.current_track.uri;
-        const track = mixtape.tracks.find(track => track.providerUri === playingUri);
+        const track = mixtape.tracks.find(track => track.spotifyUri === playingUri);
 
         if (track) {
             setCurrentTrack(track);

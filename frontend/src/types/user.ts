@@ -5,8 +5,8 @@ type User = {
 }
 
 export type AuthenticatedUser = User & {
-    providerAccessToken: string,
-    providerRefreshToken: string
+    accessToken: string,
+    refreshToken: string
 }
 
 export default User;
