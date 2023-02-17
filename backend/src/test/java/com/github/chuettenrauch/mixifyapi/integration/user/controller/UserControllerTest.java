@@ -44,7 +44,7 @@ class UserControllerTest {
     @Test
     @DirtiesContext
     void me_returnsUserResourceIfLoggedIn() throws Exception {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "http://path/to/image.jpg", "user-123");
+        User user = new User("123", "alvin", "http://path/to/image.jpg", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         // given

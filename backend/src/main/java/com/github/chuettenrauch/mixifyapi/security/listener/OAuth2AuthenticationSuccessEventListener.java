@@ -26,7 +26,7 @@ public class OAuth2AuthenticationSuccessEventListener {
         User user = this.oAuth2UserMapper.mapOAuth2UserToUser(oAuth2User, new User());
 
         this.userService
-                .findByEmail(user.getEmail())
+                .findBySpotifyId(user.getSpotifyId())
                 .ifPresent(existingUser -> user.setId(existingUser.getId()));
 
         this.userService.save(user);

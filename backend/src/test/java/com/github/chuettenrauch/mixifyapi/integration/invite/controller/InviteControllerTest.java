@@ -53,7 +53,7 @@ class InviteControllerTest {
     @DirtiesContext
     void create_whenLoggedIn_thenReturnInvite() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("123", "my mixtape", "", "http://path/to/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -81,7 +81,7 @@ class InviteControllerTest {
     @DirtiesContext
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("123", "my mixtape", "", "http://path/to/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -106,7 +106,7 @@ class InviteControllerTest {
     @Test
     void acceptInvite_whenInviteDoesNotExist_thenReturnNotFound() throws Exception {
         // given
-        User user = new User("user-123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("user-123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         // when + then
@@ -119,7 +119,7 @@ class InviteControllerTest {
     @Test
     void acceptInvite_whenInviteExistsButIsExpired_thenReturnGone() throws Exception {
         // given
-        User user = new User("user-123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("user-123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("mixtape-123", "my mixtape", "", "http://path/to/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -139,7 +139,7 @@ class InviteControllerTest {
     @Test
     void acceptInvite_whenInviteExistsAndIsNotExpired_thenReturnMixtapeUser() throws Exception {
         // given
-        User user = new User("user-123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("user-123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("mixtape-123", "my mixtape", "", "http://path/to/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -172,7 +172,7 @@ class InviteControllerTest {
     @Test
     void acceptInvite_whenInviteIsStillValidButMixtapeIsDeleted_thenReturnGone() throws Exception {
         // given
-        User user = new User("user-123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("user-123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         LocalDateTime notExpiredDate = LocalDateTime.now().plusHours(1);

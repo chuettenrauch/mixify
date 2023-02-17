@@ -46,7 +46,6 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         ));
 
         Map<String, Object> attributes = Map.of(
-                "email", "alvin@chipmunks.de",
                 "display_name", "Alvin Chipmunk",
                 "id", "user-123",
                 "images", images
@@ -61,13 +60,12 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         sut.saveUserOnAuthenticationSuccess(successEvent);
 
         // then
-        Optional<User> savedUserOptional = this.userRepository.findByEmail((String) attributes.get("email"));
+        Optional<User> savedUserOptional = this.userRepository.findBySpotifyId((String) attributes.get("id"));
 
         assertTrue(savedUserOptional.isPresent());
 
         User savedUser = savedUserOptional.get();
 
-        assertEquals(attributes.get("email"), savedUser.getEmail());
         assertEquals(attributes.get("display_name"), savedUser.getName());
         assertEquals(expectedImageUrl, savedUser.getImageUrl());
         assertEquals(attributes.get("id"), savedUser.getSpotifyId());
@@ -79,7 +77,6 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         // given
         User existingUser = new User(
                 "123",
-                "alvin@chipmunks.de",
                 "should be overwritten",
                 "should be overwritten",
                 "user-123"
@@ -90,9 +87,8 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         String expectedImageUrl = "updated image url";
 
         Map<String, Object> attributes = Map.of(
-                "email", existingUser.getEmail(),
                 "display_name", "updated name",
-                "id", existingUser.getId(),
+                "id", existingUser.getSpotifyId(),
                 "images", new ArrayList<>(List.of(
                         Map.of(
                                 "url", expectedImageUrl
@@ -108,7 +104,7 @@ class OAuth2AuthenticationSuccessEventListenerTest {
         sut.saveUserOnAuthenticationSuccess(successEvent);
 
         // then
-        Optional<User> savedUserOptional = this.userRepository.findByEmail(existingUser.getEmail());
+        Optional<User> savedUserOptional = this.userRepository.findBySpotifyId(existingUser.getSpotifyId());
 
         assertTrue(savedUserOptional.isPresent());
 

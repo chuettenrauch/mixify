@@ -59,7 +59,7 @@ class MixtapeControllerTest {
     @Test
     void create_whenLoggedIn_thenReturnMixtape() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -102,7 +102,7 @@ class MixtapeControllerTest {
     @Test
     void create_whenGivenJsonHasId_thenReturnUnprocessableEntity() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "some image".getBytes());
@@ -163,7 +163,7 @@ class MixtapeControllerTest {
                         ]
                         """;
 
-        User loggedInUser = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User loggedInUser = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(loggedInUser);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -198,7 +198,7 @@ class MixtapeControllerTest {
     @Test
     void delete_whenLoggedInAndCanEditBecauseIsListener_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -218,7 +218,7 @@ class MixtapeControllerTest {
 
     @Test
     void delete_whenLoggedInAndCanEditBecauseIsCreator_thenReturnOk() throws Exception {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "mixtape", "", null, new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -233,7 +233,7 @@ class MixtapeControllerTest {
     @Test
     void update_whenLoggedInButCanNotEditBecauseIsMixtapeOfOtherUser_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -268,7 +268,7 @@ class MixtapeControllerTest {
     @Test
     void update_whenLoggedInButCanNotEditBecauseIsOnlyListener_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         User otherUser = this.testUserHelper.createUser("234");
@@ -306,7 +306,7 @@ class MixtapeControllerTest {
     @Test
     void update_whenLoggedInButCanNotEditBecauseMixtapeIsNoDraftAnymore_thenReturnForbidden() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, false);
@@ -340,7 +340,7 @@ class MixtapeControllerTest {
     @Test
     void update_whenLoggedInAndCanEdit_thenReturnOk() throws Exception {
         // given
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -405,7 +405,7 @@ class MixtapeControllerTest {
                 }
                 """;
 
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
         Mixtape mixtape = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), user, true);
@@ -437,10 +437,10 @@ class MixtapeControllerTest {
                 }
                 """;
 
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
-        User otherUser = new User("234", null, "simon", null, null);
+        User otherUser = new User("234", "simon", null, null);
         this.userRepository.save(otherUser);
 
         Mixtape mixtapeOfOtherUser = new Mixtape("234", "existing mixtape", "existing description", "/path/to/mixtape/image", new ArrayList<>(), LocalDateTime.now(), otherUser, true);

@@ -11,13 +11,11 @@ import java.util.Map;
 @Component
 public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
 
-    private static final String ATTRIBUTE_EMAIL = "email";
     private static final String ATTRIBUTE_NAME = "display_name";
     private static final String ATTRIBUTE_SPOTIFY_ID = "id";
     private static final String ATTRIBUTE_IMAGES = "images";
 
     private static final List<String> requiredAttributes = List.of(
-            ATTRIBUTE_EMAIL,
             ATTRIBUTE_NAME,
             ATTRIBUTE_SPOTIFY_ID
     );
@@ -30,7 +28,6 @@ public class SpotifyOAuth2UserMapper implements OAuth2UserMapper {
             throw new OAuth2MappingException();
         }
 
-        user.setEmail((String) attributes.get(ATTRIBUTE_EMAIL));
         user.setName((String) attributes.get(ATTRIBUTE_NAME));
 
         List<Map<String, String>> images = (List<Map<String, String>>) attributes.get(ATTRIBUTE_IMAGES);

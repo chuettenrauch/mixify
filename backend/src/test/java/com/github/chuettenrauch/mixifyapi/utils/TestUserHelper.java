@@ -14,7 +14,7 @@ public class TestUserHelper {
     private final UserRepository userRepository;
 
     public OAuth2User createLoginUser() {
-        User user = new User("123", "alvin@chipmunks.de", "alvin", "/path/to/image", "user-123");
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
 
         return this.createLoginUser(user);
     }
@@ -23,12 +23,12 @@ public class TestUserHelper {
         this.userRepository.save(user);
 
         return new DefaultOAuth2User(null, Map.of(
-                "email", user.getEmail()
-        ), "email");
+                "id", user.getSpotifyId()
+        ), "id");
     }
 
     public User createUser(String id) {
-        User user = new User(id, null, null, null, null);
+        User user = new User(id, null, null, null);
 
         return this.userRepository.save(user);
     }
