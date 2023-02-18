@@ -1,9 +1,12 @@
-import {Button, Container, Typography} from "@mui/material";
+import {Box, Button, Container, Link, Paper, Typography} from "@mui/material";
 import logo from "../logo.png";
 import React from "react";
 import {useSearchParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import Utils from "../utils/utils";
+import {Info as InfoIcon} from "@mui/icons-material";
+
+const showDevModeInfo: boolean = !!Number(process.env.REACT_APP_SHOW_DEV_MODE_INFO);
 
 export default function LoginPage() {
     const [query] = useSearchParams();
@@ -44,6 +47,26 @@ export default function LoginPage() {
                 <Button variant="contained" href={authorizationUrl}>
                     Continue with spotify
                 </Button>
+
+            {showDevModeInfo &&
+              <Paper sx={{
+                  position: 'fixed',
+                  bottom: 0,
+                  left: 0,
+                  width: "100%",
+                  p: 2,
+                  zIndex: (theme) => theme.zIndex.appBar - 1
+              }} elevation={10}>
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 1}}>
+                  <Typography sx={{display: "flex", alignItems: "center"}}>
+                    <InfoIcon color="primary"/>
+                    Mixify is currently in development mode.
+                  </Typography>
+                  <Typography>Spotify premium account & explicit authorization through the developer required.
+                    Request access <Link href="mailto:support@mixify.me">here</Link>.</Typography>
+                </Box>
+              </Paper>
+            }
         </Container>
     );
 }
