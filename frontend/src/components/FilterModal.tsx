@@ -53,7 +53,6 @@ export default function FilterModal({open, onFilter, onClear, onClose}: {
             onClose={onClose}
             aria-labelledby="modal-mixtape-filter-form"
             aria-describedby="Form to filter mixtapes"
-            sx={{zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
             <Paper elevation={5} sx={{
                 position: "absolute",
