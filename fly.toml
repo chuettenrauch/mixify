@@ -8,6 +8,7 @@ processes = []
 [env]
   OAUTH2_SUCCESS_REDIRECT_URI="https://mixify.fly.dev"
   OAUTH2_FAILURE_REDIRECT_URI="https://mixify.fly.dev/login"
+  REACT_APP_SHOW_DEV_MODE_INFO=1
 
 [experimental]
   auto_rollback = true
