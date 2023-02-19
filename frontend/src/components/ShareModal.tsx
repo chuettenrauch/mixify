@@ -48,7 +48,6 @@ export default function ShareModal({open, mixtape, onClose}: {
             onClose={onClose}
             aria-labelledby="modal-share"
             aria-describedby="Modal to share mixtape"
-            sx={{zIndex: (theme) => theme.zIndex.appBar - 2}}
         >
             <Paper elevation={5} sx={{
                 position: "absolute",
