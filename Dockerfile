@@ -25,5 +25,5 @@ WORKDIR /app
 ENV MONGO_URI=mongodb://mongo:27017
 ENV MONGO_DATABASE=mixify
 EXPOSE 8080
-COPY --from=backend-build /app/target/backend-*.jar /app.jar
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+COPY --from=backend-build /app/target/backend-*.jar ./app.jar
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
