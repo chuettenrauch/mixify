@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.integration.mixtape.controller;
 
+import com.github.chuettenrauch.mixifyapi.integration.AbstractIntegrationTest;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape.model.Track;
 import com.github.chuettenrauch.mixifyapi.mixtape.repository.MixtapeRepository;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TrackControllerTest {
+class TrackControllerTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mvc;

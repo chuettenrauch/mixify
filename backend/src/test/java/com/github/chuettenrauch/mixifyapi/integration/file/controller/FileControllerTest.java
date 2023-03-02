@@ -2,6 +2,7 @@ package com.github.chuettenrauch.mixifyapi.integration.file.controller;
 
 import com.github.chuettenrauch.mixifyapi.file.model.File;
 import com.github.chuettenrauch.mixifyapi.file.service.FileService;
+import com.github.chuettenrauch.mixifyapi.integration.AbstractIntegrationTest;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class FileControllerTest {
+class FileControllerTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mvc;

@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: "${MONGO_URI:mongodb://localhost:27017}"
+      uri: "${MONGO_URI:mongodb://mongo:27017}"
       database: "${MONGO_DATABASE:mixify}"
       auto-index-creation: true
 

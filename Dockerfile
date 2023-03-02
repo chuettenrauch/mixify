@@ -1,9 +1,30 @@
-FROM eclipse-temurin:19-jre-jammy
+# base
+FROM eclipse-temurin:19-jdk-jammy as backend-base
+WORKDIR /app
+COPY backend/.mvn/ .mvn
+COPY backend/mvnw backend/pom.xml ./
+RUN ./mvnw dependency:resolve
+COPY backend/src ./src
 
+# build
+FROM node:18-alpine as frontend-build
+ENV NODE_ENV=production
+WORKDIR /app
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install --production
+COPY frontend .
+RUN npm run build
+
+FROM backend-base as backend-build
+WORKDIR /app
+COPY --from=frontend-build /app/build src/main/resources/static
+RUN ./mvnw package
+
+# production
+FROM eclipse-temurin:19-jre-jammy as production
+WORKDIR /app
 ENV MONGO_URI=mongodb://mongo:27017
 ENV MONGO_DATABASE=mixify
-
-ADD backend/target/*.jar app.jar
-
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+COPY --from=backend-build /app/target/backend-*.jar /app.jar
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]

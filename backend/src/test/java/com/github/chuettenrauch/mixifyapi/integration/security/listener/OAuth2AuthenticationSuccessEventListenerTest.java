@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.integration.security.listener;
 
+import com.github.chuettenrauch.mixifyapi.integration.AbstractIntegrationTest;
 import com.github.chuettenrauch.mixifyapi.security.listener.OAuth2AuthenticationSuccessEventListener;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
@@ -25,7 +26,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class OAuth2AuthenticationSuccessEventListenerTest {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class OAuth2AuthenticationSuccessEventListenerTest extends AbstractIntegrationTest {
 
     @Autowired
     private OAuth2AuthenticationSuccessEventListener sut;
@@ -34,7 +36,6 @@ class OAuth2AuthenticationSuccessEventListenerTest {
     private UserRepository userRepository;
 
     @Test
-    @DirtiesContext
     void saveUserOnAuthenticationSuccess_createsNewUserIfUserDoesNotExistAlready() {
         // given
         String expectedImageUrl = "http://url/to/image-1.jpg";
@@ -72,7 +73,6 @@ class OAuth2AuthenticationSuccessEventListenerTest {
     }
 
     @Test
-    @DirtiesContext
     void saveUserOnAuthenticationSuccess_updatedExistingUser() {
         // given
         User existingUser = new User(

@@ -1,2 +1,2 @@
-*
-!backend/target/*.jar
+backend/target
+frontend/node_modules

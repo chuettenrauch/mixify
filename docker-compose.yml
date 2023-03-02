@@ -1,0 +1,42 @@
+makversion: "3.8"
+services:
+  backend:
+    build:
+      context: .
+      target: backend-base
+    working_dir: /app
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - SPOTIFY_CLIENT_ID
+      - SPOTIFY_CLIENT_SECRET
+    volumes:
+      - ./backend/:/app
+    command: ["./mvnw", "spring-boot:run", "-Djava.security.egd=file:/dev/./urandom", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
+    depends_on:
+      - mongo
+
+  frontend:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/:/app
+    command: sh -c "npm install && npm start"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:5.0
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mixify_mongo_data:/data/db
+      - mixify_mongo_config:/data/configdb
+
+volumes:
+  mixify_mongo_data:
+  mixify_mongo_config:
