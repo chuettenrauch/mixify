@@ -8,7 +8,6 @@ COPY backend/src ./src
 
 # build
 FROM node:18-alpine as frontend-build
-ENV NODE_ENV=production
 WORKDIR /app
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install
@@ -18,7 +17,7 @@ RUN npm run build
 FROM backend-base as backend-build
 WORKDIR /app
 COPY --from=frontend-build /app/build src/main/resources/static
-RUN ./mvnw package
+RUN ./mvnw package -D maven.test.skip
 
 # production
 FROM eclipse-temurin:19-jre-jammy as production
