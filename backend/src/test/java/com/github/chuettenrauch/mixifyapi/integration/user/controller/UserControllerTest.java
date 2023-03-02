@@ -1,5 +1,6 @@
 package com.github.chuettenrauch.mixifyapi.integration.user.controller;
 
+import com.github.chuettenrauch.mixifyapi.integration.AbstractIntegrationTest;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.repository.UserRepository;
 import com.github.chuettenrauch.mixifyapi.utils.TestUserHelper;
@@ -26,7 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class UserControllerTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
@@ -42,7 +44,6 @@ class UserControllerTest {
     }
 
     @Test
-    @DirtiesContext
     void me_returnsUserResourceIfLoggedIn() throws Exception {
         User user = new User("123", "alvin", "http://path/to/image.jpg", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);

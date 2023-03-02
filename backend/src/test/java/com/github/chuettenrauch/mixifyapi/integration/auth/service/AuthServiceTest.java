@@ -1,17 +1,16 @@
 package com.github.chuettenrauch.mixifyapi.integration.auth.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
+import com.github.chuettenrauch.mixifyapi.integration.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestPropertySource(properties = "spring.autoconfigure.exclude=de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration")
-class AuthServiceTest {
+class AuthServiceTest extends AbstractIntegrationTest {
 
     @Test
     @WithMockUser(username = "Alvin")

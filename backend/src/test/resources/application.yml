@@ -1,10 +1,9 @@
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 5.0.14
-
 spring:
+  data:
+    mongodb:
+      database: "mixify"
+      auto-index-creation: true
+
   security:
     oauth2:
       client:
