@@ -10,7 +10,7 @@ COPY backend/src ./src
 FROM node:18-alpine as frontend-build
 ENV NODE_ENV=production
 WORKDIR /app
-COPY ["package.json", "package-lock.json*", "./"]
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install --production
 COPY frontend .
 RUN npm run build
