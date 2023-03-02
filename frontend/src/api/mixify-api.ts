@@ -38,6 +38,10 @@ export namespace UserApi {
     export async function logout() {
         return await client.post("/users/logout");
     }
+
+    export async function deleteUser() {
+        return await client.delete("users/me");
+    }
 }
 
 export namespace MixtapeApi {
