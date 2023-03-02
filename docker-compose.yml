@@ -1,26 +1,25 @@
-version: '3.8'
+makversion: "3.8"
 services:
   backend:
     build:
       context: .
-      target: backend-development
+      target: backend-base
     working_dir: /app
-    user: "1000"
     ports:
-      - "5005:5005"
       - "8080:8080"
+      - "5005:5005"
     environment:
       - SPOTIFY_CLIENT_ID
       - SPOTIFY_CLIENT_SECRET
     volumes:
       - ./backend/:/app
+    command: ["./mvnw", "spring-boot:run", "-Djava.security.egd=file:/dev/./urandom", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
     depends_on:
       - mongo
 
   frontend:
     image: node:18-alpine
     working_dir: /app
-    user: "1000"
     ports:
       - "3000:3000"
     volumes:
