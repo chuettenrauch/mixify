@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.unit.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
@@ -119,6 +120,46 @@ class UserServiceTest {
 
         // then
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void deleteAuthenticatedUser_whenUserNotExists_thenThrowNotFoundException() {
+        // given
+        UserRepository userRepository = mock(UserRepository.class);
+        AuthService authService = mock(AuthService.class);
+
+        UserService sut = mock(UserService.class, withSettings()
+                .useConstructor(userRepository, authService)
+                .defaultAnswer(CALLS_REAL_METHODS)
+        );
+        when(sut.getAuthenticatedUser()).thenReturn(Optional.empty());
+
+        // when
+        assertThrows(NotFoundException.class, sut::deleteAuthenticatedUser);
+
+        // then
+        verify(userRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void deleteAuthenticatedUser_whenUserExists_thenDelegateToUserRepository() {
+        // given
+        User user = new User("123", "alvin", "/path/to/image", "user-123");
+
+        UserRepository userRepository = mock(UserRepository.class);
+        AuthService authService = mock(AuthService.class);
+
+        UserService sut = mock(UserService.class, withSettings()
+                .useConstructor(userRepository, authService)
+                .defaultAnswer(CALLS_REAL_METHODS)
+        );
+        when(sut.getAuthenticatedUser()).thenReturn(Optional.of(user));
+
+        // when
+        sut.deleteAuthenticatedUser();
+
+        // then
+        verify(userRepository).deleteById(user.getId());
     }
 
     @Test

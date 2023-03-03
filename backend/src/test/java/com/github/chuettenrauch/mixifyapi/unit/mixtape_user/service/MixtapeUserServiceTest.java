@@ -47,7 +47,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
 
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
@@ -55,7 +55,7 @@ class MixtapeUserServiceTest {
 
         // then
         assertEquals(expected, actual);
-        verify(mixtapeUserRepository).findByUserAndMixtape(user, mixtape);
+        verify(mixtapeUserRepository).findOneByUserAndMixtape(user, mixtape);
     }
 
     @Test
@@ -65,7 +65,7 @@ class MixtapeUserServiceTest {
         Mixtape mixtape = new Mixtape();
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
 
         // when
         MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
@@ -81,7 +81,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.empty());
         when(mixtapeUserRepository.save(expected)).thenReturn(expected);
 
         // when
@@ -101,7 +101,7 @@ class MixtapeUserServiceTest {
         MixtapeUser expected = new MixtapeUser(null, user, mixtape);
 
         MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
-        when(mixtapeUserRepository.findByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
+        when(mixtapeUserRepository.findOneByUserAndMixtape(user, mixtape)).thenReturn(Optional.of(expected));
         when(mixtapeUserRepository.save(expected)).thenReturn(expected);
 
         // when

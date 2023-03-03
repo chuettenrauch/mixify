@@ -44,7 +44,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void me_returnsUserResourceIfLoggedIn() throws Exception {
+    void me_whenLoggedIn_thenReturnsUserResource() throws Exception {
         User user = new User("123", "alvin", "http://path/to/image.jpg", "user-123");
         OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
 
@@ -69,8 +69,26 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void delete_whenLoggedIn_thenLogoutAndReturnOk() throws Exception {
+        // given
+        User user = new User("123", "alvin", "http://path/to/image.jpg", "user-123");
+        OAuth2User oAuth2User = this.testUserHelper.createLoginUser(user);
+
+        MockHttpSession session = new MockHttpSession();
+
+        // when + then
+        this.mvc.perform(delete("/api/users/me")
+                        .with(oauth2Login().oauth2User(oAuth2User))
+                        .session(session)
+                )
+                .andExpect(status().isOk());
+
+        assertTrue(session.isInvalid());
+    }
+
+    @Test
     @WithMockUser
-    void logout_invalidatesSession() throws Exception {
+    void logout_whenLoggedIn_thenInvalidatesSession() throws Exception {
         MockHttpSession session = new MockHttpSession();
 
         this.mvc.perform(post("/api/users/logout")

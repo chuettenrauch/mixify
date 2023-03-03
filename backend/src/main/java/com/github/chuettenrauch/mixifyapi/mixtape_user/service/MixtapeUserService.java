@@ -22,13 +22,13 @@ public class MixtapeUserService {
 
     public MixtapeUser findByUserAndMixtape(User user, Mixtape mixtape) {
         return this.mixtapeUserRepository
-                .findByUserAndMixtape(user, mixtape)
+                .findOneByUserAndMixtape(user, mixtape)
                 .orElseThrow(NotFoundException::new);
     }
 
     public MixtapeUser createIfNotExists(User user, Mixtape mixtape) {
         MixtapeUser mixtapeUser = this.mixtapeUserRepository
-                .findByUserAndMixtape(user, mixtape)
+                .findOneByUserAndMixtape(user, mixtape)
                 .orElse(new MixtapeUser(null, user, mixtape));
 
         return this.mixtapeUserRepository.save(mixtapeUser);
