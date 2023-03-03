@@ -4,7 +4,6 @@ import com.github.chuettenrauch.mixifyapi.mixtape.model.Mixtape;
 import com.github.chuettenrauch.mixifyapi.mixtape_user.service.MixtapeUserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
 import org.springframework.data.mongodb.core.mapping.event.BeforeDeleteEvent;
@@ -28,7 +27,7 @@ public class MixtapeLifecycleEventListener extends AbstractMongoEventListener<Mi
     public void onBeforeDelete(BeforeDeleteEvent<Mixtape> event) {
         Document document = event.getSource();
 
-        ObjectId mixtapeId = (ObjectId) document.get("_id");
+        Object mixtapeId = document.get("_id");
         Mixtape mixtape = new Mixtape();
         mixtape.setId(mixtapeId.toString());
 
