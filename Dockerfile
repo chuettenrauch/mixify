@@ -25,7 +25,7 @@ WORKDIR /app
 ENV MONGO_URI=mongodb://mongo:27017
 ENV MONGO_DATABASE=mixify
 EXPOSE 8080
-RUN addgroup --system javauser && adduser -S -s /usr/sbin/nologin -G javauser javauser
+RUN adduser --system --no-create-home --disabled-login --group javauser
 COPY --from=backend-build /app/target/*.jar ./app.jar
 RUN chown -R javauser:javauser .
 USER javauser
