@@ -166,4 +166,34 @@ class MixtapeUserServiceTest {
         verify(mixtapeUserRepository).deleteByUserAndMixtape(user, mixtape);
     }
 
+    @Test
+    void deleteByUser_whenCalled_thenDelegateToMixtapeUserRepository() {
+        // given
+        User user = new User();
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
+        sut.deleteByUser(user);
+
+        // then
+        verify(mixtapeUserRepository).deleteByUser(user);
+    }
+
+    @Test
+    void deleteByMixtape_whenCalled_thenDelegateToMixtapeUserRepository() {
+        // given
+        Mixtape mixtape = new Mixtape();
+
+        MixtapeUserRepository mixtapeUserRepository = mock(MixtapeUserRepository.class);
+
+        // when
+        MixtapeUserService sut = new MixtapeUserService(mixtapeUserRepository);
+        sut.deleteByMixtape(mixtape);
+
+        // then
+        verify(mixtapeUserRepository).deleteByMixtape(mixtape);
+    }
+
 }

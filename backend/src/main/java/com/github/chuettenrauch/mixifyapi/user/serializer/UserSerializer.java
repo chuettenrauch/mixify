@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class UserSerializer extends StdSerializer<User> {
 
-    public final static String DEFAULT_USERNAME = "Unknown";
+    public static final String DEFAULT_USERNAME = "Unknown";
 
     public UserSerializer() {
         this(null);

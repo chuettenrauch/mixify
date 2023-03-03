@@ -45,4 +45,12 @@ public class MixtapeUserService {
     public void deleteByUserAndMixtape(User user, Mixtape mixtape) {
         this.mixtapeUserRepository.deleteByUserAndMixtape(user, mixtape);
     }
+
+    public void deleteByUser(User user) {
+        this.mixtapeUserRepository.deleteByUser(user);
+    }
+
+    public void deleteByMixtape(Mixtape mixtape) {
+        this.mixtapeUserRepository.deleteByMixtape(mixtape);
+    }
 }

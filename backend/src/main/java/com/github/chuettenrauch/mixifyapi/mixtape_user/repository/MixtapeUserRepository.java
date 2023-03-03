@@ -21,4 +21,8 @@ public interface MixtapeUserRepository extends MongoRepository<MixtapeUser, Stri
     boolean existsByMixtape(Mixtape mixtape);
 
     void deleteByUserAndMixtape(User user, Mixtape mixtape);
+
+    void deleteByUser(User user);
+
+    void deleteByMixtape(Mixtape mixtape);
 }
