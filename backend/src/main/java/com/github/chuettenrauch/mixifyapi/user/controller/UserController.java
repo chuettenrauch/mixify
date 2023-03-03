@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,6 +18,12 @@ public class UserController {
     @GetMapping("/me")
     public UserResource me(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
         return this.userService.createUserResource(authorizedClient);
+    }
+
+    @DeleteMapping("/me")
+    public void delete(HttpSession httpSession) {
+        this.userService.deleteAuthenticatedUser();
+        this.logout(httpSession);
     }
 
     @PostMapping("/logout")

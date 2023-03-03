@@ -1,6 +1,7 @@
 package com.github.chuettenrauch.mixifyapi.user.service;
 
 import com.github.chuettenrauch.mixifyapi.auth.service.AuthService;
+import com.github.chuettenrauch.mixifyapi.exception.NotFoundException;
 import com.github.chuettenrauch.mixifyapi.exception.UnauthorizedException;
 import com.github.chuettenrauch.mixifyapi.user.model.User;
 import com.github.chuettenrauch.mixifyapi.user.model.UserResource;
@@ -55,5 +56,11 @@ public class UserService {
         }
 
         return userResource;
+    }
+
+    public void deleteAuthenticatedUser() {
+        User user = this.getAuthenticatedUser().orElseThrow(NotFoundException::new);
+
+        this.userRepository.deleteById(user.getId());
     }
 }

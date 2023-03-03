@@ -12,6 +12,7 @@ import {Slide, ToastContainer} from "react-toastify";
 import theme from "./theme/theme";
 import NotFoundPage from "./pages/NotFoundPage";
 import SharePage from "./pages/SharePage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                             <Route path="/mixtapes/:id" element={<MixtapeDetailPage/>}/>
                             <Route path="/play/:id" element={<PlayMixtapePage/>}/>
                             <Route path="/share/:id" element={<SharePage/>}/>
+                            <Route path="/settings" element={<SettingsPage/>}/>
                             <Route path="*" element={<NotFoundPage/>}/>
                         </Route>
                     </Route>

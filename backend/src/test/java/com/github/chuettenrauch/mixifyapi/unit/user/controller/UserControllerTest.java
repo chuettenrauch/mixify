@@ -24,14 +24,20 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    void me_returnsUnauthorizedIfNotLoggedIn() throws Exception {
+    void me_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
         this.mvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void logout_returnsUnauthorizedIfNotLoggedIn() throws Exception {
+    void logout_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
         this.mvc.perform(post("/api/users/logout"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void delete_whenNotLoggedIn_thenReturnUnauthorized() throws Exception {
+        this.mvc.perform(delete("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
