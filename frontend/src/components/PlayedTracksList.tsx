@@ -26,7 +26,7 @@ export default function PlayedTracksList({mixtape, playedTracks, onTrackPlay}: {
                             <FlippableTrackCard
                                 track={track}
                                 mixtape={mixtape}
-                                onImageClick={() => onTrackPlay(index)}
+                                onPlay={() => onTrackPlay(index)}
                             />
                         </Container>
                     </ListItem>

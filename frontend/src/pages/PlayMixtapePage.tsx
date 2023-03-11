@@ -57,7 +57,7 @@ export default function PlayMixtapePage() {
             if (globalConfig.canUsePlayer && device === null) {
                 window.location.reload();
             }
-        }, 3000);
+        }, 5000);
 
         return () => clearTimeout(timeoutId);
     }, [device, globalConfig.canUsePlayer]);
@@ -129,7 +129,7 @@ export default function PlayMixtapePage() {
             <PlayedTracksList
                 mixtape={mixtape}
                 playedTracks={mixtape.tracks.slice(0, getLastReachedTrackForMixtape(mixtape) + 1)}
-                onTrackPlay={(trackIndex: number) => addTracks(mixtape.tracks || [], trackIndex)}
+                onTrackPlay={(trackIndex: number) => addTracks(mixtape?.tracks || [], trackIndex)}
             />
 
             {currentTrack && state &&
