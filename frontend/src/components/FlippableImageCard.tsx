@@ -39,21 +39,6 @@ export default function FlippableImageCard({image, textOnBack}: {
                     sx={{paddingTop: "100%", position: "relative"}}
                     onClick={() => setIsImageFlipped(false)}
                 >
-                    <CardMedia
-                        component="img"
-                        image={image.src}
-                        alt={image.alt}
-                        sx={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            objectFit: "cover",
-                            width: "100%",
-                            height: "100%",
-                            border: "1px solid grey",
-                            opacity: 0.3,
-                        }}
-                    />
                     <Box sx={{
                         display: "flex",
                         justifyContent: "center",
